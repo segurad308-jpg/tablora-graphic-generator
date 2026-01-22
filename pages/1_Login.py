@@ -240,6 +240,12 @@ def create_or_update_profile(user_id, email, name, picture):
             "subscription_start": dt.datetime.utcnow().isoformat(),
             "subscription_end": (dt.datetime.utcnow() + dt.timedelta(days=14)).isoformat(),
         })
+    else:
+        data_payload.update({
+            "is_premium": False,
+            "subscription_start": dt.datetime.utcnow().isoformat(),
+            "subscription_end": dt.datetime.utcnow().isoformat(),
+        })
 
     try:
         # Utilise upsert en ciblant la colonne UNIQUE: 'user_id'
