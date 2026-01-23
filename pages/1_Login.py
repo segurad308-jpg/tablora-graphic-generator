@@ -290,8 +290,10 @@ def signup_user(email, password, name):
                 }
             }
         })
-        
-        return True, "Compte créé avec succès! Vérifiez votre email pour confirmer votre compte."
+        if is_unine_email(email):
+            return True, "Compte créé avec succès! Vérifiez votre email pour confirmer votre compte. L'email peut mettre quelques minutes à arriver."
+        else:
+            return True, "Compte créé avec succès! Vérifiez votre email pour confirmer votre compte."
             
     except Exception as e:
         error_message = str(e)
