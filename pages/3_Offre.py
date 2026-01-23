@@ -136,7 +136,7 @@ if "_go_try" in st.query_params:
 
 if "_check" in st.query_params:
     st.query_params.clear()
-    st.switch_page("pages/1_login.py")
+    st.switch_page("pages/1_Login.py")
     st.stop()
 
 if user is None:
