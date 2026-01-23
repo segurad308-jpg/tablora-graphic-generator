@@ -339,8 +339,7 @@ st.markdown("""
 <div class="review-submit-card">
     <div class="st3">Donner votre avis</div>
 
-<form action="mailto:info.tablora@gmail.com" method="post" enctype="text/plain"
-        class="review-form">
+<form action="https://formspree.io/f/mkojrbjk" method="POST" class="review-form">
 
 <!-- Ligne du haut -->
 <div class="review-top">
