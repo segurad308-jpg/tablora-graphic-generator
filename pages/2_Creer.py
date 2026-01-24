@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 import json
 import time
 
-st.set_page_config(page_title="Tablora - Créer un graphique", layout="centered", page_icon="https://i.imgur.com/QiTTNUk.png")
+st.set_page_config(page_title="Tablora - Créer un graphique", layout="centered", page_icon="https://github.com/segurad308-jpg/images-tablora/blob/main/logo.webp?raw=true")
 
 controller = CookieController()
 if "cookies_ready" not in st.session_state:
@@ -354,7 +354,7 @@ if user is None:
         <a href="/Login" target="_self">Login</a>
         
     <div class="logo-image-graph">
-        <img src="https://i.imgur.com/6e9Z5aA.png" class="logo-image-img" alt="Tablora Logo" />
+        <img src="https://github.com/segurad308-jpg/images-tablora/blob/main/Tablora.webp?raw=true" class="logo-image-img" alt="Tablora Logo" />
     </div>
     </div>
     """, unsafe_allow_html=True)
@@ -367,7 +367,7 @@ else:
         <a href="/Login" target="_self">Logout</a>
         
     <div class="logo-image-graph">
-        <img src="https://i.imgur.com/6e9Z5aA.png" class="logo-image-img" alt="Tablora Logo" />
+        <img src="https://github.com/segurad308-jpg/images-tablora/blob/main/Tablora.webp?raw=true" class="logo-image-img" alt="Tablora Logo" />
     </div>
     </div>
     """, unsafe_allow_html=True)

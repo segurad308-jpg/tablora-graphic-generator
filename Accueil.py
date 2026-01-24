@@ -6,7 +6,7 @@ from streamlit_cookies_controller import CookieController
 import time
 
 # THIS MUST BE THE ABSOLUTE FIRST STREAMLIT COMMAND
-st.set_page_config(page_title="Tablora - Accueil", layout="wide", initial_sidebar_state="collapsed", page_icon="https://i.imgur.com/QiTTNUk.png")
+st.set_page_config(page_title="Tablora - Accueil", layout="wide", initial_sidebar_state="collapsed", page_icon="https://github.com/segurad308-jpg/images-tablora/blob/main/logo.webp?raw=true")
  
 controller = CookieController()
 if "cookies_ready" not in st.session_state:
@@ -42,7 +42,7 @@ if user is None:
         <a href="/Login" target="_self">Login</a>
         
     <div class="logo-image-graph">
-        <img src="https://i.imgur.com/6e9Z5aA.png" class="logo-image-img" alt="Tablora Logo" />
+        <img src="https://github.com/segurad308-jpg/images-tablora/blob/main/Tablora.webp?raw=true" class="logo-image-img" alt="Tablora Logo" />
     </div>
     </div>
     """, unsafe_allow_html=True)
@@ -55,7 +55,7 @@ else:
         <a href="/Login" target="_self">Logout</a>
         
     <div class="logo-image-graph">
-        <img src="https://i.imgur.com/6e9Z5aA.png" class="logo-image-img" alt="Tablora Logo" />
+        <img src="https://github.com/segurad308-jpg/images-tablora/blob/main/Tablora.webp?raw=true" class="logo-image-img" alt="Tablora Logo" />
     </div>
     </div>
     """, unsafe_allow_html=True)
@@ -85,7 +85,7 @@ st.markdown("""
         </div>
     </div>
     <div class="hero-right">
-        <img src="https://i.imgur.com/kHfo2f5.png" class="hero-img" alt="Hero Image" />
+        <img src="https://github.com/segurad308-jpg/images-tablora/blob/main/Tablora%20(1).webp?raw=true" class="hero-img" alt="Hero Image" />
     </div>
 </div>
 """, unsafe_allow_html=True)
@@ -95,7 +95,7 @@ st.markdown("""
 # ===== FEATURE CARD =====
 st.markdown("""       
 <div class="neumo-card">
-    <img src="https://i.imgur.com/LTlWNGx.png" class="neumo-img" alt="Feature">
+    <img src="https://github.com/segurad308-jpg/images-tablora/blob/main/design.webp?raw=true" class="neumo-img" alt="Feature">
     <div style="display: flex; flex-direction: column; width: 50%;">
         <div class="st1">
             Visualisez plus vite et mieux<br> 
@@ -129,25 +129,25 @@ st.markdown("""
 <div class="neumo-row">
 
 <div class="feature-card">
-    <img src="https://i.imgur.com/3oR7V22.png" class="feature-image" />
+    <img src="https://github.com/segurad308-jpg/images-tablora/blob/main/Design%20sans%20titre.webp?raw=true" class="feature-image" />
     <div class="feature-title">Importez vos données CSV et Excel</div>
     <div class="feature-desc">Importez en un clic vos tableau de données.</div>
 </div>
 
 <div class="feature-card">
-    <img src="https://i.imgur.com/VMe4wFv.png" class="feature-image" />
+    <img src="https://github.com/segurad308-jpg/images-tablora/blob/main/his.webp?raw=true" class="feature-image" />
     <div class="feature-title">Créez des graphes personnalisables et rapides</div>
     <div class="feature-desc">Choisissez le graphe qui vous correspond le mieux.</div>
 </div>
 
 <div class="feature-card">
-    <img src="https://i.imgur.com/wLC41TE.png" class="feature-image" />
+    <img src="https://github.com/segurad308-jpg/images-tablora/blob/main/Design%20sans%20titre%20(1).webp?raw=true" class="feature-image" />
     <div class="feature-title">Téléchargement pro</div>
     <div class="feature-desc">Exportez en PNG, PDF, SVG et partagez vos créations partout.</div>
 </div>
 
 <div class="feature-card">
-    <img src="https://i.imgur.com/GpPhpqS.png" class="feature-image" />
+    <img src="https://github.com/segurad308-jpg/images-tablora/blob/main/Design%20sans%20titre%20(2).webp?raw=true" class="feature-image" />
     <div class="feature-title">Données sécurisées</div>
     <div class="feature-desc">Vos fichiers ne quittent jamais votre ordinateur et ne sont pas stockés.</div>
 </div>
@@ -170,7 +170,7 @@ st.markdown("""
             </div>
         </div>
         <div class="bottom-right">
-            <img src="https://i.imgur.com/1U0qAX1.jpeg" class="bottom-img" alt="Demo" />
+            <img src="https://github.com/segurad308-jpg/images-tablora/blob/main/travail.webp?raw=true" class="bottom-img" alt="Demo" />
         </div>
     </div>
 </div>
@@ -248,17 +248,17 @@ with st.expander("Comment ça marche ?"):
         """
         <p>
             1. Importez votre fichier de données (CSV ou Excel).<br><br>
-            <img src="https://i.imgur.com/JPDBpNO.png" class="faq-image">
+            <img src="https://github.com/segurad308-jpg/images-tablora/blob/main/faq.webp?raw=true" class="faq-image">
         </p>
 
         <p>
             2. Sélectionnez vos préférences.<br><br>
-            <img src="https://i.imgur.com/pEVvv9A.png" class="faq-image">
+            <img src="https://github.com/segurad308-jpg/images-tablora/blob/main/faq%202.webp?raw=true" class="faq-image">
         </p>
 
         <p>
             3. Générez et téléchargez votre graphique.<br><br>
-            <img src="https://i.imgur.com/iMCW1CI.png" class="faq-image">
+            <img src="https://github.com/segurad308-jpg/images-tablora/blob/main/faq%203.webp?raw=true" class="faq-image">
         </p>
         """,
         unsafe_allow_html=True) 
