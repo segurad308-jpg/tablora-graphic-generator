@@ -23,12 +23,6 @@ load_css("styles/style.css")
 import sys, os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-if "_go_try" in st.query_params:
-    time.sleep(0.2)
-    if user:
-        st.switch_page("pages/3_Offre.py")
-    else:
-        st.switch_page("pages/1_Login.py")
 if "_learn_more" in st.query_params:
     st.switch_page("pages/3_Offre.py")
 
@@ -73,7 +67,7 @@ st.markdown("""
         </div>
         <div style="display: flex; gap: 20px; margin-top: 30px;">
             <form action="" method="get">
-                <button class="neumo-btn1" name="_go_try" value="1" type="submit">
+                <button class="neumo-btn1" name="_learn_more" value="1" type="submit">
                     Essayer gratuitement
                 </button>
             </form>
@@ -106,7 +100,7 @@ st.markdown("""
             Générez des graphiques époustouflants en seulement quelques secondes grâce à notre interface intuitive.
         </div>
         <form action="" method="get">
-            <button class="neumo-btn1" name="_go_try" value="1" type="submit">
+            <button class="neumo-btn1" name="_learn_more" value="1" type="submit">
                 Essayer maintenant
             </button>
         </form>
@@ -384,7 +378,7 @@ st.markdown("""
 st.markdown("""
 <div style="display: flex; justify-content: center; gap: 20px; margin-top: 0;">
     <form action="" method="get">
-        <button class="neumo-btn2" name="_go_try" value="1" type="submit">
+        <button class="neumo-btn2" name="_learn_more" value="1" type="submit">
             Essayer gratuitement
         </button>
     </form>
