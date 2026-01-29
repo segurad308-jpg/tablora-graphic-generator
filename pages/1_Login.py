@@ -11,6 +11,8 @@ import datetime as dt
 import time
 from utils.subscription import cgu_modal, get_profile, has_access, is_unine_email, open_stripe_portal
 from datetime import datetime, timedelta, timezone
+from utils.cache_function import get_cached_profile, has_access_cached, get_supabase
+from utils.cache_function import load_css
 
 st.set_page_config(
     page_title="Tablora - Connexion", 
@@ -29,7 +31,6 @@ user = raw if raw else None
 if raw:
     controller.set('username', raw)
 
-from utils.load_css import load_css
 load_css("styles/style.css")
 # Load .env
 current_path = Path(__file__).resolve()
@@ -44,9 +45,7 @@ if env_path.exists():
     load_dotenv(env_path)
 
 # Supabase Configuration with SERVICE KEY
-SUPABASE_URL = os.getenv("SUPABASE_URL")
-SUPABASE_SERVICE_KEY = os.getenv("SUPABASE_SERVICE_KEY")
-supabase: Client = create_client(SUPABASE_URL, SUPABASE_SERVICE_KEY)
+supabase: Client = get_supabase()
 
 # OAuth Configuration
 CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
@@ -64,18 +63,15 @@ profile = None
 if user:
     user_id = user.get("id")
     if user_id:
-        # Get profile from Supabase
-        try:
-            result = supabase.table("profiles").select("*").eq("user_id", user_id).execute()
-            if result.data:
-                profile = result.data[0]
-                # Check if user already has a plan (free or premium)
-                if profile.get("plan") in ["free", "premium"]:
-                    trial_used = True
-        except Exception as e:
-            st.error(f"Erreur lors de la récupération du profil: {str(e)}")
-        profile = get_profile(user_id)
-        user_is_premium = has_access(profile)
+        profile = get_cached_profile(user_id)
+        if profile.get("plan") in ["free", "premium"]:
+            trial_used = True
+        user_is_premium = has_access_cached(profile)
+
+if "_stripe_return" in st.query_params:
+    get_cached_profile.clear()
+    has_access_cached.clear()
+    st.query_params.clear()
 
 # Initialize session state
 if "oauth_state" not in st.session_state:

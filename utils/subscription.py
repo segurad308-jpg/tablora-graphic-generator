@@ -7,8 +7,6 @@ import dateutil.parser
 import stripe
 from fastapi import FastAPI, Query
 from streamlit_cookies_controller import CookieController
-import streamlit.components.v1 as components
-import supabase
 
 # Load environment variables
 load_dotenv()
@@ -210,7 +208,7 @@ def create_checkout_session(user_id: str = Query(...)):
                 "quantity": 1,
             }
         ],
-        success_url="https://tablora.ch/Offre",
+        success_url="https://tablora.ch/Offre?_stripe_return=1",
         cancel_url="https://tablora.ch/Offre",
         metadata={
             "user_id": user_id  # lien CRUCIAL
@@ -240,7 +238,7 @@ def open_stripe_portal(user_id):
 
     session = stripe.billing_portal.Session.create(
         customer=customer_id,
-        return_url="https://tablora.ch/Login"
+        return_url="https://tablora.ch/Login?_stripe_return=1"
     )
 
     return session.url

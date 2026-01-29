@@ -7,7 +7,9 @@ from dotenv import load_dotenv
 import os
 import time
 import stripe
+from utils.cache_function import get_cached_profile, has_access_cached
 from utils.subscription import get_profile, has_access
+from utils.cache_function import load_css
 
 st.set_page_config(page_title="Tablora - Offres", layout="wide", initial_sidebar_state="collapsed", page_icon="https://github.com/segurad308-jpg/images-tablora/blob/main/logo.webp?raw=true")
 
@@ -20,7 +22,6 @@ user = raw if raw else None
 if raw:
     controller.set('username', raw) 
     
-from utils.load_css import load_css
 load_css("styles/style.css")
 
 
@@ -53,6 +54,11 @@ if user_id:
     profile = get_profile(user_id)
     user_is_premium = has_access(profile)
 
+if "_stripe_return" in st.query_params:
+    get_cached_profile.clear()
+    has_access_cached.clear()
+    st.query_params.clear()
+    
 if "_upgrade" in st.query_params:
     time.sleep(0.1)
     if user is None:
