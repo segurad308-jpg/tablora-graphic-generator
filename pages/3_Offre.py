@@ -139,32 +139,20 @@ if "_check" in st.query_params:
     st.switch_page("pages/1_Login.py")
     st.stop()
 
-if user is None:
-    st.markdown("""  
-    <div class="topnav">
-        <a href="/" target="_self">Accueil</a>
-        <a class="active" href="" target="_self">Offre</a>
-        <a href="/Creer" target="_self">Créer</a>
-        <a href="/Login" target="_self">Login</a>
-        
-    <div class="logo-image-graph">
-        <img src="https://github.com/segurad308-jpg/images-tablora/blob/main/Tablora.webp?raw=true" class="logo-image-img" alt="Tablora Logo" />
-    </div>
-    </div>
-    """, unsafe_allow_html=True)
-else:
-    st.markdown(f"""  
-    <div class="topnav">
-        <a href="/" target="_self">Accueil</a>
-        <a class="active" href="" target="_self">Offre</a>
-        <a href="/Creer" target="_self">Créer</a>
-        <a href="/Login" target="_self">Logout</a>
-        
-    <div class="logo-image-graph">
-        <img src="https://github.com/segurad308-jpg/images-tablora/blob/main/Tablora.webp?raw=true" class="logo-image-img" alt="Tablora Logo" />
-    </div>
-    </div>
-    """, unsafe_allow_html=True)
+login_status = "Logout" if user else "Login"
+st.markdown(f"""  
+<div class="topnav">
+<a href="/" target="_self" class="logo-image-graph logo-link">
+    <img src="https://github.com/segurad308-jpg/images-tablora/blob/main/Tablora.webp?raw=true"
+        class="logo-image-img"
+        alt="Tablora Logo" />
+</a>
+
+<a class="active" href="/Offre" target="_self" >Offre</a>
+<a href="/Creer" target="_self">Créer</a>
+<a href="/Login" target="_self">{login_status}</a>
+</div>
+""", unsafe_allow_html=True)
 
 if trial_used:
     st.markdown("""

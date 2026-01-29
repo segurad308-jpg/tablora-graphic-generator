@@ -183,8 +183,7 @@ section[data-testid="stSidebar"] * { color: #555 !important; }
     margin-bottom: 0px;
 }
 .logo-image-graph {
-    float: right; /* Fait flotter le logo à droite */
-    padding: 7px 14px; /* Ajuste le padding pour centrer verticalement */
+    display: block;
 }
 .logo-image-img {
     width: 150px;
@@ -194,24 +193,24 @@ section[data-testid="stSidebar"] * { color: #555 !important; }
     margin-right: auto;
     transition: all 0.3s ease;
 }
+
+/* Navigation Bar */
 .topnav {
+    display: flex;
+    align-items: center;
     overflow: hidden;
     background: #f0f0f0;   /* léger gris clair */
     padding: 8px 0;
     border-radius: 10px;
-    position: relative; /* Nécessaire pour que z-index fonctionne */
-    z-index: 10;
+
     /* léger relief */
     box-shadow:
         3px 3px 6px #c8c8c8,
         -3px -3px 6px #ffffff;
 }
 
-.topnav a {
-    float: left;
-    display: block;
+.topnav a:not(.CTA-nav-btn):not(.logo-image-graph) {
     color: #555;
-    text-align: center;
     padding: 12px 16px;
     margin: 0 6px;
     text-decoration: none;
@@ -225,10 +224,26 @@ section[data-testid="stSidebar"] * { color: #555 !important; }
         -2px -2px 4px #ffffff;
 
     transition: 0.15s ease-in-out;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transform: translateY(8px);
+}
+
+.topnav a.logo-link {
+    padding: 7px 10px;
+    margin: 0;
+    background: none;
+    box-shadow: none;
+    transform: translateY(0);
+}
+
+.topnav a.logo-link:hover {
+    box-shadow: none;
 }
 
 /* Hover (légèrement creusé) */
-.topnav a:hover {
+.topnav a:hover:not(.CTA-nav-btn):not(.logo-image-graph) {
     box-shadow:
         inset 2px 2px 4px #c8c8c8,
         inset -2px -2px 4px #ffffff;
@@ -242,7 +257,7 @@ section[data-testid="stSidebar"] * { color: #555 !important; }
     box-shadow:
         inset 2px 2px 4px #8c6de0,
         inset -2px -2px 4px #c7aaff;
-}           
+}       
 </style>
 """, unsafe_allow_html=True)
 
@@ -345,32 +360,20 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ===== NAVIGATION BAR =====
-if user is None:
-    st.markdown("""  
-    <div class="topnav">
-        <a href="/" target="_self">Accueil</a>
-        <a href="/Offre" target="_self">Offre</a>
-        <a class="active" href="" target="_self">Créer</a>
-        <a href="/Login" target="_self">Login</a>
-        
-    <div class="logo-image-graph">
-        <img src="https://github.com/segurad308-jpg/images-tablora/blob/main/Tablora.webp?raw=true" class="logo-image-img" alt="Tablora Logo" />
-    </div>
-    </div>
-    """, unsafe_allow_html=True)
-else:
-    st.markdown(f"""  
-    <div class="topnav">
-        <a href="/" target="_self">Accueil</a>
-        <a href="/Offre" target="_self">Offre</a>
-        <a class="active" href="" target="_self">Créer</a>
-        <a href="/Login" target="_self">Logout</a>
-        
-    <div class="logo-image-graph">
-        <img src="https://github.com/segurad308-jpg/images-tablora/blob/main/Tablora.webp?raw=true" class="logo-image-img" alt="Tablora Logo" />
-    </div>
-    </div>
-    """, unsafe_allow_html=True)
+login_status = "Logout" if user else "Login"
+st.markdown(f"""  
+<div class="topnav">
+<a href="/" target="_self" class="logo-image-graph logo-link">
+    <img src="https://github.com/segurad308-jpg/images-tablora/blob/main/Tablora.webp?raw=true"
+        class="logo-image-img"
+        alt="Tablora Logo" />
+</a>
+            
+<a href="/Offre" target="_self">Offre</a>
+<a class="active" href="/Creer" target="_self" >Créer</a>
+<a href="/Login" target="_self">{login_status}</a>
+</div>
+""", unsafe_allow_html=True)
 
 st.markdown("""
 <div id="neumo-bg">
