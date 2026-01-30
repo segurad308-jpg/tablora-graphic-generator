@@ -9,7 +9,8 @@ def render_static_home():
             <div class="hero-catch-mid">ㅤTablora pour Créer et Personnaliser Vos Graphiques  ㅤ</div>
             <div class="hero-catch-right">‎ ‎  🡪 ‎ ‎ </div>
         </a>
-        <div class="hero-title">Crée et Personnalise tes Graphiques Rapidement et Facilement</div>
+        <div class="hero-title">Crée et Personnalise tes Graphiques <br>
+        Rapidement et Facilement</div>
         <div class="hero-desc">
             Vous êtes étudiant ou professionnel et vous avez régulièrement besoin de créer des graphiques <br>
                 mais vous trouvez ce processus long et complexe ?<br>
@@ -23,9 +24,9 @@ def render_static_home():
                 Voir l'offre
             </a> 
         </div>
-        <div class="hero-sub">
+        <a href="#reviews-section" class="hero-sub" style="text-decoration: none;">
             ★ ‎ ★ ‎ ★ ‎ ★ ‎ ★ㅤ<u>De nombreux utilisateurs satisfaits</u>
-        </div>
+        </a>
     </div>
 
     <div class="neumo-card">
@@ -44,6 +45,50 @@ def render_static_home():
             </a>
         </div>
     </div>
+    <section class="reviews-section" id="reviews-section">
+        <div class="st4">Ce que les utilisateurs pensent de nous</div>
+        <div class="reviews-grid">            
+    <div class="review-card">
+        <div class="review-header">
+            <div class="review-avatar">Q</div>
+            <div class="review-meta">
+                <div class="review-name">Quentin S.</div>
+                <div class="review-stars">★★★★★</div>
+            </div>
+        </div>
+        <div class="review-text">J'ai été impressionné par la facilité d'utilisation du logiciel. J'ai l'habitude
+                de créer des graphiques et par conséquent j'étais sceptique à l'idée d'utiliser Tablora, car c'est en général une tâche
+                laborieuse et complexe. J'ai fait mon choix et je ne reviendrai pas en arrière.</div>
+    </div>
+    <div class="review-card">
+        <div class="review-header">
+            <div class="review-avatar">D</div>
+            <div class="review-meta">
+                <div class="review-name">David L.</div>
+                <div class="review-stars">★★★★★</div>
+            </div>
+        </div>
+        <div class="review-text">Tout simplement j'adore ! J'aurais jamais cru que ce serait autant facile de créer des
+                graphiques mais avec Tablora j'ai qu'à cliquer sur quelques boutons et le tour est joué !
+                Si vous avez besoin de créer des graphiques rapidement, je recommande fortement Tablora.</div>
+    </div>
+    <div class="review-card">
+        <div class="review-header">
+            <div class="review-avatar">C</div>
+            <div class="review-meta">
+                <div class="review-name">Catherine M.</div>
+                <div class="review-stars">★★★★☆</div>
+            </div>
+        </div>
+        <div class="review-text">Cela a toujours été pour moi une tâche compliquée, et donc en trouvant ce logiciel, 
+                j'ai pu facilement créer de bons graphiques sans effort. De cette manière, je peux maintenant facilement 
+                intégrer des graphiques à mes présentations lors de mes projets d'étude.</div>
+    </div>
+    </div>
+    <div class="hero-sub" style="margin-top: 30px;">
+        <a href="#reviews-send" class="hero-sub" style="text-decoration: none;"><u>Votre avis compte pour nous</u></a>
+    </div>
+    </section>
 
     <div class="st2">
         <div style="text-align: center;">
@@ -107,42 +152,42 @@ def render_static_home():
     <table class="neumo-table">
     <tr>
         <th style="color:#311566;">Avantages</th>
-        <th style="text-align:center;color:#603CC9;">Tablora</th>
+        <th class="tablora-header">Tablora</th>
         <th style="text-align:center;color:#311566;">&copy; Tableau Software</th>
         <th style="text-align:center;color:#311566;">&copy; Excel</th>
     </tr>
 
     <tr>
         <td>Rapide et intuitif</td>
-        <td class="neumo-check">✔</td>
+        <td class="tablora-cell"><span class="neumo-check">✔</span></td>
         <td class="neumo-check">-</td>
         <td class="neumo-check">✔</td>
     </tr>
 
     <tr>
         <td>Visualisation puissante</td>
-        <td class="neumo-check">✔</td>
+        <td class="tablora-cell"><span class="neumo-check">✔</span></td>
         <td class="neumo-check">✔</td>
         <td class="neumo-check">-</td>
     </tr>
 
     <tr>
         <td>Personnalisation facile</td>
-        <td class="neumo-check">✔</td>
+        <td class="tablora-cell"><span class="neumo-check">✔</span></td>
         <td class="neumo-check">✔</td>
         <td class="neumo-check">-</td>
     </tr>
 
     <tr>
         <td>Téléchargement haute qualité</td>
-        <td class="neumo-check">✔</td>
+        <td class="tablora-cell"><span class="neumo-check">✔</span></td>
         <td class="neumo-check">✔</td>
         <td class="neumo-check">-</td>
     </tr>
 
     <tr>
         <td>Abordable et accessible</td>
-        <td class="neumo-check">✔</td>
+        <td class="tablora-cell"><span class="neumo-check">✔</span></td>
         <td class="neumo-check">-</td>
         <td class="neumo-check">✔</td>
     </tr>
@@ -159,50 +204,7 @@ def render_static_home():
 @st.cache_data
 def render_static_home2():
     return """
-    <section class="reviews-section">
-        <div class="st4">Avis</div>
-        <div class="reviews-grid">
-                
-    <div class="review-card">
-        <div class="review-header">
-            <div class="review-avatar">Q</div>
-            <div class="review-meta">
-                <div class="review-name">Quentin S.</div>
-                <div class="review-stars">★★★★★</div>
-            </div>
-        </div>
-        <div class="review-text">J'ai été impressionné par la facilité d'utilisation du logiciel. J'ai l'habitude
-                de créer des graphiques et par conséquent j'étais sceptique à l'idée d'utiliser Tablora, car c'est en général une tâche
-                laborieuse et complexe. J'ai fait mon choix et je ne reviendrai pas en arrière.</div>
-    </div>
-
-    <div class="review-card">
-        <div class="review-header">
-            <div class="review-avatar">D</div>
-            <div class="review-meta">
-                <div class="review-name">David L.</div>
-                <div class="review-stars">★★★★★</div>
-            </div>
-        </div>
-        <div class="review-text">Tout simplement j'adore ! J'aurais jamais cru que ce serait autant facile de créer des
-                graphiques mais avec Tablora j'ai qu'à cliquer sur quelques boutons et le tour est joué !
-                Si vous avez besoin de créer des graphiques rapidement, je recommande fortement Tablora.</div>
-    </div>
-
-    <div class="review-card">
-        <div class="review-header">
-            <div class="review-avatar">C</div>
-            <div class="review-meta">
-                <div class="review-name">Catherine M.</div>
-                <div class="review-stars">★★★★☆</div>
-            </div>
-        </div>
-        <div class="review-text">Cela a toujours été pour moi une tâche compliquée, et donc en trouvant ce logiciel, 
-                j'ai pu facilement créer de bons graphiques sans effort. De cette manière, je peux maintenant facilement 
-                intégrer des graphiques à mes présentations lors de mes projets d'étude.</div>
-    </div>
-
-    </div>
+    <section class="reviews-section" id="reviews-send">
     <div class="review-submit-card">
         <div class="st3">Donner votre avis</div>
 

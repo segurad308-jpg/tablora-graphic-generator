@@ -8,6 +8,9 @@ body, [data-testid="stAppViewContainer"], section.main {
     background-color: #ECF0F3 !important;
     font-family: 'Segoe UI', sans-serif !important;
 }
+html {
+    scroll-behavior: smooth;
+}
 .background-shapes {
     position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; overflow: hidden;
     z-index: -1;
@@ -294,11 +297,35 @@ html, body {
     padding: 6px 12px;        /* 🔹 bouton beaucoup moins large */
     border-radius: 20px;
     margin-top: 20px;
-    box-shadow: 6px 6px 14px #D1D9E6, -6px -6px 14px #FFFFFF;
+    animation: shadow-pulse 4s ease-in-out infinite;
     transition: all 0.25s ease-in-out;
     width: fit-content;       
     white-space: nowrap; 
-    border: 2px solid #fff;    
+    border: 2px solid #fff;   
+    position: relative;
+    z-index: 1;
+}
+@keyframes shadow-pulse {
+    0%, 100% {
+        box-shadow: 
+            6px 6px 14px #D1D9E6, 
+            -6px -6px 14px #FFFFFF;
+    }
+    25% {
+        box-shadow: 
+            6px 6px 14px rgba(191, 168, 255, 0.4),  /* Purple tint */
+            -6px -6px 14px #FFFFFF;
+    }
+    50% {
+        box-shadow: 
+            6px 6px 14px rgba(96, 60, 201, 0.5),  /* Deeper purple */
+            -6px -6px 14px rgba(160, 124, 255, 0.2);
+    }
+    75% {
+        box-shadow: 
+            6px 6px 14px rgba(175, 145, 255, 0.4),
+            -6px -6px 14px #FFFFFF;
+    }
 }
 .hero-catch-left {
     margin-right: auto !important;
@@ -334,17 +361,19 @@ html, body {
     font-size: 70px;
     text-align: center;
     font-weight: 600;
-    color: #603CC9;
+    color: #33206b;
     text-shadow: 1px 1px 2px #EEE;
     margin: 20px 0;
     line-height: 1.1;
 }
 .hero-sub {
     font-size: 16px;
-    color: #373737;
+    color: #373737 !important;
     margin-top: 6px;
     font-weight: 500;
     text-align: center;
+    text-decoration: none !important;
+    cursor: pointer;
 }
 .hero-desc {
     margin-top: 12px;
@@ -481,24 +510,54 @@ div[data-testid="stExpanderDetails"] {
 
 .neumo-table {
     width: 100%;
-    border-collapse: collapse;
+    border-collapse: separate;
+    border-spacing: 0;
     font-family: 'Inter', sans-serif;
+    position: relative;
 }
 
 .neumo-table th {
     background: #ECF0F3;
     font-size: 18px;
     font-weight: 700;
-    padding: 14px;
+    padding: 20px 14px;
     text-align: left;
     border-bottom: 2px solid #d9dfe6;
 }
 
+/* 🔹 Tablora column header - purple */
+.neumo-table th.tablora-header {
+    background: #a47cff;
+    color: white !important;
+    border-radius: 20px 20px 0 0;
+    font-size: 18px;
+    padding: 25px 14px;
+    position: relative;
+    z-index: 2;
+    text-align: center;
+}
+
 .neumo-table td {
-    padding: 14px;
+    padding: 18px 14px;
     font-size: 16px;
     color: #444;
     border-bottom: 1px solid #e3e6eb;
+    background: #ECF0F3;
+}
+
+/* 🔹 Tablora column cells - purple */
+.neumo-table td.tablora-cell {
+    background: #a47cff;
+    color: white;
+    font-weight: 600;
+    position: relative;
+    z-index: 1;
+    text-align: center;  /* 🔹 Center the checkmarks */
+}
+
+/* 🔹 Last row in Tablora column gets rounded bottom */
+.neumo-table tr:last-child td.tablora-cell {
+    border-radius: 0 0 20px 20px;
 }
 
 .neumo-check {
@@ -506,6 +565,18 @@ div[data-testid="stExpanderDetails"] {
     color: #603CC9;
     font-weight: bold;
     text-align: center;
+}
+
+/* 🔹 Checkmarks in Tablora column */
+.tablora-cell .neumo-check {
+    color: white;
+    font-size: 22px;
+}
+
+/* 🔹 Add elevation to Tablora column */
+.neumo-table th.tablora-header,
+.neumo-table td.tablora-cell {
+    box-shadow: 0 4px 15px rgba(96, 60, 201, 0.3);
 }
 /* SECTION AVEC BEAU DÉGRADÉ */
 .gradient-section {
@@ -1095,12 +1166,11 @@ div.stButton > button[kind="primary"]:hover {
     box-shadow:
         2px 2px 4px #c8c8c8,
         -2px -2px 4px #ffffff;
-
-    transition: 0.15s ease-in-out;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     transform: translateY(8px);
+    transition: all 0.3s ease !important;
 }
 
 .topnav a.logo-link {

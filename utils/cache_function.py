@@ -75,10 +75,6 @@ def has_access_cached(profile):
             return True
     return False
 
-@st.cache_resource
-def get_supabase():
-    return create_client(SUPABASE_URL, SUPABASE_SERVICE_KEY)
-
 @st.cache_data
 def load_css(file_path: str):
     with open(file_path, "r", encoding="utf-8") as f:
