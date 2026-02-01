@@ -43,7 +43,7 @@ st.markdown("""
     </p>
     <p>
         <strong>Render<br>
-        Serveurs situés aux États-Unis.
+        Serveurs situés en Europe.
     </p>
 
     <h2>Objet du service</h2>
