@@ -5,7 +5,7 @@ import extra_streamlit_components as stx
 from streamlit_cookies_controller import CookieController
 import time
 from utils.cache_footer import cache_footer
-from utils.load_css import load_css
+from utils.cache_function import load_css
 from utils.html_home import render_static_home, render_static_home2
 
 # THIS MUST BE THE ABSOLUTE FIRST STREAMLIT COMMAND

@@ -41,7 +41,7 @@ def render_static_home():
                 Générez des graphiques époustouflants en seulement quelques secondes grâce à notre interface intuitive.
             </div>
             <a href="/Offre" target="_self" class="neumo-btn1">
-                Essayer maintenant
+                Essayer gratuitement
             </a>
         </div>
     </div>
@@ -87,6 +87,58 @@ def render_static_home():
     </div>
     <div class="hero-sub" style="margin-top: 30px;">
         <a href="#reviews-send" class="hero-sub" style="text-decoration: none;"><u>Votre avis compte pour nous</u></a>
+    </div>
+    </section>
+
+    <div class="st2">
+        <div style="text-align: center;">
+        ㅤ<br><br>
+            Vos problèmes nous préoccupent
+        </div>
+    </div>
+    <section class="problems-section">
+    <div class="timeline">
+
+    <div class="timeline-item">
+    <div class="dot"></div>
+    <div class="card">
+        <div class="step-label">Problème initial</div>
+        <h3>Vous devez créer un graphique</h3>
+        <p>Créer un graphique à partir de zéro prend du temps et est souvent fastidieux.</p>
+        <div class="img-placeholder">
+        <img src="https://github.com/segurad308-jpg/images-tablora/blob/main/time2.webp?raw=true" alt="Problem 1" style="width:100%;height:100%;object-fit:cover;border-radius:14px;" />
+        </div>
+    </div>
+    </div>
+
+    <div class="timeline-item">
+    <div class="dot"></div>
+    <div class="card">
+        <div class="step-label">Complication</div>
+        <h3>Aucun logiciel adapté</h3>
+        <p>Vous cherchez alors un logiciel pratique et facile d'utilisation mais rien de semble adapté à vos besoins.</p>
+        <div class="img-placeholder">
+        <img src="https://github.com/segurad308-jpg/images-tablora/blob/main/complex.webp?raw=true" alt="Problem 2" style="width:100%;height:100%;object-fit:cover;border-radius:14px;" />
+        </div>
+    </div>
+    </div>
+
+    <div class="timeline-item">
+    <div class="dot"></div>
+    <div class="card">
+        <div class="step-label">Conséquences</div>
+        <h3>Vous perdez du temps</h3>
+        <p>Rien ne vous convient et vous finissez par vous contenter du moins pire mais vous n'êtes en aucun cas satisfait de votre travail.</p>
+        <div class="img-placeholder">
+        <img src="https://github.com/segurad308-jpg/images-tablora/blob/main/sad.webp?raw=true" alt="Problem 3" style="width:100%;height:100%;object-fit:cover;border-radius:14px;" />
+        </div>
+    </div>
+    </div>
+    </div>
+    <div style="display:flex; justify-content:center; margin-top:20px;">
+        <a href="/Offre" target="_self" class="neumo-btn2">
+            Essayer gratuitement
+        </a>
     </div>
     </section>
 
