@@ -9,7 +9,7 @@ def render_static_home():
             <div class="hero-catch-mid">ㅤTablora pour Créer et Personnaliser Vos Graphiques  ㅤ</div>
             <div class="hero-catch-right">‎ ‎  🡪 ‎ ‎ </div>
         </a>
-        <div class="hero-title">Crée et Personnalise tes Graphiques <br>
+        <div class="hero-title">Crée et Personnalise <u>tes Graphiques</u> <br>
         Rapidement et Facilement</div>
         <div class="hero-desc">
             Vous êtes étudiant ou professionnel et vous avez régulièrement besoin de créer des graphiques <br>
@@ -144,28 +144,28 @@ def render_static_home():
 
     <div class="st2">
         <div style="text-align: center;">
-            Tablora explore et visualise vos données<br>
-            en un clin d'œil
+            Nous pensons à vous pour vous faciliter la vie
         </div>
     </div>
 
-    <div class="neumo-row">
+    <section class="benefits-section">
+    <div class="benefits-left neumo-row">
     <div class="feature-card">
         <img src="https://github.com/segurad308-jpg/images-tablora/blob/main/Design%20sans%20titre.webp?raw=true" class="feature-image" />
         <div class="feature-title">Importez vos données CSV et Excel</div>
-        <div class="feature-desc">Importez en un clic vos tableau de données.</div>
+        <div class="feature-desc">En un clic, importez vos données et commencez à créer vos graphiques.</div>
     </div>
 
     <div class="feature-card">
         <img src="https://github.com/segurad308-jpg/images-tablora/blob/main/his.webp?raw=true" class="feature-image" />
         <div class="feature-title">Créez des graphes personnalisables et rapides</div>
-        <div class="feature-desc">Choisissez le graphe qui vous correspond le mieux.</div>
+        <div class="feature-desc">Choisissez le graphe qui vous correspond le mieux grâce à nos nombreuses possibilités de personnalisation.</div>
     </div>
 
     <div class="feature-card">
         <img src="https://github.com/segurad308-jpg/images-tablora/blob/main/Design%20sans%20titre%20(1).webp?raw=true" class="feature-image" />
         <div class="feature-title">Téléchargement pro</div>
-        <div class="feature-desc">Exportez en PNG, PDF, SVG et partagez vos créations partout.</div>
+        <div class="feature-desc">Exportez directement et facilement vos graphiques en PNG, PDF, SVG et partagez vos créations partout.</div>
     </div>
 
     <div class="feature-card">
@@ -173,6 +173,30 @@ def render_static_home():
         <div class="feature-title">Données sécurisées</div>
         <div class="feature-desc">Vos fichiers ne quittent jamais votre ordinateur et ne sont pas stockés.</div>
     </div>
+    </div>
+    <div class="benefits-right">
+    <h2 class="benefits-title">
+        Tablora est conçu <u>pour vous</u>.<br />Gagnez du temps et de la qualité !
+    </h2>
+
+    <p class="benefits-text">
+        Créez les graphiques dont vous avez toujours rêvé en quelques clics seulement.
+        Améliorez vos présentations, rapports et projets avec des visualisations de données percutantes.
+    </p>
+
+    <ul class="benefits-list">
+        <li>Intuitif et facile</li>
+        <li>Personnalisable</li>
+        <li>Illimité</li>
+        <li>Haute qualité</li>
+        <li>Support client</li>
+    </ul>
+    </div>
+    </section>
+    <div style="display:flex; justify-content:center; margin-top:80px;">
+        <a href="/Offre" target="_self" class="neumo-btn2">
+            Essayer gratuitement
+        </a>
     </div>
 
     <div class='gradient-section'>
