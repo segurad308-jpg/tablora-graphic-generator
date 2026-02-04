@@ -253,10 +253,6 @@ if not user_is_premium:
             <span class="pricing-feature-icon">✓</span>
             <span>Export PNG uniquement</span>
         </div>
-        <div class="pricing-feature-item">
-            <span class="pricing-feature-icon">✓</span>
-            <span>Support communautaire</span>
-        </div>
     </div>
     </div>
 
@@ -297,7 +293,7 @@ if not user_is_premium:
         </div>
         <div class="pricing-feature-item">
             <span class="pricing-feature-icon">✓</span>
-            <span>Sauvegarde des graphiques</span>
+            <span>Options avancées</span>
         </div>
         <div class="pricing-feature-item">
             <span class="pricing-feature-icon">✓</span>
@@ -357,10 +353,6 @@ if user_is_premium:
             <span class="pricing-feature-icon">✓</span>
             <span>Export PNG uniquement</span>
         </div>
-        <div class="pricing-feature-item">
-            <span class="pricing-feature-icon">✓</span>
-            <span>Support communautaire</span>
-        </div>
     </div>
     </div>
 
@@ -401,7 +393,7 @@ if user_is_premium:
         </div>
         <div class="pricing-feature-item">
             <span class="pricing-feature-icon">✓</span>
-            <span>Sauvegarde des graphiques</span>
+            <span>Options avancées</span>
         </div>
         <div class="pricing-feature-item">
             <span class="pricing-feature-icon">✓</span>

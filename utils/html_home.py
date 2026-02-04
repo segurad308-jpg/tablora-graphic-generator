@@ -29,22 +29,14 @@ def render_static_home():
         </a>
     </div>
 
-    <div class="neumo-card">
-        <img src="https://github.com/segurad308-jpg/images-tablora/blob/main/design.webp?raw=true" class="neumo-img" alt="Feature">
-        <div style="display: flex; flex-direction: column; width: 50%;">
-            <div class="st1">
-                Visualisez plus vite et mieux<br> 
-                avec 
-                <span style="color:#603CC9;">Tablora</span>
-            </div>
-            <div class="neumo-text">
-                Générez des graphiques époustouflants en seulement quelques secondes grâce à notre interface intuitive.
-            </div>
-            <a href="/Offre" target="_self" class="neumo-btn1">
-                Essayer gratuitement
-            </a>
-        </div>
+    <div class="video-wrapper">
+        <iframe
+            src="https://www.youtube.com/embed/YryH2Fabi2M?autoplay=1&mute=1&loop=1&playlist=YryH2Fabi2M&controls=0&rel=0"
+            allow="autoplay"
+            allowfullscreen>
+        </iframe>
     </div>
+
     <section class="reviews-section" id="reviews-section">
         <div class="st4">Ce que les utilisateurs pensent de nous</div>
         <div class="reviews-grid">            
@@ -199,24 +191,22 @@ def render_static_home():
         </a>
     </div>
 
-    <div class='gradient-section'>
-        <div class="bottom-section">
-            <div class="bottom-left">
-                <div class="st1">Qui sommes-nous ?</div>
-                <div class="bottom-desc">
-                    <span style="color:#603CC9;">Tablora</span> est une entreprise Suisse, ayant conçu un outil de visualisation de données pour les étudiants et les professionnels.
-                    Notre mission est de rendre la création de graphiques accessible à tous, en simplifiant le processus qui parfois peut sembler complexe.<br><br>
-                    La conception de graphiques prend souvent du temps et nécessite des compétences techniques et par conséquent,
-                    nous cherchons à faciliter la tâche aux personnes souhaitant représenter visuellement leurs données.<br>
-                    Avec <span style="color:#603CC9;">Tablora</span>, ménagez vos efforts et transformez vos données en visualisations percutantes en seulement quelques clics.
-                </div>
+    <div class="neumo-card">
+        <img src="https://github.com/segurad308-jpg/images-tablora/blob/main/design.webp?raw=true" class="neumo-img" alt="Feature">
+        <div style="display: flex; flex-direction: column; width: 50%;">
+            <div class="st1">
+                Visualisez plus vite et mieux<br> 
+                avec 
+                <span style="color:#603CC9;">Tablora</span>
             </div>
-            <div class="bottom-right">
-                <img src="https://github.com/segurad308-jpg/images-tablora/blob/main/travail.webp?raw=true" class="bottom-img" alt="Demo" />
+            <div class="neumo-text">
+                Générez des graphiques époustouflants en seulement quelques secondes grâce à notre interface intuitive.
             </div>
+            <a href="/Offre" target="_self" class="neumo-btn1">
+                Essayer gratuitement
+            </a>
         </div>
     </div>
-    <div class='separator'></div>
 
     <div class="st2">
         <div style="justify-content: center;">
