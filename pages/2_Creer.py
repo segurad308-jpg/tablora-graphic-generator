@@ -198,11 +198,13 @@ section[data-testid="stSidebar"] * { color: #555 !important; }
 .topnav {
     display: flex;
     align-items: center;
+    position: relative;
+    z-index: 10;
     overflow: hidden;
     background: #f0f0f0;   /* léger gris clair */
     padding: 8px 0;
     border-radius: 10px;
-
+    height: 60px;
     /* léger relief */
     box-shadow:
         3px 3px 6px #c8c8c8,
@@ -215,19 +217,17 @@ section[data-testid="stSidebar"] * { color: #555 !important; }
     margin: 0 6px;
     text-decoration: none;
     font-size: 17px;
-    border-radius: 8px;
+    font-weight: 450;
+    border-radius: 25px;
 
     /* très léger effet bouton en relief */
+    height: 40px;
     background: #f0f0f0;
-    box-shadow:
-        2px 2px 4px #c8c8c8,
-        -2px -2px 4px #ffffff;
-
-    transition: 0.15s ease-in-out;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     transform: translateY(8px);
+    transition: all 0.3s ease !important;
 }
 
 .topnav a.logo-link {
@@ -244,20 +244,18 @@ section[data-testid="stSidebar"] * { color: #555 !important; }
 
 /* Hover (légèrement creusé) */
 .topnav a:hover:not(.CTA-nav-btn):not(.logo-image-graph) {
-    box-shadow:
-        inset 2px 2px 4px #c8c8c8,
-        inset -2px -2px 4px #ffffff;
+    background-color: #e7e7e7;
     color: #222;
 }
 
 /* Page active → violet + creusé */
 .topnav a.active {
-    background: #a47cff; /* violet doux */
-    color: white;
+    background: #a47cff !important; /* violet doux */
+    color: white !important;
     box-shadow:
         inset 2px 2px 4px #8c6de0,
-        inset -2px -2px 4px #c7aaff;
-}       
+        inset -2px -2px 4px #c7aaff !important;
+}   
 </style>
 """, unsafe_allow_html=True)
 
