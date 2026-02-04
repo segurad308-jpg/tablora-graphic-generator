@@ -71,11 +71,11 @@ h2 {
     max-width: 260px;
     text-align: left;
 
-    box-shadow: 18px 18px 38px #D1D9E6, -18px -18px 38px #FFFFFF;
+    box-shadow: 9px 9px 19px #D1D9E6, -9px -9px 19px #FFFFFF;
     transition: all 0.3s ease !important;
 }           
 .feature-card:hover {
-    transform: translateY(-4px);
+    transform: translateY(-2px);
     box-shadow: 9px 9px 19px #adb4be, -9px -9px 19px #dfdede;
 }
             
@@ -527,6 +527,8 @@ html, body {
 }   
 /* Expander closed state */
 details {
+    margin-left: auto !important;
+    width: 80% !important;
     border-radius: 16px !important;
     background: #ECF0F3 !important;
     padding: 6px 10px !important;
@@ -539,6 +541,8 @@ details {
 
 /* Expander open state */
 details[open] {
+    margin-left: auto !important;
+    width: 80% !important;
     background: #ECF0F3 !important;
     box-shadow:
         6px 6px 12px #b8bec4,
@@ -1247,7 +1251,7 @@ div.stButton > button[kind="primary"]:hover {
     background: #f0f0f0;   /* léger gris clair */
     padding: 8px 0;
     border-radius: 10px;
-
+    height: 60px;
     /* léger relief */
     box-shadow:
         3px 3px 6px #c8c8c8,
@@ -1260,13 +1264,12 @@ div.stButton > button[kind="primary"]:hover {
     margin: 0 6px;
     text-decoration: none;
     font-size: 17px;
-    border-radius: 8px;
+    font-weight: 450;
+    border-radius: 25px;
 
     /* très léger effet bouton en relief */
+    height: 40px;
     background: #f0f0f0;
-    box-shadow:
-        2px 2px 4px #c8c8c8,
-        -2px -2px 4px #ffffff;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -1288,9 +1291,7 @@ div.stButton > button[kind="primary"]:hover {
 
 /* Hover (légèrement creusé) */
 .topnav a:hover:not(.CTA-nav-btn):not(.logo-image-graph) {
-    box-shadow:
-        inset 2px 2px 4px #c8c8c8,
-        inset -2px -2px 4px #ffffff;
+    background-color: #e7e7e7;
     color: #222;
 }
 
@@ -1379,7 +1380,7 @@ div.stButton > button[kind="primary"]:hover {
 .reviews-section {
     margin: 70px 0 0 0;
     width: 100%;
-    background: radial-gradient(circle at center,#bedbf0 0%, #e6edf3 60%, #ECF0F3 100%);
+    background: radial-gradient(circle at center,#d0e4f4 0%, #e6edf3 60%, #ECF0F3 100%);
     padding: 60px 40px;
 }
 

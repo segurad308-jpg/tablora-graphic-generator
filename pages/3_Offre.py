@@ -21,7 +21,7 @@ raw = controller.get('username')
 user = raw if raw else None
 if raw:
     controller.set('username', raw) 
-    
+from utils.load_css import load_css  
 load_css("styles/style.css")
 
 

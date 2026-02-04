@@ -106,7 +106,7 @@ def render_static_home():
         <h3>Vous devez créer un graphique</h3>
         <p>Créer un graphique à partir de zéro prend du temps et est souvent fastidieux.</p>
         <div class="img-placeholder">
-        <img src="https://github.com/segurad308-jpg/images-tablora/blob/main/time2.webp?raw=true" alt="Problem 1" style="width:100%;height:100%;object-fit:cover;border-radius:14px;" />
+        <img src="https://github.com/segurad308-jpg/images-tablora/blob/main/time3.webp?raw=true" alt="Problem 1" style="width:100%;height:100%;object-fit:cover;border-radius:14px;" />
         </div>
     </div>
     </div>
@@ -224,7 +224,7 @@ def render_static_home():
         </div>
     </div> 
 
-    <div class="neumo-container">
+    <div class="neumo-container" style="margin-bottom: 100px;">
     <table class="neumo-table">
     <tr>
         <th style="color:#311566;">Avantages</th>
@@ -268,12 +268,6 @@ def render_static_home():
         <td class="neumo-check">✔</td>
     </tr>
     </table>
-    </div>
-
-    <div class="st2">
-        <div style="justify-content: center;">
-            Questions fréquentes
-        </div>
     </div>
     """
 
@@ -319,7 +313,7 @@ def render_static_home2():
 
     <div class="banner">
         <div class="banner-text">
-                Commencez gratuitement dès aujourd'hui !
+                Ne perdez plus jamais votre temps, soyez créatif dès aujourd'hui !<br>
         </div>
     </div>
 

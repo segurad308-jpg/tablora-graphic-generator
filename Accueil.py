@@ -5,7 +5,7 @@ import extra_streamlit_components as stx
 from streamlit_cookies_controller import CookieController
 import time
 from utils.cache_footer import cache_footer
-from utils.cache_function import load_css
+#from utils.cache_function import load_css
 from utils.html_home import render_static_home, render_static_home2
 
 # THIS MUST BE THE ABSOLUTE FIRST STREAMLIT COMMAND
@@ -20,10 +20,11 @@ user = raw if raw else None
 if raw:
     controller.set('username', raw) 
 
-load_css("styles/style.css")
-
 import sys, os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+from utils.load_css import load_css
+load_css("styles/style.css")
 
 login_status = "Logout" if user else "Login"
 st.markdown(f"""  
@@ -49,53 +50,66 @@ st.markdown(f"""
 st.markdown(render_static_home(), unsafe_allow_html=True)
 
 # ===== FAQ SECTION =====
-with st.expander("Comment ça marche ?"):
-    st.markdown(
-        """
-        <p>
-            1. Importez votre fichier de données (CSV ou Excel).<br><br>
-            <img src="https://github.com/segurad308-jpg/images-tablora/blob/main/faq.webp?raw=true" class="faq-image">
-        </p>
+col_left, col_right = st.columns([1, 1.7])
 
-        <p>
-            2. Sélectionnez vos préférences.<br><br>
-            <img src="https://github.com/segurad308-jpg/images-tablora/blob/main/faq%202.webp?raw=true" class="faq-image">
-        </p>
-
-        <p>
-            3. Générez et téléchargez votre graphique.<br><br>
-            <img src="https://github.com/segurad308-jpg/images-tablora/blob/main/faq%203.webp?raw=true" class="faq-image">
-        </p>
-        """,
-        unsafe_allow_html=True) 
-    
-with st.expander("Comment choisir mon graphique ?"):
-    st.markdown(
-        """
-        <p>
-            1. Vous voulez montrer une évolution ou une tendance dans le temps ? Utilisez un <strong>graphique en ligne</strong>.<br>
-        </p>
-        <p>
-            2. Vous souhaitez comparer des catégories entre elles ? Choisissez un <strong>graphique en barres</strong>.<br>
-        </p>
-        <p>
-            3. Vous cherchez à analyser la relation entre deux variables ? Le <strong>nuage de points</strong> est le plus adapté.<br>
-        </p>
-        <p>
-            4. Vous voulez visualiser la répartition d’un ensemble en pourcentages ? Utilisez un <strong>graphique circulaire</strong>.<br>
-        </p>
-        """,
-        unsafe_allow_html=True)
-
-with st.expander("Mes données sont-elles stockées ?"):
+with col_left:
     st.markdown("""
-        <strong>Non</strong>, toutes les données que vous importez restent sur votre ordinateur.
-        """, unsafe_allow_html=True)
+    <div class="st2">
+        Frequently Asked ‎<span style="color:#a47cff;"><i>Questions</i></span>
+    </div>
+    <a href="/Offre" target="_self" class="neumo-btn1" style="margin-top: 0;">
+                Essayer gratuitement
+    </a>
+    """, unsafe_allow_html=True)
 
-with st.expander("Puis-je exporter mes résultats ?"):
-    st.markdown("""
-        <strong>Oui</strong>, nous avons plusieurs formats disponibles ; <strong>PNG, PDF, SVG</strong>.
-        """, unsafe_allow_html=True)
+with col_right:
+    with st.expander("Comment ça marche ?"):
+        st.markdown(
+            """
+            <p>
+                1. Importez votre fichier de données (CSV ou Excel).<br><br>
+                <img src="https://github.com/segurad308-jpg/images-tablora/blob/main/faq.webp?raw=true" class="faq-image">
+            </p>
+
+            <p>
+                2. Sélectionnez vos préférences.<br><br>
+                <img src="https://github.com/segurad308-jpg/images-tablora/blob/main/faq%202.webp?raw=true" class="faq-image">
+            </p>
+
+            <p>
+                3. Générez et téléchargez votre graphique.<br><br>
+                <img src="https://github.com/segurad308-jpg/images-tablora/blob/main/faq%203.webp?raw=true" class="faq-image">
+            </p>
+            """,
+            unsafe_allow_html=True) 
+        
+    with st.expander("Comment choisir mon graphique ?"):
+        st.markdown(
+            """
+            <p>
+                1. Vous voulez montrer une évolution ou une tendance dans le temps ? Utilisez un <strong>graphique en ligne</strong>.<br>
+            </p>
+            <p>
+                2. Vous souhaitez comparer des catégories entre elles ? Choisissez un <strong>graphique en barres</strong>.<br>
+            </p>
+            <p>
+                3. Vous cherchez à analyser la relation entre deux variables ? Le <strong>nuage de points</strong> est le plus adapté.<br>
+            </p>
+            <p>
+                4. Vous voulez visualiser la répartition d’un ensemble en pourcentages ? Utilisez un <strong>graphique circulaire</strong>.<br>
+            </p>
+            """,
+            unsafe_allow_html=True)
+
+    with st.expander("Mes données sont-elles stockées ?"):
+        st.markdown("""
+            <strong>Non</strong>, toutes les données que vous importez restent sur votre ordinateur.
+            """, unsafe_allow_html=True)
+
+    with st.expander("Puis-je exporter mes résultats ?"):
+        st.markdown("""
+            <strong>Oui</strong>, nous avons plusieurs formats disponibles ; <strong>PNG, PDF, SVG</strong>.
+            """, unsafe_allow_html=True)
 
 st.markdown(render_static_home2(), unsafe_allow_html=True)
 
