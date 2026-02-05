@@ -208,7 +208,7 @@ if trial_used:
 
 if not user_is_premium:
     st.markdown("""
-    <div class="pricing-wrapper">
+    <div class="pricing-wrapper" style="max-width: 1000px;">
         <div class="pricing-header">
             <div class="pricing-main-title">Choisissez votre plan</div>
             <p class="pricing-subtitle">

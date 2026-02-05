@@ -29,7 +29,7 @@ def cache_footer():
     </div>
 
     <div class="footer-bottom">
-        © 2025 Tablora — Tous droits réservés
+        © 2026 Tablora — Tous droits réservés
     </div>
     </div>
     """

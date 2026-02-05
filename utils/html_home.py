@@ -9,13 +9,13 @@ def render_static_home():
             <div class="hero-catch-mid">ㅤTablora pour Créer et Personnaliser Vos Graphiques  ㅤ</div>
             <div class="hero-catch-right">‎ ‎  🡪 ‎ ‎ </div>
         </a>
-        <div class="hero-title">Crée et Personnalise <u>tes Graphiques</u> <br>
-        Rapidement et Facilement</div>
-        <div class="hero-desc">
+        <h1 class="hero-title">Crée et Personnalise <u>tes Graphiques</u> <br>
+        Rapidement et Facilement</h1>
+        <h2 class="hero-desc">
             Vous êtes étudiant ou professionnel et vous avez régulièrement besoin de créer des graphiques <br>
                 mais vous trouvez ce processus long et complexe ?<br>
                 Grâce à Tablora, élaborez vos graphiques en seulement quelques clics
-        </div>
+        </h2>
         <div style="display: flex; gap: 20px; margin-top: 30px; margin-bottom: 20px;">
             <a href="/Offre" target="_self" class="neumo-btn1">
                 Essayer gratuitement
@@ -183,12 +183,98 @@ def render_static_home():
         <li>Haute qualité</li>
         <li>Support client</li>
     </ul>
-    </div>
-    </section>
-    <div style="display:flex; justify-content:center; margin-top:80px;">
+    <div style="display:flex; margin-top:40px;">
         <a href="/Offre" target="_self" class="neumo-btn2">
             Essayer gratuitement
         </a>
+    </div>
+    </div>
+    </section>
+
+    <div class="pricing-wrapper">
+    <div class="pricing-header">
+        <h1 class="pricing-main-title">Nos offres</h1>
+        <p class="pricing-subtitle">Choisissez ce qui vous correspond le mieux</p>
+    </div>
+
+    <div class="pricing-cards-container-inline">
+        
+    <!-- Starter Plan -->
+    <div class="pricing-card-inline">
+    <div class="pricing-card-price-section">
+        <span class="pricing-card-price">0 CHF</span>
+    </div>
+    
+    <h3 class="pricing-card-plan-name">Essai gratuit</h3>
+    <p class="pricing-card-description">Découvrez Tablora et créez vos premiers graphiques</p>
+    
+    <ul class="pricing-features-list">
+        <div class="pricing-feature-item">
+            <span class="pricing-feature-icon">✓</span>
+            <span>Types et thèmes limités</span>
+        </div>
+        <div class="pricing-feature-item">
+            <span class="pricing-feature-icon">✓</span>
+            <span>Exportation limitée</span>
+        </div>
+    </ul>
+    
+    <a href="/Offre" target="_self" class="pricing-cta-button">Essayer gratuitement</a>
+    </div>
+
+    <!-- Professional Plan (Premium) - LARGER -->
+    <div class="pricing-card-inline pricing-card-premium-inline">
+        <div class="pricing-card-badge-premium">Le plus populaire</div>
+    
+    <div class="pricing-card-price-section">
+        <span class="pricing-card-price">7 CHF</span>
+        <span class="pricing-card-period">/ mois</span>
+    </div>
+    
+    <h3 class="pricing-card-plan-name">Premium</h3>
+    <p class="pricing-card-description">Visualisez, créez et analysez au meilleur niveau</p>
+    
+    <div class="pricing-features-list">
+        <div class="pricing-feature-item">
+            <span class="pricing-feature-icon">✓</span>
+            <span>Création illimitée</span>
+        </div>
+        <div class="pricing-feature-item">
+            <span class="pricing-feature-icon">✓</span>
+            <span>Personnalisation avancée</span>
+        </div>
+        <div class="pricing-feature-item">
+            <span class="pricing-feature-icon">✓</span>
+            <span>Exportation avancée</span>
+        </div>
+    </div>
+    
+    <a href="/Offre" target="_self" class="pricing-cta-button">Voir l'offre Premium</a>
+    </div>
+
+    <!-- Company Plan -->
+    <div class="pricing-card-inline">
+    <div class="pricing-card-price-section">
+        <span class="pricing-card-price" style="font-size: 23px; font-weight: 700;">Nous contacter</span>
+    </div>
+    
+    <h3 class="pricing-card-plan-name">Devenir membre</h3>
+    <p class="pricing-card-description">Bénéficiez de tous les avantages premium et contribuez directement au développement de Tablora</p>
+    
+    <div class="pricing-features-list">
+        <div class="pricing-feature-item">
+            <span class="pricing-feature-icon">✓</span>
+            <span>Tous les avantages Premium</span>
+        </div>
+        <div class="pricing-feature-item">
+            <span class="pricing-feature-icon">✓</span>
+            <span>Contribution au développement</span>
+        </div>
+    </div>
+    
+    <a href="mailto:info.tablora@gmail.com" class="pricing-cta-button">Nous contacter</a>
+    </div>
+    </div>
     </div>
 
     <div class="neumo-card">
@@ -303,7 +389,7 @@ def render_static_home2():
 
     <div class="banner">
         <div class="banner-text">
-                Ne perdez plus jamais votre temps, soyez créatif dès aujourd'hui !<br>
+                Le meilleur moment pour se lancer était hier, le deuxième est aujourd'hui !<br>
         </div>
     </div>
 
