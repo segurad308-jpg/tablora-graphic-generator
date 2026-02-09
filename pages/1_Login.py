@@ -529,7 +529,14 @@ def logout():
     
     st.session_state.user = None
     st.session_state.token = None
-    controller.remove('username')
+    st.session_state.token_exchanged = False
+    st.session_state.oauth_state = None
+    controller.set(
+        "username", 
+        "", 
+        max_age=0,
+        path="/"
+    )
     
     st.session_state.logged_out_success = True
     st.rerun()
