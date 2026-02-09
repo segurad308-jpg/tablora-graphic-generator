@@ -531,10 +531,11 @@ def logout():
     st.session_state.token = None
     st.session_state.token_exchanged = False
     st.session_state.oauth_state = None
-    st.cache_data.clear()
+    st.session_state.clear()
     controller.remove("username")
     
     st.session_state.logged_out_success = True
+    time.sleep(0.2)
     st.rerun()
 
 # Show logout success message
