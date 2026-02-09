@@ -531,6 +531,7 @@ def logout():
     st.session_state.token = None
     st.session_state.token_exchanged = False
     st.session_state.oauth_state = None
+    st.cache_data.clear()
     controller.remove("username")
     
     st.session_state.logged_out_success = True
