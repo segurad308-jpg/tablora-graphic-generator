@@ -224,13 +224,16 @@ def create_or_update_profile(user_id, email, name, picture):
             "subscription_start": dt.datetime.utcnow().isoformat(),
             "subscription_end": (dt.datetime.utcnow() + dt.timedelta(days=14)).isoformat(),
         })
-    else:
+    elif "subscription_end" == None and "subscription_start" == None:
         data_payload.update({
             "is_premium": False,
             "subscription_start": dt.datetime.utcnow().isoformat(),
             "subscription_end": dt.datetime.utcnow().isoformat(),
         })
-
+    else:
+        data_payload.update({
+            "is_premium": False,
+        })
     try:
         # Utilise upsert en ciblant la colonne UNIQUE: 'user_id'
         res = supabase.table("profiles").upsert(
@@ -440,6 +443,16 @@ def fetch_token():
     params = dict(st.query_params)
     if "code" not in params:
         return
+    
+    if st.session_state.get("token_exchanged"):
+        st.query_params.clear()
+        return
+    
+    code = params["code"]
+    state_from_url = params.get("state")
+    
+    st.query_params.clear()
+    st.session_state.token_exchanged = True
 
     auth_response = f"{REDIRECT_URI}?{urlencode(params)}"
     oauth = OAuth2Session(CLIENT_ID, scope="openid email profile", redirect_uri=REDIRECT_URI,
@@ -447,7 +460,12 @@ def fetch_token():
 
     try:
         # 1) Token + User Google
-        token = oauth.fetch_token(TOKEN_URL, authorization_response=auth_response, client_secret=CLIENT_SECRET)
+        token = oauth.fetch_token(
+            TOKEN_URL,
+            code=code,
+            client_secret=CLIENT_SECRET,
+            include_client_id=True
+        )
         resp = oauth.get(USERINFO_URL)
         resp.raise_for_status()
         google_user = resp.json()
@@ -491,9 +509,11 @@ def fetch_token():
         controller.set("username", st.session_state.user)
 
         st.query_params.clear()
+        st.session_state.token_exchanged = False
         st.rerun()
 
     except Exception as e:
+        st.session_state.token_exchanged = False
         st.error(f"Erreur Google OAuth: {str(e)}")
 
 
