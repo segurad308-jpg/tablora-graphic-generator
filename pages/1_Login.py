@@ -23,9 +23,7 @@ st.set_page_config(
 
 # Cookie controller
 controller = CookieController()
-if "cookies_ready" not in st.session_state:
-    time.sleep(0.2)
-    st.session_state.cookies_ready = True
+time.sleep(0.2)
 raw = controller.get('username')
 user = raw if raw else None
 if raw:
@@ -463,7 +461,7 @@ def fetch_token():
         CLIENT_ID, 
         scope="openid email profile", 
         redirect_uri=REDIRECT_URI,
-        state=st.session_state.get("oauth_state")
+        state=state_from_url
     )
 
     try:
@@ -523,7 +521,6 @@ def fetch_token():
 
     except Exception as e:
         st.session_state.token_exchanged = False
-        st.query_params.clear()  # Clear on error too
         st.error(f"Erreur Google OAuth: {str(e)}")
 
 
