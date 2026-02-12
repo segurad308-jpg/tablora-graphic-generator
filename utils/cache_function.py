@@ -20,17 +20,17 @@ if env_path.exists():
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_SERVICE_KEY = os.getenv("SUPABASE_SERVICE_KEY")
 
-@st.cache_resource
+
 def get_supabase():
     return create_client(SUPABASE_URL, SUPABASE_SERVICE_KEY)
-
-supabase: Client = get_supabase()
 
 
 # Cache functions
 @st.cache_data(ttl=60)
 def get_cached_profile(user_id):
     try:
+        supabase = get_supabase()
+
         response = (
             supabase.table("profiles")
             .select("*")
