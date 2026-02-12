@@ -518,7 +518,7 @@ if st.session_state.get("logged_out_success"):
     del st.session_state.logged_out_success
 
 # Check OAuth callback
-if "code" in st.query_params and st.session_state.get("user") is None:
+if "code" in st.query_params:
     with st.spinner("Connexion en cours..."):
         fetch_token()
 
