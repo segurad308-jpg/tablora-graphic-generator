@@ -408,6 +408,8 @@ def create_login_form():
 
 def create_google_button():
     """Generate Google OAuth login button"""
+    if "code" in st.query_params:
+        return
     oauth = OAuth2Session(CLIENT_ID, scope="openid email profile", redirect_uri=REDIRECT_URI)
     uri, state = oauth.create_authorization_url(AUTH_URL, access_type="offline", prompt="select_account")
     st.session_state.oauth_state = state
@@ -461,7 +463,7 @@ def fetch_token():
         CLIENT_ID, 
         scope="openid email profile", 
         redirect_uri=REDIRECT_URI,
-        state=state_from_url
+        state=st.session_state.get("oauth_state")
     )
 
     try:
