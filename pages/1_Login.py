@@ -456,8 +456,8 @@ def fetch_token():
     code = params["code"]
     state_from_url = params.get("state")
 
-    st.write(f"State from URL: {state_from_url}")
-    st.write(f"State in session: {st.session_state.get('oauth_state')}")
+    print(f"State from URL: {state_from_url}")
+    print(f"State in session: {st.session_state.get('oauth_state')}")
 
     # Mark as being processed
     st.session_state.token_exchanged = True
@@ -469,7 +469,7 @@ def fetch_token():
         state=st.session_state.get("oauth_state")
     )
 
-    st.write("STEP 1")
+    print("STEP 1")
 
     try:
         # Exchange code for token
@@ -479,20 +479,20 @@ def fetch_token():
             client_secret=CLIENT_SECRET,
         )
 
-        st.write("STEP 2")
+        print("STEP 2")
         
         # Get user info
         resp = oauth.get(USERINFO_URL)
         resp.raise_for_status()
         google_user = resp.json()
 
-        st.write("STEP 3")
+        print("STEP 3")
 
         email = google_user["email"]
         name = google_user.get("name", email.split("@")[0])
         picture = google_user.get("picture", "")
 
-        st.write("STEP 4")
+        print("STEP 4")
 
         # Check if user exists in Supabase
         users = supabase.auth.admin.list_users()
@@ -501,7 +501,7 @@ def fetch_token():
             None
         )
 
-        st.write("STEP 5")
+        print("STEP 5")
 
         if existing_user:
             user_id = existing_user.id
@@ -515,12 +515,12 @@ def fetch_token():
             })
             user_id = signup.user.id
 
-        st.write("STEP 6")
+        print("STEP 6")
 
         # Create/update profile
         create_or_update_profile(user_id, email, name, picture)
 
-        st.write("STEP 7")
+        print("STEP 7")
 
 
         # Save to session + cookie
@@ -533,7 +533,7 @@ def fetch_token():
         st.session_state.user = user_info
         controller.set("username", st.session_state.user)
 
-        st.write("STEP 8")
+        print("STEP 8")
 
         # Clear query params and reset flag AFTER everything succeeds
         time.sleep(0.2)
