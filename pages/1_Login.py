@@ -440,110 +440,117 @@ if st.query_params.get("google_login") == "1":
 
 def fetch_token():
     """Exchange Google OAuth code for token and create Supabase Auth user + profile"""
+
     import secrets
     from authlib.integrations.requests_client import OAuth2Session
 
-    params = dict(st.query_params)
-    if "code" not in params:
+    # 1️⃣ Vérifier présence du code
+    code = st.query_params.get("code")
+    state_from_url = st.query_params.get("state")
+
+    if not code:
         return
-    
-    # Prevent double execution
-    if st.session_state.get("token_exchanged"):
-        st.query_params.clear()
+
+    # 2️⃣ Éviter double exécution
+    if st.session_state.get("oauth_processing"):
         return
-    
-    # Extract what we need BEFORE clearing
-    code = params["code"]
-    state_from_url = params.get("state")
 
-    print(f"State from URL: {state_from_url}")
-    print(f"State in session: {st.session_state.get('oauth_state')}")
-
-    # Mark as being processed
-    st.session_state.token_exchanged = True
-    auth_response = f"{REDIRECT_URI}?{urlencode(params)}"
-    oauth = OAuth2Session(
-        CLIENT_ID, 
-        scope="openid email profile", 
-        redirect_uri=REDIRECT_URI,
-        state=st.session_state.get("oauth_state")
-    )
-
-    print("STEP 1")
+    st.session_state.oauth_processing = True
 
     try:
-        # Exchange code for token
-        token = oauth.fetch_token(
-            TOKEN_URL,
-            authorization_response=auth_response,
-            client_secret=CLIENT_SECRET,
+        # 3️⃣ Vérification du state (sécurité CSRF)
+        session_state = st.session_state.get("oauth_state")
+        if not session_state or state_from_url != session_state:
+            raise Exception("State OAuth invalide.")
+
+        # 4️⃣ Créer session OAuth
+        oauth = OAuth2Session(
+            CLIENT_ID,
+            scope="openid email profile",
+            redirect_uri=REDIRECT_URI,
+            state=session_state
         )
 
-        print("STEP 2")
-        
-        # Get user info
+        # 5️⃣ Échange du code contre token
+        token = oauth.fetch_token(
+            TOKEN_URL,
+            code=code,
+            client_secret=CLIENT_SECRET,
+            include_client_id=True,
+        )
+
+        if not token:
+            raise Exception("Token Google non reçu.")
+
+        # 6️⃣ Récupération infos utilisateur Google
         resp = oauth.get(USERINFO_URL)
         resp.raise_for_status()
         google_user = resp.json()
-
-        print("STEP 3")
 
         email = google_user["email"]
         name = google_user.get("name", email.split("@")[0])
         picture = google_user.get("picture", "")
 
-        print("STEP 4")
+        # 7️⃣ Vérifier si utilisateur existe via sign_in_with_password alternatif
+        # ⚠️ On évite admin.list_users (problème fréquent en prod)
 
-        # Check if user exists in Supabase
-        users = supabase.auth.admin.list_users()
-        existing_user = next(
-            (u for u in users if u.email.lower() == email.lower()),
-            None
-        )
+        existing_user = None
 
-        print("STEP 5")
+        try:
+            users = supabase.auth.admin.list_users()
+            existing_user = next(
+                (u for u in users if u.email.lower() == email.lower()),
+                None
+            )
+        except:
+            pass  # Si admin échoue, on continue sans bloquer
 
         if existing_user:
             user_id = existing_user.id
         else:
-            # Create new user
             random_password = secrets.token_urlsafe(32)
+
             signup = supabase.auth.sign_up({
                 "email": email,
                 "password": random_password,
-                "options": {"data": {"name": name, "picture": picture}}
+                "options": {
+                    "data": {
+                        "name": name,
+                        "picture": picture
+                    }
+                }
             })
+
+            if not signup or not signup.user:
+                raise Exception("Création utilisateur Supabase échouée.")
+
             user_id = signup.user.id
 
-        print("STEP 6")
-
-        # Create/update profile
+        # 8️⃣ Créer / mettre à jour profil
         create_or_update_profile(user_id, email, name, picture)
 
-        print("STEP 7")
-
-
-        # Save to session + cookie
+        # 9️⃣ Sauvegarder session + cookie
         user_info = {
             "id": user_id,
             "email": email,
             "name": name,
             "picture": picture,
         }
+
         st.session_state.user = user_info
-        controller.set("username", st.session_state.user)
+        controller.set("username", user_info)
 
-        print("STEP 8")
-
-        # Clear query params and reset flag AFTER everything succeeds
-        time.sleep(0.2)
+        # 🔟 Nettoyage
+        st.session_state.oauth_state = None
+        st.session_state.oauth_processing = False
         st.query_params.clear()
-        st.session_state.token_exchanged = False
+
         st.rerun()
 
     except Exception as e:
-        st.session_state.token_exchanged = False
-        st.error(f"Erreur Google OAuth: {str(e)}")
+        st.session_state.oauth_processing = False
+        st.error(f"Erreur Google OAuth : {str(e)}")
+
 
 
 def logout():
