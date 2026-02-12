@@ -458,7 +458,7 @@ def fetch_token():
     
     # Mark as being processed
     st.session_state.token_exchanged = True
-
+    auth_response = f"{REDIRECT_URI}?{urlencode(params)}"
     oauth = OAuth2Session(
         CLIENT_ID, 
         scope="openid email profile", 
@@ -470,9 +470,8 @@ def fetch_token():
         # Exchange code for token
         token = oauth.fetch_token(
             TOKEN_URL,
-            code=code,
+            authorization_response=auth_response,
             client_secret=CLIENT_SECRET,
-            include_client_id=True
         )
         
         # Get user info
