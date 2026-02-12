@@ -516,6 +516,7 @@ def fetch_token():
         controller.set("username", st.session_state.user)
 
         # Clear query params and reset flag AFTER everything succeeds
+        time.sleep(0.2)
         st.query_params.clear()
         st.session_state.token_exchanged = False
         st.rerun()
