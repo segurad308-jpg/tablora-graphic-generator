@@ -84,7 +84,7 @@ if "pending_action" not in st.session_state:
     st.session_state.pending_action = None
 
 # Navbar
-login_status = "Logout" if user else "Login"
+login_status = "Profil" if user else "Login"
 st.markdown(f"""  
 <div class="topnav">
 <a href="/" target="_self" class="logo-image-graph logo-link">
@@ -95,7 +95,9 @@ st.markdown(f"""
             
 <a href="/Offre" target="_self">Offre</a>
 <a href="/Creer" target="_self">Créer</a>
-<a class="active" href="/Login" target="_self">{login_status}</a>
+<div class="nav-right">
+    <a class="active" href="/Login" target="_self">{login_status}</a>
+</div>
 </div>
 """, unsafe_allow_html=True)
 

@@ -26,7 +26,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from utils.load_css import load_css
 load_css("styles/style.css")
 
-login_status = "Logout" if user else "Login"
+login_status = "Profil" if user else "Login"
 st.markdown(f"""  
 <div class="topnav">
 <a href="/" target="_self" class="logo-image-graph logo-link">
@@ -37,8 +37,8 @@ st.markdown(f"""
             
 <a href="/Offre" target="_self">Offre</a>
 <a href="/Creer" target="_self">Créer</a>
-<a href="/Login" target="_self">{login_status}</a>
-<div class="cta-wrapper">
+<div class="nav-right">
+    <a href="/Login" target="_self">{login_status}</a>
     <a href="/Offre" target="_self" class="CTA-nav-btn">
         Créer maintenant  🡪
     </a>

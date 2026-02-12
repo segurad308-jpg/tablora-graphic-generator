@@ -1131,7 +1131,6 @@ div.stButton > button[kind="primary"]:hover {
     font-weight: 700 !important;
     color: #373736 !important;
     margin-bottom: 8px !important;
-    text-shadow: 1px 1px 2px #FFF;
 }
 
 .pricing-card-premium .pricing-card-plan-name {
@@ -1399,7 +1398,17 @@ div.stButton > button[kind="primary"]:hover {
     background-color: #e7e7e7;
     color: #222;
 }
-
+.nav-right {
+    margin-left: auto;
+    margin-right: 6px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transform: translateY(-8px);
+}
+.nav-right a {
+    transform: translateY(8px);
+}
 /* Page active → violet + creusé */
 .topnav a.active {
     background: #a47cff !important; /* violet doux */
@@ -1408,13 +1417,7 @@ div.stButton > button[kind="primary"]:hover {
         inset 2px 2px 4px #8c6de0,
         inset -2px -2px 4px #c7aaff !important;
 }
-.cta-wrapper {
-    margin-left: auto;
-    display: flex;
-    align-items: center;
-    margin-right: 15px;
-    align-self: center;
-}
+
 .CTA-nav-btn {
     text-decoration: none !important;
     background: #603CC9 !important;
