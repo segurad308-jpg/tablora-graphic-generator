@@ -9,10 +9,9 @@ from streamlit_cookies_controller import CookieController
 import json
 import datetime as dt
 import time
-import streamlit.components.v1 as components
-from utils.subscription import cgu_modal, is_unine_email, open_stripe_portal
+from utils.subscription import cgu_modal, get_profile, has_access, is_unine_email, open_stripe_portal
 from datetime import datetime, timedelta, timezone
-from utils.cache_function import get_cached_profile, get_supabase_anon, has_access_cached, get_supabase
+from utils.cache_function import get_cached_profile, has_access_cached, get_supabase
 from utils.cache_function import load_css
 
 st.set_page_config(
@@ -22,44 +21,15 @@ st.set_page_config(
     page_icon="https://github.com/segurad308-jpg/images-tablora/blob/main/logo.webp?raw=true"
 )
 
-st.write("Query params:", dict(st.query_params))
-st.write("Session state keys:", list(st.session_state.keys()))
-
 # Cookie controller
 controller = CookieController()
-if "cookies_loaded" not in st.session_state:
-    st.session_state.cookies_loaded = False
-raw = None
-try:
-    raw = controller.get("username")
-    if raw:
-        controller.set('username', raw)
-    st.session_state.cookies_loaded = True
-except:
-    pass
+if "cookies_ready" not in st.session_state:
+    time.sleep(0.2)
+    st.session_state.cookies_ready = True
+raw = controller.get('username')
 user = raw if raw else None
-if not st.session_state.cookies_loaded:
-    time.sleep(0.5)
-
-components.html("""
-<script>
-if (window.location.hash.includes("access_token")) {
-    const hash = window.location.hash.substring(1);
-    const params = new URLSearchParams(hash);
-
-    const access_token = params.get("access_token");
-    const refresh_token = params.get("refresh_token");
-
-    if (access_token) {
-        const newUrl = window.location.origin + window.location.pathname +
-            "?access_token=" + access_token +
-            "&refresh_token=" + refresh_token;
-
-        window.location.replace(newUrl);
-    }
-}
-</script>
-""", height=0)
+if raw:
+    controller.set('username', raw)
 
 load_css("styles/style.css")
 # Load .env
@@ -74,6 +44,8 @@ env_path = project_root / '.env'
 if env_path.exists():
     load_dotenv(env_path)
 
+# Supabase Configuration with SERVICE KEY
+supabase: Client = get_supabase()
 
 # OAuth Configuration
 CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
@@ -82,8 +54,7 @@ REDIRECT_URI = os.getenv("REDIRECT_URI", "https://tablora.ch/Login")
 
 AUTH_URL = "https://accounts.google.com/o/oauth2/auth"
 TOKEN_URL = "https://oauth2.googleapis.com/token"
-USERINFO_URL = "https://openidconnect.googleapis.com/v1/userinfo"
-SUPABASE_URL = "https://vpxutvtbzjetsjwmsjoa.supabase.co"
+USERINFO_URL = "https://www.googleapis.com/oauth2/v2/userinfo"
 
 user_is_premium = False
 trial_used = False
@@ -113,7 +84,7 @@ if "pending_action" not in st.session_state:
     st.session_state.pending_action = None
 
 # Navbar
-login_status = "Profil" if user else "Login"
+login_status = "Logout" if user else "Login"
 st.markdown(f"""  
 <div class="topnav">
 <a href="/" target="_self" class="logo-image-graph logo-link">
@@ -124,9 +95,7 @@ st.markdown(f"""
             
 <a href="/Offre" target="_self">Offre</a>
 <a href="/Creer" target="_self">Créer</a>
-<div class="nav-right">
-    <a class="active" href="/Login" target="_self">{login_status}</a>
-</div>
+<a class="active" href="/Login" target="_self">{login_status}</a>
 </div>
 """, unsafe_allow_html=True)
 
@@ -226,7 +195,6 @@ div.stButton > button[kind="primary"]:hover {
 modal_box = st.empty()
 
 if st.session_state.get("pending_action") in ("signup", "google") and not st.session_state.get("cgu_accepted", False):
-    st.write("STATE STORED:", st.session_state.get("oauth_state"))
     cgu_modal(modal_box)
 
 if st.session_state.get("cgu_accepted") and st.session_state.get("pending_action") == "google":
@@ -239,7 +207,6 @@ if st.session_state.get("cgu_accepted") and st.session_state.get("pending_action
         )
 
 def create_or_update_profile(user_id, email, name, picture):
-    supabase: Client = get_supabase()
     """Crée ou met à jour le profil utilisateur dans Supabase en utilisant upsert (clé de service)."""    
     # Prépare l'objet de données
     data_payload = {
@@ -300,7 +267,6 @@ def create_or_update_profile(user_id, email, name, picture):
 
 def signup_user(email, password, name):
     """Create new user with Supabase Auth"""
-    supabase: Client = get_supabase()
     try:
         # Sign up user
         response = supabase.auth.sign_up({
@@ -326,7 +292,6 @@ def signup_user(email, password, name):
 
 def login_user(email, password):
     """Login user with Supabase Auth and store in cookie"""
-    supabase: Client = get_supabase()
     try:
         response = supabase.auth.sign_in_with_password({
             "email": email,
@@ -442,30 +407,24 @@ def create_login_form():
         """, unsafe_allow_html=True)
 
 def create_google_button():
+    """Generate Google OAuth login button"""
+    oauth = OAuth2Session(CLIENT_ID, scope="openid email profile", redirect_uri=REDIRECT_URI)
+    uri, state = oauth.create_authorization_url(AUTH_URL, access_type="offline", prompt="select_account")
+    st.session_state.oauth_state = state
+    st.session_state.google_oauth_url = uri
 
-    redirect_url = "https://tablora.ch/Login"
-
-    oauth_url = (
-        f"{SUPABASE_URL}/auth/v1/authorize"
-        f"?provider=google"
-        f"&redirect_to={redirect_url}"
-    )
-
-    st.markdown(
-        f"""
-        <a href="{oauth_url}" style="text-decoration: none;">
-            <button class="login-google-btn">
-                Continuer avec Google
-            </button>
-        </a>
-        """,
-        unsafe_allow_html=True
-    )
-
+    st.markdown("""
+    <form method="get">
+        <button class="login-google-btn" name="google_login" value="1">
+            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg">
+            Continuer avec Google
+        </button>
+    </form>
+    """, unsafe_allow_html=True)
 
 if st.query_params.get("google_login") == "1":
     st.query_params.clear()
-    st.session_state.last_processed_code = None
+
     if not st.session_state.get("cgu_accepted", False):
         st.session_state.pending_action = "google"
         st.rerun()
@@ -476,73 +435,93 @@ if st.query_params.get("google_login") == "1":
                 f"<meta http-equiv='refresh' content='0; url={uri}'>",
                 unsafe_allow_html=True
             )
-def handle_supabase_oauth():
-    """Handle Supabase OAuth callback with PKCE flow"""
-    supabase: Client = get_supabase_anon()
-    # 1️⃣ Si Supabase renvoie une erreur
-    if "error" in st.query_params:
-        st.error(
-            f"Erreur d'authentification: {st.query_params.get('error_description', 'Erreur inconnue')}"
-        )
+
+def fetch_token():
+    """Exchange Google OAuth code for token and create Supabase Auth user + profile"""
+    import secrets
+    from urllib.parse import urlencode
+    from authlib.integrations.requests_client import OAuth2Session
+
+    params = dict(st.query_params)
+    if "code" not in params:
+        return
+    
+    if st.session_state.get("token_exchanged"):
         st.query_params.clear()
-        return False
+        return
+    
+    code = params["code"]
+    state_from_url = params.get("state")
+    
+    st.query_params.clear()
+    st.session_state.token_exchanged = True
 
-    # 2️⃣ 🔥 IMPORTANT : récupérer le code PKCE
-    if "code" in st.query_params:
-        try:
-            code = st.query_params["code"]
+    auth_response = f"{REDIRECT_URI}?{urlencode(params)}"
+    oauth = OAuth2Session(CLIENT_ID, scope="openid email profile", redirect_uri=REDIRECT_URI,
+                          state=st.session_state.get("oauth_state"))
 
-            # Échange le code contre une session
-            response = supabase.auth.exchange_code_for_session(
-                {"auth_code": code}
-            )
+    try:
+        # 1) Token + User Google
+        token = oauth.fetch_token(
+            TOKEN_URL,
+            code=code,
+            client_secret=CLIENT_SECRET,
+            include_client_id=True
+        )
+        resp = oauth.get(USERINFO_URL)
+        resp.raise_for_status()
+        google_user = resp.json()
 
-            if response.session and response.user:
+        email = google_user["email"]
+        name = google_user.get("name", email.split("@")[0])
+        picture = google_user.get("picture", "")
 
-                session = response.session
-                user = response.user
-                user_data = user.user_metadata or {}
+        # 2) CHECK USER IN SUPABASE AUTH (Admin API)
+        users = supabase.auth.admin.list_users()
 
-                user_info = {
-                    "id": user.id,
-                    "email": user.email,
-                    "name": user_data.get("full_name")
-                            or user_data.get("name")
-                            or user.email.split("@")[0],
-                    "picture": user_data.get("avatar_url")
-                            or user_data.get("picture")
-                            or f"https://ui-avatars.com/api/?name={user.email.split('@')[0]}&background=603CC9&color=fff"
-                }
+        existing_user = next(
+            (u for u in users if u.email.lower() == email.lower()),
+            None
+        )
 
-                # Crée / update profil
-                create_or_update_profile(
-                    user_info["id"],
-                    user_info["email"],
-                    user_info["name"],
-                    user_info["picture"]
-                )
+        if existing_user:
+            user_id = existing_user.id
+        else:
+            # User does NOT exist → create it
+            random_password = secrets.token_urlsafe(32)
+            signup = supabase.auth.sign_up({
+                "email": email,
+                "password": random_password,
+                "options": {"data": {"name": name, "picture": picture}}
+            })
+            user_id = signup.user.id
 
-                # Stockage session
-                st.session_state.user = user_info
-                st.session_state.token = session.access_token
+        # 3) CREATE OR UPDATE PROFILE
+        create_or_update_profile(user_id, email, name, picture)
 
-                controller.set("username", user_info)
+        # 4) SAVE TO SESSION + COOKIE
+        user_info = {
+            "id": user_id,
+            "email": email,
+            "name": name,
+            "picture": picture,
+        }
+        st.session_state.user = user_info
 
-                # Nettoyer l’URL
-                st.query_params.clear()
+        controller.set("username", st.session_state.user)
 
-                return True
+        st.query_params.clear()
+        st.session_state.token_exchanged = False
+        st.rerun()
 
-        except Exception as e:
-            st.error(f"Erreur échange OAuth: {str(e)}")
-            return False
+    except Exception as e:
+        st.session_state.token_exchanged = False
+        st.error(f"Erreur Google OAuth: {str(e)}")
 
-    return False
 
 
 def logout():
     """Logout and clear session"""
-    supabase: Client = get_supabase()
     try:
         supabase.auth.sign_out()
     except:
@@ -559,14 +538,15 @@ def logout():
     time.sleep(0.2)
     st.rerun()
 
-if handle_supabase_oauth():
-    st.success("Connexion réussie!")
-    st.rerun()
-    
 # Show logout success message
 if st.session_state.get("logged_out_success"):
     st.success("Vous avez été déconnecté avec succès.")
     del st.session_state.logged_out_success
+
+# Check OAuth callback
+if "code" in st.query_params and st.session_state.get("user") is None:
+    with st.spinner("Connexion en cours..."):
+        fetch_token()
 
 # Get current user
 user_session = st.session_state.get("user", None)
