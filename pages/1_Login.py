@@ -426,7 +426,13 @@ def create_google_button():
     redirect_url = "https://tablora.ch/Login"  # Where to redirect after auth
     
     # Supabase will handle the OAuth flow
-    oauth_url = f"{SUPABASE_URL}/auth/v1/authorize?provider=google&redirect_to={redirect_url}"
+    oauth_url = (
+    f"{SUPABASE_URL}/auth/v1/authorize"
+    f"?provider=google"
+    f"&redirect_to={redirect_url}"
+    f"&flow_type=pkce"
+)
+
     
     st.markdown(f"""
     <a href="{oauth_url}" style="text-decoration: none;">
@@ -451,70 +457,68 @@ if st.query_params.get("google_login") == "1":
                 unsafe_allow_html=True
             )
 def handle_supabase_oauth():
-    """Handle Supabase OAuth callback by extracting tokens from URL hash"""
-    
-    # JavaScript to extract tokens from URL hash and convert to query params
-    auth_component = st.markdown("""
-    <script>
-        const hash = window.location.hash.substring(1);
-        const params = new URLSearchParams(hash);
-        const accessToken = params.get('access_token');
-        const refreshToken = params.get('refresh_token');
-        
-        if (accessToken && refreshToken) {
-            // Redirect to same page with tokens in query params
-            const url = new URL(window.location.href);
-            url.hash = '';  // Clear hash
-            url.searchParams.set('access_token', accessToken);
-            url.searchParams.set('refresh_token', refreshToken);
-            window.location.href = url.toString();
-        }
-    </script>
-    """, unsafe_allow_html=True)
-    
-    # Now check if we have tokens in query params (after JavaScript redirect)
-    access_token = st.query_params.get("access_token")
-    refresh_token = st.query_params.get("refresh_token")
-    
-    if access_token and refresh_token:
+    """Handle Supabase OAuth callback with PKCE flow"""
+
+    # 1️⃣ Si Supabase renvoie une erreur
+    if "error" in st.query_params:
+        st.error(
+            f"Erreur d'authentification: {st.query_params.get('error_description', 'Erreur inconnue')}"
+        )
+        st.query_params.clear()
+        return False
+
+    # 2️⃣ 🔥 IMPORTANT : récupérer le code PKCE
+    if "code" in st.query_params:
         try:
-            # Set the session using the tokens
-            response = supabase.auth.set_session(access_token, refresh_token)
-            
-            if response and response.user:
-                user_data = response.user.user_metadata or {}
+            code = st.query_params["code"]
+
+            # Échange le code contre une session
+            response = supabase.auth.exchange_code_for_session(
+                {"auth_code": code}
+            )
+
+            if response.session and response.user:
+
+                session = response.session
+                user = response.user
+                user_data = user.user_metadata or {}
+
                 user_info = {
-                    "id": response.user.id,
-                    "email": response.user.email,
-                    "name": user_data.get("full_name") or user_data.get("name") or response.user.email.split("@")[0],
-                    "picture": user_data.get("avatar_url") or user_data.get("picture") or f"https://ui-avatars.com/api/?name={response.user.email.split('@')[0]}&background=603CC9&color=fff"
+                    "id": user.id,
+                    "email": user.email,
+                    "name": user_data.get("full_name")
+                            or user_data.get("name")
+                            or user.email.split("@")[0],
+                    "picture": user_data.get("avatar_url")
+                            or user_data.get("picture")
+                            or f"https://ui-avatars.com/api/?name={user.email.split('@')[0]}&background=603CC9&color=fff"
                 }
-                
-                # Create/update profile
+
+                # Crée / update profil
                 create_or_update_profile(
                     user_info["id"],
                     user_info["email"],
                     user_info["name"],
                     user_info["picture"]
                 )
-                
-                # Store in session and cookie
+
+                # Stockage session
                 st.session_state.user = user_info
-                st.session_state.token = access_token
-                
-                controller.set('username', user_info)
-                
-                # Clear tokens from URL for security
+                st.session_state.token = session.access_token
+
+                controller.set("username", user_info)
+
+                # Nettoyer l’URL
                 st.query_params.clear()
-                
+
                 return True
-                
+
         except Exception as e:
-            st.error(f"Erreur lors de la connexion OAuth: {str(e)}")
-            st.write("Debug - Error details:", str(e))
-            st.query_params.clear()
-    
+            st.error(f"Erreur échange OAuth: {str(e)}")
+            return False
+
     return False
+
 
 def logout():
     """Logout and clear session"""
