@@ -9,6 +9,7 @@ from streamlit_cookies_controller import CookieController
 import json
 import datetime as dt
 import time
+import streamlit.components.v1 as components
 from utils.subscription import cgu_modal, is_unine_email, open_stripe_portal
 from datetime import datetime, timedelta, timezone
 from utils.cache_function import get_cached_profile, get_supabase_anon, has_access_cached, get_supabase
@@ -40,6 +41,25 @@ user = raw if raw else None
 if not st.session_state.cookies_loaded:
     time.sleep(0.5)
 
+components.html("""
+<script>
+if (window.location.hash.includes("access_token")) {
+    const hash = window.location.hash.substring(1);
+    const params = new URLSearchParams(hash);
+
+    const access_token = params.get("access_token");
+    const refresh_token = params.get("refresh_token");
+
+    if (access_token) {
+        const newUrl = window.location.origin + window.location.pathname +
+            "?access_token=" + access_token +
+            "&refresh_token=" + refresh_token;
+
+        window.location.replace(newUrl);
+    }
+}
+</script>
+""", height=0)
 
 load_css("styles/style.css")
 # Load .env
@@ -422,24 +442,19 @@ def create_login_form():
         """, unsafe_allow_html=True)
 
 def create_google_button():
-    supabase = get_supabase_anon()
-    
+
     redirect_url = "https://tablora.ch/Login"
 
-    response = supabase.auth.sign_in_with_oauth({
-        "provider": "google",
-        "options": {
-            "redirect_to": redirect_url
-        }
-    })
-
-    oauth_url = response.url
+    oauth_url = (
+        f"{SUPABASE_URL}/auth/v1/authorize"
+        f"?provider=google"
+        f"&redirect_to={redirect_url}"
+    )
 
     st.markdown(
         f"""
         <a href="{oauth_url}" style="text-decoration: none;">
             <button class="login-google-btn">
-                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg">
                 Continuer avec Google
             </button>
         </a>
