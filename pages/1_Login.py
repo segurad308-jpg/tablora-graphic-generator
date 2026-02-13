@@ -438,7 +438,7 @@ def create_google_button():
 
 if st.query_params.get("google_login") == "1":
     st.query_params.clear()
-
+    st.session_state.token_exchanged = False
     if not st.session_state.get("cgu_accepted", False):
         st.session_state.pending_action = "google"
         st.rerun()
@@ -559,9 +559,11 @@ def logout():
     st.rerun()
 
 # Check OAuth callback
-if "code" in st.query_params and st.session_state.get("user") is None:
+if "code" in st.query_params:
+    st.write("✅ DEBUG 2 - CODE DETECTED! Entering OAuth flow")
     with st.spinner("Connexion en cours..."):
         fetch_token()
+    st.stop()
 
 # Show logout success message
 if st.session_state.get("logged_out_success"):
