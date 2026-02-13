@@ -66,6 +66,126 @@ AUTH_URL = "https://accounts.google.com/o/oauth2/auth"
 TOKEN_URL = "https://oauth2.googleapis.com/token"
 USERINFO_URL = "https://www.googleapis.com/oauth2/v2/userinfo"
 
+def fetch_token():
+    """Exchange Google OAuth code for token and create Supabase Auth user + profile"""
+    import secrets
+    from urllib.parse import urlencode
+    from authlib.integrations.requests_client import OAuth2Session
+
+    st.write("🔍 DEBUG 6 - Inside fetch_token()")
+    
+    params = dict(st.query_params)
+    st.write("🔍 DEBUG 7 - Params:", params)
+    
+    if "code" not in params:
+        st.write("❌ DEBUG 8 - No code in params, returning")
+        return
+
+    st.write("✅ DEBUG 10 - Proceeding with token exchange")
+    
+    code = params["code"]
+    state_from_url = params.get("state")
+
+    if st.session_state.get("last_processed_code") == code:
+        st.write("⚠️ Code already processed, skipping")
+        st.query_params.clear()
+        return
+    st.session_state.last_processed_code = code
+
+    auth_response = f"{REDIRECT_URI}?{urlencode(params)}"
+    oauth = OAuth2Session(CLIENT_ID, scope="openid email profile", redirect_uri=REDIRECT_URI,
+                          state=st.session_state.get("oauth_state"))
+
+    try:
+        st.write("🔍 DEBUG 11 - Fetching token from Google...")
+        
+        # 1) Token + User Google
+        token = oauth.fetch_token(
+            TOKEN_URL,
+            code=code,
+            client_secret=CLIENT_SECRET,
+            include_client_id=True
+        )
+
+        st.query_params.clear()
+        
+        st.write("✅ DEBUG 12 - Token received:", bool(token))
+        
+        resp = oauth.get(USERINFO_URL)
+        resp.raise_for_status()
+        google_user = resp.json()
+        
+        st.write("✅ DEBUG 13 - Google user info:", google_user.get("email"))
+
+        email = google_user["email"]
+        name = google_user.get("name", email.split("@")[0])
+        picture = google_user.get("picture", "")
+
+        # 2) CHECK USER IN SUPABASE AUTH (Admin API)
+        st.write("🔍 DEBUG 14 - Getting Supabase client...")
+        supabase_client = get_supabase() 
+        
+        st.write("🔍 DEBUG 15 - Checking existing users...")
+        users = supabase_client.auth.admin.list_users()
+
+        existing_user = next(
+            (u for u in users if u.email.lower() == email.lower()),
+            None
+        )
+
+        if existing_user:
+            st.write("✅ DEBUG 16 - Existing user found:", existing_user.id)
+            user_id = existing_user.id
+        else:
+            st.write("🔍 DEBUG 17 - Creating new user...")
+            # User does NOT exist → create it
+            random_password = secrets.token_urlsafe(32)
+            signup = supabase_client.auth.sign_up({
+                "email": email,
+                "password": random_password,
+                "options": {"data": {"name": name, "picture": picture}}
+            })
+            user_id = signup.user.id
+            st.write("✅ DEBUG 18 - New user created:", user_id)
+
+        # 3) CREATE OR UPDATE PROFILE
+        st.write("🔍 DEBUG 19 - Creating/updating profile...")
+        create_or_update_profile(user_id, email, name, picture)
+        st.write("✅ DEBUG 20 - Profile updated")
+
+        # 4) SAVE TO SESSION + COOKIE
+        user_info = {
+            "id": user_id,
+            "email": email,
+            "name": name,
+            "picture": picture,
+        }
+        st.session_state.user = user_info
+        st.write("✅ DEBUG 21 - User saved to session:", user_info.get("email"))
+
+        controller = CookieController()
+        controller.set("username", st.session_state.user)
+        st.write("✅ DEBUG 22 - Cookie set")
+
+        st.write("🔍 DEBUG 23 - About to rerun...")
+        time.sleep(0.2)
+        st.rerun()
+
+    except Exception as e:
+        st.query_params.clear()
+        st.error(f"❌ DEBUG 24 - ERROR: {str(e)}")
+        st.write("Debug info:", {
+            "error": str(e),
+            "params": params,
+            "has_code": "code" in params
+        })
+
+if "code" in st.query_params:
+    st.write("✅ DEBUG 2 - CODE DETECTED! Entering OAuth flow")
+    with st.spinner("Connexion en cours..."):
+        fetch_token()
+    st.stop()
+
 user_is_premium = False
 trial_used = False
 profile = None
@@ -450,118 +570,6 @@ if st.query_params.get("google_login") == "1":
                 unsafe_allow_html=True
             )
 
-def fetch_token():
-    """Exchange Google OAuth code for token and create Supabase Auth user + profile"""
-    import secrets
-    from urllib.parse import urlencode
-    from authlib.integrations.requests_client import OAuth2Session
-
-    st.write("🔍 DEBUG 6 - Inside fetch_token()")
-    
-    params = dict(st.query_params)
-    st.write("🔍 DEBUG 7 - Params:", params)
-    
-    if "code" not in params:
-        st.write("❌ DEBUG 8 - No code in params, returning")
-        return
-
-    st.write("✅ DEBUG 10 - Proceeding with token exchange")
-    
-    code = params["code"]
-    state_from_url = params.get("state")
-
-    if st.session_state.get("last_processed_code") == code:
-        st.write("⚠️ Code already processed, skipping")
-        st.query_params.clear()
-        return
-    st.session_state.last_processed_code = code
-    
-    auth_response = f"{REDIRECT_URI}?{urlencode(params)}"
-    oauth = OAuth2Session(CLIENT_ID, scope="openid email profile", redirect_uri=REDIRECT_URI,
-                          state=st.session_state.get("oauth_state"))
-
-    try:
-        st.write("🔍 DEBUG 11 - Fetching token from Google...")
-        
-        # 1) Token + User Google
-        token = oauth.fetch_token(
-            TOKEN_URL,
-            code=code,
-            client_secret=CLIENT_SECRET,
-            include_client_id=True
-        )
-        
-        st.write("✅ DEBUG 12 - Token received:", bool(token))
-        
-        resp = oauth.get(USERINFO_URL)
-        resp.raise_for_status()
-        google_user = resp.json()
-        
-        st.write("✅ DEBUG 13 - Google user info:", google_user.get("email"))
-
-        email = google_user["email"]
-        name = google_user.get("name", email.split("@")[0])
-        picture = google_user.get("picture", "")
-
-        # 2) CHECK USER IN SUPABASE AUTH (Admin API)
-        st.write("🔍 DEBUG 14 - Getting Supabase client...")
-        supabase_client = get_supabase() 
-        
-        st.write("🔍 DEBUG 15 - Checking existing users...")
-        users = supabase_client.auth.admin.list_users()
-
-        existing_user = next(
-            (u for u in users if u.email.lower() == email.lower()),
-            None
-        )
-
-        if existing_user:
-            st.write("✅ DEBUG 16 - Existing user found:", existing_user.id)
-            user_id = existing_user.id
-        else:
-            st.write("🔍 DEBUG 17 - Creating new user...")
-            # User does NOT exist → create it
-            random_password = secrets.token_urlsafe(32)
-            signup = supabase_client.auth.sign_up({
-                "email": email,
-                "password": random_password,
-                "options": {"data": {"name": name, "picture": picture}}
-            })
-            user_id = signup.user.id
-            st.write("✅ DEBUG 18 - New user created:", user_id)
-
-        # 3) CREATE OR UPDATE PROFILE
-        st.write("🔍 DEBUG 19 - Creating/updating profile...")
-        create_or_update_profile(user_id, email, name, picture)
-        st.write("✅ DEBUG 20 - Profile updated")
-
-        # 4) SAVE TO SESSION + COOKIE
-        user_info = {
-            "id": user_id,
-            "email": email,
-            "name": name,
-            "picture": picture,
-        }
-        st.session_state.user = user_info
-        st.write("✅ DEBUG 21 - User saved to session:", user_info.get("email"))
-
-        controller = CookieController()
-        controller.set("username", st.session_state.user)
-        st.write("✅ DEBUG 22 - Cookie set")
-
-        st.query_params.clear()
-        st.write("🔍 DEBUG 23 - About to rerun...")
-        time.sleep(0.2)
-        st.rerun()
-
-    except Exception as e:
-        st.error(f"❌ DEBUG 24 - ERROR: {str(e)}")
-        st.write("Debug info:", {
-            "error": str(e),
-            "params": params,
-            "has_code": "code" in params
-        })
-
 def logout():
     """Logout and clear session"""
     try:
@@ -579,13 +587,6 @@ def logout():
     st.session_state.logged_out_success = True
     time.sleep(0.2)
     st.rerun()
-
-# Check OAuth callback
-if "code" in st.query_params:
-    st.write("✅ DEBUG 2 - CODE DETECTED! Entering OAuth flow")
-    with st.spinner("Connexion en cours..."):
-        fetch_token()
-    st.stop()
 
 # Show logout success message
 if st.session_state.get("logged_out_success"):
