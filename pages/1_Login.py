@@ -419,31 +419,29 @@ def create_login_form():
         """, unsafe_allow_html=True)
 
 def create_google_button():
-    if "google_oauth_url" not in st.session_state:
-        oauth = OAuth2Session(
-            CLIENT_ID,
-            scope="openid email profile",
-            redirect_uri=REDIRECT_URI
-        )
-        uri, state = oauth.create_authorization_url(
-            AUTH_URL,
-            access_type="offline",
-            prompt="select_account"
-        )
-        st.session_state.oauth_state = state
-        st.session_state.google_oauth_url = uri
-
-    st.markdown(
-        f"""
-        <a href="{st.session_state.google_oauth_url}">
-            <button class="login-google-btn">
-                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg">
-                Continuer avec Google
-            </button>
-        </a>
-        """,
-        unsafe_allow_html=True
+    # ✅ Always create new OAuth session when button is shown
+    oauth = OAuth2Session(
+        CLIENT_ID,
+        scope="openid email profile",
+        redirect_uri=REDIRECT_URI
     )
+    uri, state = oauth.create_authorization_url(
+        AUTH_URL,
+        access_type="offline",
+        prompt="select_account"
+    )
+    # ✅ Store both in session state
+    st.session_state.oauth_state = state
+    st.session_state.google_oauth_url = uri
+
+    st.markdown("""
+    <form method="get">
+        <button class="login-google-btn" name="google_login" value="1">
+            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg">
+            Continuer avec Google
+        </button>
+    </form>
+    """, unsafe_allow_html=True)
 
 if st.query_params.get("google_login") == "1":
     st.query_params.clear()
@@ -648,7 +646,8 @@ if current_user:
 
 else:
     create_login_form()
-    create_google_button()
+    if "code" not in st.query_params:
+        create_google_button()
 
 st.markdown("""
 <div class="footer">

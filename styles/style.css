@@ -885,13 +885,13 @@ div[data-testid="stExpanderDetails"] {
     display: block;
     width: 100%;
     margin-top: 8px;
-
+    text-decoration: none !important;
     background: #ECF0F3;
     border-radius: 14px;
 
     padding: 12px 18px;
     text-align: center;
-    color: #444;
+    color: #444 !important;
     font-weight: 600;
 
     box-shadow:
@@ -910,7 +910,7 @@ div[data-testid="stExpanderDetails"] {
 .login-google-btn img {
         width: 18px;
         height: 18px;
-    }
+}
 /* USER CARD (when logged in) */
 .login-user-card {
     background: #ECF0F3;
