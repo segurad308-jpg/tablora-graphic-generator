@@ -211,7 +211,6 @@ if st.session_state.get("pending_action") in ("signup", "google") and not st.ses
 
 if st.session_state.get("cgu_accepted") and st.session_state.get("pending_action") == "google":
     st.session_state.pending_action = None
-    st.session_state.token_exchanged = False
     uri = st.session_state.get("google_oauth_url")
     if uri:
         st.markdown(
@@ -439,7 +438,6 @@ def create_google_button():
 
 if st.query_params.get("google_login") == "1":
     st.query_params.clear()
-    st.session_state.token_exchanged = False
 
     if not st.session_state.get("cgu_accepted", False):
         st.session_state.pending_action = "google"
@@ -467,17 +465,10 @@ def fetch_token():
         st.write("❌ DEBUG 8 - No code in params, returning")
         return
 
-    if st.session_state.get("token_exchanged"):
-        st.write("❌ DEBUG 9 - token_exchanged is True, clearing and returning")
-        st.query_params.clear()
-        return
-
     st.write("✅ DEBUG 10 - Proceeding with token exchange")
     
     code = params["code"]
     state_from_url = params.get("state")
-
-    st.session_state.token_exchanged = True
 
     auth_response = f"{REDIRECT_URI}?{urlencode(params)}"
     oauth = OAuth2Session(CLIENT_ID, scope="openid email profile", redirect_uri=REDIRECT_URI,
@@ -553,13 +544,11 @@ def fetch_token():
         st.write("✅ DEBUG 22 - Cookie set")
 
         st.query_params.clear()
-        st.session_state.token_exchanged = False
         st.write("🔍 DEBUG 23 - About to rerun...")
         time.sleep(0.2)
         st.rerun()
 
     except Exception as e:
-        st.session_state.token_exchanged = False
         st.error(f"❌ DEBUG 24 - ERROR: {str(e)}")
         st.write("Debug info:", {
             "error": str(e),
