@@ -422,26 +422,31 @@ def create_login_form():
         """, unsafe_allow_html=True)
 
 def create_google_button():
-    """Generate Google OAuth login button using Supabase"""
-    # Get the Supabase OAuth URL
-    redirect_url = "https://tablora.ch/Login"  # Where to redirect after auth
+    supabase = get_supabase_anon()
     
-    # Supabase will handle the OAuth flow
-    oauth_url = (
-        f"{SUPABASE_URL}/auth/v1/authorize"
-        f"?provider=google"
-        f"&redirect_to={redirect_url}"
-        f"&flow_type=pkce"
+    redirect_url = "https://tablora.ch/Login"
+
+    response = supabase.auth.sign_in_with_oauth({
+        "provider": "google",
+        "options": {
+            "redirect_to": redirect_url
+        }
+    })
+
+    oauth_url = response.url
+
+    st.markdown(
+        f"""
+        <a href="{oauth_url}" style="text-decoration: none;">
+            <button class="login-google-btn">
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg">
+                Continuer avec Google
+            </button>
+        </a>
+        """,
+        unsafe_allow_html=True
     )
- 
-    st.markdown(f"""
-    <a href="{oauth_url}" style="text-decoration: none;">
-        <button class="login-google-btn">
-            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg">
-            Continuer avec Google
-        </button>
-    </a>
-    """, unsafe_allow_html=True)
+
 
 if st.query_params.get("google_login") == "1":
     st.query_params.clear()
