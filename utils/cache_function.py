@@ -19,11 +19,13 @@ if env_path.exists():
 
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_SERVICE_KEY = os.getenv("SUPABASE_SERVICE_KEY")
-
+SUPABASE_ANON_KEY = os.getenv("SUPABASE_ANON_KEY")
 
 def get_supabase():
     return create_client(SUPABASE_URL, SUPABASE_SERVICE_KEY)
 
+def get_supabase_anon():
+    return create_client(SUPABASE_URL, SUPABASE_ANON_KEY)
 
 # Cache functions
 @st.cache_data(ttl=60)

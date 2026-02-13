@@ -11,7 +11,7 @@ import datetime as dt
 import time
 from utils.subscription import cgu_modal, is_unine_email, open_stripe_portal
 from datetime import datetime, timedelta, timezone
-from utils.cache_function import get_cached_profile, has_access_cached, get_supabase
+from utils.cache_function import get_cached_profile, get_supabase_anon, has_access_cached, get_supabase
 from utils.cache_function import load_css
 
 st.set_page_config(
@@ -54,8 +54,6 @@ env_path = project_root / '.env'
 if env_path.exists():
     load_dotenv(env_path)
 
-# Supabase Configuration with SERVICE KEY
-supabase: Client = get_supabase()
 
 # OAuth Configuration
 CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
@@ -221,6 +219,7 @@ if st.session_state.get("cgu_accepted") and st.session_state.get("pending_action
         )
 
 def create_or_update_profile(user_id, email, name, picture):
+    supabase: Client = get_supabase()
     """Crée ou met à jour le profil utilisateur dans Supabase en utilisant upsert (clé de service)."""    
     # Prépare l'objet de données
     data_payload = {
@@ -281,6 +280,7 @@ def create_or_update_profile(user_id, email, name, picture):
 
 def signup_user(email, password, name):
     """Create new user with Supabase Auth"""
+    supabase: Client = get_supabase()
     try:
         # Sign up user
         response = supabase.auth.sign_up({
@@ -306,6 +306,7 @@ def signup_user(email, password, name):
 
 def login_user(email, password):
     """Login user with Supabase Auth and store in cookie"""
+    supabase: Client = get_supabase()
     try:
         response = supabase.auth.sign_in_with_password({
             "email": email,
@@ -427,13 +428,12 @@ def create_google_button():
     
     # Supabase will handle the OAuth flow
     oauth_url = (
-    f"{SUPABASE_URL}/auth/v1/authorize"
-    f"?provider=google"
-    f"&redirect_to={redirect_url}"
-    f"&flow_type=pkce"
-)
-
-    
+        f"{SUPABASE_URL}/auth/v1/authorize"
+        f"?provider=google"
+        f"&redirect_to={redirect_url}"
+        f"&flow_type=pkce"
+    )
+ 
     st.markdown(f"""
     <a href="{oauth_url}" style="text-decoration: none;">
         <button class="login-google-btn">
@@ -458,7 +458,7 @@ if st.query_params.get("google_login") == "1":
             )
 def handle_supabase_oauth():
     """Handle Supabase OAuth callback with PKCE flow"""
-
+    supabase: Client = get_supabase_anon()
     # 1️⃣ Si Supabase renvoie une erreur
     if "error" in st.query_params:
         st.error(
@@ -522,6 +522,7 @@ def handle_supabase_oauth():
 
 def logout():
     """Logout and clear session"""
+    supabase: Client = get_supabase()
     try:
         supabase.auth.sign_out()
     except:
