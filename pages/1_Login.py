@@ -463,6 +463,10 @@ def fetch_token():
     if "code" not in st.query_params:
         return
 
+    st.write("SESSION ID:", id(st.session_state))
+    st.write("STATE STORED:", st.session_state.get("oauth_state"))
+    st.write("STATE RETURNED:", st.query_params.get("state"))
+
     # 🔒 Empêcher double exécution
     if st.session_state.get("token_exchanged"):
         return
