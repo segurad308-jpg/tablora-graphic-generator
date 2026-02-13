@@ -64,79 +64,7 @@ REDIRECT_URI = os.getenv("REDIRECT_URI", "https://tablora.ch/Login")
 
 AUTH_URL = "https://accounts.google.com/o/oauth2/auth"
 TOKEN_URL = "https://oauth2.googleapis.com/token"
-USERINFO_URL = "https://www.googleapis.com/oauth2/v2/userinfo"
-
-def fetch_token():
-    """Exchange Google OAuth code for token and create Supabase Auth user + profile"""
-    import secrets
-    from urllib.parse import urlencode
-    from authlib.integrations.requests_client import OAuth2Session
-
-    params = dict(st.query_params)
-    if "code" not in params:
-        return
-
-    auth_response = f"{REDIRECT_URI}?{urlencode(params)}"
-    oauth = OAuth2Session(CLIENT_ID, scope="openid email profile", redirect_uri=REDIRECT_URI,
-                          state=st.session_state.get("oauth_state"))
-
-    try:
-        # 1) Token + User Google
-        token = oauth.fetch_token(TOKEN_URL, authorization_response=auth_response, client_secret=CLIENT_SECRET)
-        resp = oauth.get(USERINFO_URL)
-        resp.raise_for_status()
-        google_user = resp.json()
-
-        email = google_user["email"]
-        name = google_user.get("name", email.split("@")[0])
-        picture = google_user.get("picture", "")
-
-        # 2) CHECK USER IN SUPABASE AUTH (Admin API)
-        users = supabase.auth.admin.list_users()
-
-        existing_user = next(
-            (u for u in users if u.email.lower() == email.lower()),
-            None
-        )
-
-        if existing_user:
-            user_id = existing_user.id
-        else:
-            # User does NOT exist → create it
-            random_password = secrets.token_urlsafe(32)
-            signup = supabase.auth.sign_up({
-                "email": email,
-                "password": random_password,
-                "options": {"data": {"name": name, "picture": picture}}
-            })
-            user_id = signup.user.id
-
-        # 3) CREATE OR UPDATE PROFILE
-        create_or_update_profile(user_id, email, name, picture)
-
-        # 4) SAVE TO SESSION + COOKIE
-        user_info = {
-            "id": user_id,
-            "email": email,
-            "name": name,
-            "picture": picture,
-        }
-        st.session_state.user = user_info
-
-        controller.set("username", st.session_state.user)
-
-        st.query_params.clear()
-        st.rerun()
-
-    except Exception as e:
-        st.error(f"Erreur Google OAuth: {str(e)}")
-
-
-if "code" in st.query_params:
-    st.write("✅ DEBUG 2 - CODE DETECTED! Entering OAuth flow")
-    with st.spinner("Connexion en cours..."):
-        fetch_token()
-    st.stop()
+USERINFO_URL = "https://openidconnect.googleapis.com/v1/userinfo"
 
 user_is_premium = False
 trial_used = False
@@ -491,13 +419,19 @@ def create_login_form():
         """, unsafe_allow_html=True)
 
 def create_google_button():
-    """Generate Google OAuth login button"""
-    if "code" in st.query_params:
-        return
-    oauth = OAuth2Session(CLIENT_ID, scope="openid email profile", redirect_uri=REDIRECT_URI)
-    uri, state = oauth.create_authorization_url(AUTH_URL, access_type="offline", prompt="select_account")
-    st.session_state.oauth_state = state
-    st.session_state.google_oauth_url = uri
+    if "google_oauth_url" not in st.session_state:
+        oauth = OAuth2Session(
+            CLIENT_ID,
+            scope="openid email profile",
+            redirect_uri=REDIRECT_URI
+        )
+        uri, state = oauth.create_authorization_url(
+            AUTH_URL,
+            access_type="offline",
+            prompt="select_account"
+        )
+        st.session_state.oauth_state = state
+        st.session_state.google_oauth_url = uri
 
     st.markdown("""
     <form method="get">
@@ -521,6 +455,87 @@ if st.query_params.get("google_login") == "1":
                 f"<meta http-equiv='refresh' content='0; url={uri}'>",
                 unsafe_allow_html=True
             )
+def fetch_token():
+    import secrets
+    from urllib.parse import urlencode
+    from authlib.integrations.requests_client import OAuth2Session
+
+    if "code" not in st.query_params:
+        return
+
+    # 🔒 Empêcher double exécution
+    if st.session_state.get("token_exchanged"):
+        return
+    st.session_state.token_exchanged = True
+
+    code = st.query_params.get("code")
+    state = st.query_params.get("state")
+
+    # 🔎 Vérification manuelle du state
+    if state != st.session_state.get("oauth_state"):
+        st.error("State mismatch")
+        st.query_params.clear()
+        return
+
+    oauth = OAuth2Session(
+        CLIENT_ID,
+        redirect_uri=REDIRECT_URI
+    )
+
+    try:
+        token = oauth.fetch_token(
+            TOKEN_URL,
+            code=code,
+            client_secret=CLIENT_SECRET,
+            include_client_id=True
+        )
+
+        resp = oauth.get(USERINFO_URL)
+        google_user = resp.json()
+
+        email = google_user["email"]
+        name = google_user.get("name", email.split("@")[0])
+        picture = google_user.get("picture", "")
+
+        # 2) CHECK USER IN SUPABASE AUTH (Admin API)
+        users = supabase.auth.admin.list_users()
+
+        existing_user = next(
+            (u for u in users if u.email.lower() == email.lower()),
+            None
+        )
+
+        if existing_user:
+            user_id = existing_user.id
+        else:
+            # User does NOT exist → create it
+            random_password = secrets.token_urlsafe(32)
+            signup = supabase.auth.sign_up({
+                "email": email,
+                "password": random_password,
+                "options": {"data": {"name": name, "picture": picture}}
+            })
+            user_id = signup.user.id
+
+        # 3) CREATE OR UPDATE PROFILE
+        create_or_update_profile(user_id, email, name, picture)
+
+        # 4) SAVE TO SESSION + COOKIE
+        user_info = {
+            "id": user_id,
+            "email": email,
+            "name": name,
+            "picture": picture,
+        }
+        st.session_state.user = user_info
+
+        controller.set("username", st.session_state.user)
+
+        st.query_params.clear()
+        st.rerun()
+
+    except Exception as e:
+        st.error(f"Erreur Google OAuth: {str(e)}")
 
 def logout():
     """Logout and clear session"""
@@ -540,6 +555,12 @@ def logout():
     time.sleep(0.2)
     st.rerun()
 
+if "code" in st.query_params:
+    st.write("✅ DEBUG 2 - CODE DETECTED! Entering OAuth flow")
+    with st.spinner("Connexion en cours..."):
+        fetch_token()
+    st.stop()
+    
 # Show logout success message
 if st.session_state.get("logged_out_success"):
     st.success("Vous avez été déconnecté avec succès.")
