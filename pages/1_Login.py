@@ -20,8 +20,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed", 
     page_icon="https://github.com/segurad308-jpg/images-tablora/blob/main/logo.webp?raw=true"
 )
-st.write("Query params:", dict(st.query_params))
-st.write("Session state keys:", list(st.session_state.keys()))
+
 # Cookie controller
 controller = CookieController()
 if "cookies_loaded" not in st.session_state:
