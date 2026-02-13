@@ -66,36 +66,23 @@ AUTH_URL = "https://accounts.google.com/o/oauth2/auth"
 TOKEN_URL = "https://oauth2.googleapis.com/token"
 USERINFO_URL = "https://www.googleapis.com/oauth2/v2/userinfo"
 
-if "oauth_done" not in st.session_state:
-    st.session_state.oauth_done = False
-
 def fetch_token():
+    """Exchange Google OAuth code for token and create Supabase Auth user + profile"""
+    import secrets
+    from urllib.parse import urlencode
     from authlib.integrations.requests_client import OAuth2Session
 
-    if "code" not in st.query_params:
+    params = dict(st.query_params)
+    if "code" not in params:
         return
 
-    if st.session_state.get("oauth_done"):
-        return
+    auth_response = f"{REDIRECT_URI}?{urlencode(params)}"
+    oauth = OAuth2Session(CLIENT_ID, scope="openid email profile", redirect_uri=REDIRECT_URI,
+                          state=st.session_state.get("oauth_state"))
 
     try:
-        # Rebuild full URL EXACTLY as Google returned it
-        full_url = st.request.url
-
-        oauth = OAuth2Session(
-            CLIENT_ID,
-            redirect_uri=REDIRECT_URI
-        )
-
-        token = oauth.fetch_token(
-            TOKEN_URL,
-            authorization_response=full_url,
-            client_secret=CLIENT_SECRET
-        )
-
-        st.session_state.oauth_done = True
-        st.query_params.clear()
-
+        # 1) Token + User Google
+        token = oauth.fetch_token(TOKEN_URL, authorization_response=auth_response, client_secret=CLIENT_SECRET)
         resp = oauth.get(USERINFO_URL)
         resp.raise_for_status()
         google_user = resp.json()
@@ -104,9 +91,9 @@ def fetch_token():
         name = google_user.get("name", email.split("@")[0])
         picture = google_user.get("picture", "")
 
-        supabase_client = get_supabase()
+        # 2) CHECK USER IN SUPABASE AUTH (Admin API)
+        users = supabase.auth.admin.list_users()
 
-        users = supabase_client.auth.admin.list_users()
         existing_user = next(
             (u for u in users if u.email.lower() == email.lower()),
             None
@@ -115,33 +102,34 @@ def fetch_token():
         if existing_user:
             user_id = existing_user.id
         else:
-            import secrets
+            # User does NOT exist → create it
             random_password = secrets.token_urlsafe(32)
-
-            signup = supabase_client.auth.sign_up({
+            signup = supabase.auth.sign_up({
                 "email": email,
                 "password": random_password,
                 "options": {"data": {"name": name, "picture": picture}}
             })
             user_id = signup.user.id
 
+        # 3) CREATE OR UPDATE PROFILE
         create_or_update_profile(user_id, email, name, picture)
 
-        st.session_state.user = {
+        # 4) SAVE TO SESSION + COOKIE
+        user_info = {
             "id": user_id,
             "email": email,
             "name": name,
             "picture": picture,
         }
+        st.session_state.user = user_info
 
-        controller = CookieController()
         controller.set("username", st.session_state.user)
 
+        st.query_params.clear()
         st.rerun()
 
     except Exception as e:
-        st.query_params.clear()
-        st.error(f"OAuth error: {str(e)}")
+        st.error(f"Erreur Google OAuth: {str(e)}")
 
 
 if "code" in st.query_params:
