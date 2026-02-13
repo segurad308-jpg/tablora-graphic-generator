@@ -464,7 +464,6 @@ def fetch_token():
     code = params["code"]
     state_from_url = params.get("state")
 
-    st.query_params.clear()
     st.session_state.token_exchanged = True
 
     auth_response = f"{REDIRECT_URI}?{urlencode(params)}"
@@ -523,6 +522,7 @@ def fetch_token():
 
         st.query_params.clear()
         st.session_state.token_exchanged = False
+        time.sleep(0.2)
         st.rerun()
 
     except Exception as e:
