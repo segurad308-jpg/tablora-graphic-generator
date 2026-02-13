@@ -433,14 +433,17 @@ def create_google_button():
         st.session_state.oauth_state = state
         st.session_state.google_oauth_url = uri
 
-    st.markdown("""
-    <form method="get">
-        <button class="login-google-btn" name="google_login" value="1">
-            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg">
-            Continuer avec Google
-        </button>
-    </form>
-    """, unsafe_allow_html=True)
+    st.markdown(
+        f"""
+        <a href="{st.session_state.google_oauth_url}">
+            <button class="login-google-btn">
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg">
+                Continuer avec Google
+            </button>
+        </a>
+        """,
+        unsafe_allow_html=True
+    )
 
 if st.query_params.get("google_login") == "1":
     st.query_params.clear()
