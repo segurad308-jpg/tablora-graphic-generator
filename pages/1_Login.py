@@ -21,6 +21,9 @@ st.set_page_config(
     page_icon="https://github.com/segurad308-jpg/images-tablora/blob/main/logo.webp?raw=true"
 )
 
+st.write("Query params:", dict(st.query_params))
+st.write("Session state keys:", list(st.session_state.keys()))
+
 # Cookie controller
 controller = CookieController()
 if "cookies_loaded" not in st.session_state:
@@ -434,6 +437,7 @@ def create_google_button():
     """, unsafe_allow_html=True)
 
 if st.query_params.get("google_login") == "1":
+    st.query_params.clear()
 
     if not st.session_state.get("cgu_accepted", False):
         st.session_state.pending_action = "google"
@@ -486,7 +490,8 @@ def fetch_token():
         picture = google_user.get("picture", "")
 
         # 2) CHECK USER IN SUPABASE AUTH (Admin API)
-        users = supabase.auth.admin.list_users()
+        supabase_client = get_supabase() 
+        users = supabase_client.auth.admin.list_users()
 
         existing_user = next(
             (u for u in users if u.email.lower() == email.lower()),
@@ -498,7 +503,7 @@ def fetch_token():
         else:
             # User does NOT exist → create it
             random_password = secrets.token_urlsafe(32)
-            signup = supabase.auth.sign_up({
+            signup = supabase_client.auth.sign_up({
                 "email": email,
                 "password": random_password,
                 "options": {"data": {"name": name, "picture": picture}}
@@ -506,7 +511,7 @@ def fetch_token():
             user_id = signup.user.id
 
         # 3) CREATE OR UPDATE PROFILE
-        create_or_update_profile(user_id, email, name, picture)
+        create_or_update_profile(user_id, email, name, picture) 
 
         # 4) SAVE TO SESSION + COOKIE
         user_info = {
@@ -517,6 +522,7 @@ def fetch_token():
         }
         st.session_state.user = user_info
 
+        controller = CookieController()
         controller.set("username", st.session_state.user)
 
         st.query_params.clear()
@@ -527,7 +533,11 @@ def fetch_token():
     except Exception as e:
         st.session_state.token_exchanged = False
         st.error(f"Erreur Google OAuth: {str(e)}")
-
+        st.write("Debug info:", {
+            "error": str(e),
+            "params": params,
+            "has_code": "code" in params
+        })
 
 
 def logout():
@@ -549,7 +559,7 @@ def logout():
     st.rerun()
 
 # Check OAuth callback
-if "code" in st.query_params:
+if "code" in st.query_params and st.session_state.get("user") is None:
     with st.spinner("Connexion en cours..."):
         fetch_token()
 
