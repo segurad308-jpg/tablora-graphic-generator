@@ -207,6 +207,7 @@ div.stButton > button[kind="primary"]:hover {
 modal_box = st.empty()
 
 if st.session_state.get("pending_action") in ("signup", "google") and not st.session_state.get("cgu_accepted", False):
+    st.write("STATE STORED:", st.session_state.get("oauth_state"))
     cgu_modal(modal_box)
 
 if st.session_state.get("cgu_accepted") and st.session_state.get("pending_action") == "google":
@@ -648,6 +649,7 @@ else:
     create_login_form()
     if "code" not in st.query_params:
         create_google_button()
+        st.write("STATE STORED:", st.session_state.get("oauth_state"))
 
 st.markdown("""
 <div class="footer">
