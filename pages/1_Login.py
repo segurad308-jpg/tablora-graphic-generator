@@ -459,15 +459,10 @@ if st.query_params.get("google_login") == "1":
             )
 def fetch_token():
     import secrets
-    from urllib.parse import urlencode
     from authlib.integrations.requests_client import OAuth2Session
 
     if "code" not in st.query_params:
         return
-
-    st.write("SESSION ID:", id(st.session_state))
-    st.write("STATE STORED:", st.session_state.get("oauth_state"))
-    st.write("STATE RETURNED:", st.query_params.get("state"))
 
     # 🔒 Empêcher double exécution
     if st.session_state.get("token_exchanged"):
@@ -475,13 +470,6 @@ def fetch_token():
     st.session_state.token_exchanged = True
 
     code = st.query_params.get("code")
-    state = st.query_params.get("state")
-
-    # 🔎 Vérification manuelle du state
-    if state != st.session_state.get("oauth_state"):
-        st.error("State mismatch")
-        st.query_params.clear()
-        return
 
     oauth = OAuth2Session(
         CLIENT_ID,
@@ -503,7 +491,6 @@ def fetch_token():
         name = google_user.get("name", email.split("@")[0])
         picture = google_user.get("picture", "")
 
-        # 2) CHECK USER IN SUPABASE AUTH (Admin API)
         users = supabase.auth.admin.list_users()
 
         existing_user = next(
@@ -514,7 +501,6 @@ def fetch_token():
         if existing_user:
             user_id = existing_user.id
         else:
-            # User does NOT exist → create it
             random_password = secrets.token_urlsafe(32)
             signup = supabase.auth.sign_up({
                 "email": email,
@@ -523,10 +509,8 @@ def fetch_token():
             })
             user_id = signup.user.id
 
-        # 3) CREATE OR UPDATE PROFILE
         create_or_update_profile(user_id, email, name, picture)
 
-        # 4) SAVE TO SESSION + COOKIE
         user_info = {
             "id": user_id,
             "email": email,
@@ -535,12 +519,15 @@ def fetch_token():
         }
         st.session_state.user = user_info
 
-        controller.set("username", st.session_state.user)
+        cookie_ctrl = CookieController()
+        cookie_ctrl.set("username", st.session_state.user)
 
         st.query_params.clear()
+        st.session_state.token_exchanged = False  # Reset for next login
         st.rerun()
 
     except Exception as e:
+        st.session_state.token_exchanged = False
         st.error(f"Erreur Google OAuth: {str(e)}")
 
 def logout():
