@@ -65,6 +65,7 @@ REDIRECT_URI = os.getenv("REDIRECT_URI", "https://tablora.ch/Login")
 AUTH_URL = "https://accounts.google.com/o/oauth2/auth"
 TOKEN_URL = "https://oauth2.googleapis.com/token"
 USERINFO_URL = "https://openidconnect.googleapis.com/v1/userinfo"
+SUPABASE_URL = "https://vpxutvtbzjetsjwmsjoa.supabase.co/auth/v1/callback"
 
 user_is_premium = False
 trial_used = False
@@ -420,28 +421,20 @@ def create_login_form():
         """, unsafe_allow_html=True)
 
 def create_google_button():
-    # ✅ Always create new OAuth session when button is shown
-    oauth = OAuth2Session(
-        CLIENT_ID,
-        scope="openid email profile",
-        redirect_uri=REDIRECT_URI
-    )
-    uri, state = oauth.create_authorization_url(
-        AUTH_URL,
-        access_type="offline",
-        prompt="select_account"
-    )
-    # ✅ Store both in session state
-    st.session_state.oauth_state = state
-    st.session_state.google_oauth_url = uri
-
-    st.markdown("""
-    <form method="get">
-        <button class="login-google-btn" name="google_login" value="1">
+    """Generate Google OAuth login button using Supabase"""
+    # Get the Supabase OAuth URL
+    redirect_url = "https://tablora.ch/Login"  # Where to redirect after auth
+    
+    # Supabase will handle the OAuth flow
+    oauth_url = f"{SUPABASE_URL}/auth/v1/authorize?provider=google&redirect_to={redirect_url}"
+    
+    st.markdown(f"""
+    <a href="{oauth_url}" style="text-decoration: none;">
+        <button class="login-google-btn">
             <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg">
             Continuer avec Google
         </button>
-    </form>
+    </a>
     """, unsafe_allow_html=True)
 
 if st.query_params.get("google_login") == "1":
@@ -457,78 +450,52 @@ if st.query_params.get("google_login") == "1":
                 f"<meta http-equiv='refresh' content='0; url={uri}'>",
                 unsafe_allow_html=True
             )
-def fetch_token():
-    import secrets
-    from authlib.integrations.requests_client import OAuth2Session
-
-    if "code" not in st.query_params:
-        return
-
-    # 🔒 Empêcher double exécution
-    if st.session_state.get("token_exchanged"):
-        return
-    st.session_state.token_exchanged = True
-
-    code = st.query_params.get("code")
-
-    oauth = OAuth2Session(
-        CLIENT_ID,
-        redirect_uri=REDIRECT_URI
-    )
-
-    try:
-        token = oauth.fetch_token(
-            TOKEN_URL,
-            code=code,
-            client_secret=CLIENT_SECRET,
-            include_client_id=True
-        )
-
-        resp = oauth.get(USERINFO_URL)
-        google_user = resp.json()
-
-        email = google_user["email"]
-        name = google_user.get("name", email.split("@")[0])
-        picture = google_user.get("picture", "")
-
-        users = supabase.auth.admin.list_users()
-
-        existing_user = next(
-            (u for u in users if u.email.lower() == email.lower()),
-            None
-        )
-
-        if existing_user:
-            user_id = existing_user.id
-        else:
-            random_password = secrets.token_urlsafe(32)
-            signup = supabase.auth.sign_up({
-                "email": email,
-                "password": random_password,
-                "options": {"data": {"name": name, "picture": picture}}
-            })
-            user_id = signup.user.id
-
-        create_or_update_profile(user_id, email, name, picture)
-
-        user_info = {
-            "id": user_id,
-            "email": email,
-            "name": name,
-            "picture": picture,
-        }
-        st.session_state.user = user_info
-
-        cookie_ctrl = CookieController()
-        cookie_ctrl.set("username", st.session_state.user)
-
+def handle_supabase_oauth():
+    """Handle Supabase OAuth callback"""
+    # Supabase adds auth tokens to URL fragments
+    # We need to check for access_token or error
+    
+    # Check if there's an error in query params
+    if "error" in st.query_params:
+        st.error(f"Erreur d'authentification: {st.query_params.get('error_description', 'Erreur inconnue')}")
         st.query_params.clear()
-        st.session_state.token_exchanged = False  # Reset for next login
-        st.rerun()
-
-    except Exception as e:
-        st.session_state.token_exchanged = False
-        st.error(f"Erreur Google OAuth: {str(e)}")
+        return False
+    
+    # Supabase puts tokens in URL hash, we need to extract them via JavaScript
+    # For now, let's use a simpler approach with session detection
+    
+    try:
+        # Get current session from Supabase
+        session = supabase.auth.get_session()
+        
+        if session and session.user:
+            user_data = session.user.user_metadata or {}
+            user_info = {
+                "id": session.user.id,
+                "email": session.user.email,
+                "name": user_data.get("full_name") or user_data.get("name") or session.user.email.split("@")[0],
+                "picture": user_data.get("avatar_url") or user_data.get("picture") or f"https://ui-avatars.com/api/?name={session.user.email.split('@')[0]}&background=603CC9&color=fff"
+            }
+            
+            # Create/update profile
+            create_or_update_profile(
+                user_info["id"],
+                user_info["email"],
+                user_info["name"],
+                user_info["picture"]
+            )
+            
+            # Store in session and cookie
+            st.session_state.user = user_info
+            st.session_state.token = session.access_token
+            
+            controller.set('username', user_info)
+            
+            return True
+    except:
+        pass
+    
+    return False
 
 def logout():
     """Logout and clear session"""
@@ -548,11 +515,9 @@ def logout():
     time.sleep(0.2)
     st.rerun()
 
-if "code" in st.query_params:
-    st.write("✅ DEBUG 2 - CODE DETECTED! Entering OAuth flow")
-    with st.spinner("Connexion en cours..."):
-        fetch_token()
-    st.stop()
+if handle_supabase_oauth():
+    st.success("Connexion réussie!")
+    st.rerun()
     
 # Show logout success message
 if st.session_state.get("logged_out_success"):
@@ -634,9 +599,7 @@ if current_user:
 
 else:
     create_login_form()
-    if "code" not in st.query_params:
-        create_google_button()
-        st.write("STATE STORED:", st.session_state.get("oauth_state"))
+    create_google_button()
 
 st.markdown("""
 <div class="footer">
