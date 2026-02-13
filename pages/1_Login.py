@@ -66,50 +66,43 @@ AUTH_URL = "https://accounts.google.com/o/oauth2/auth"
 TOKEN_URL = "https://oauth2.googleapis.com/token"
 USERINFO_URL = "https://www.googleapis.com/oauth2/v2/userinfo"
 
+if "token_exchanged" not in st.session_state:
+    st.session_state.token_exchanged = False
+
 def fetch_token():
     """Exchange Google OAuth code for token and create Supabase Auth user + profile"""
-    from authlib.integrations.requests_client import OAuth2Session
 
-    st.write("🔍 DEBUG - Inside fetch_token()")
+    from authlib.integrations.requests_client import OAuth2Session
 
     params = dict(st.query_params)
 
     if "code" not in params:
         return
 
-    code = params.get("code")
-    state_from_url = params.get("state")
-
-    # ⚠️ Sécurité : vérifier le state
-    if not state_from_url or state_from_url != st.session_state.get("oauth_state"):
-        st.error("State mismatch. Possible CSRF attack.")
-        st.query_params.clear()
-        return
-
-    # ⚠️ Empêcher double exécution
+    # ⚠️ empêcher double exécution
     if st.session_state.get("token_exchanged"):
         return
 
-    oauth = OAuth2Session(
-        CLIENT_ID,
-        scope="openid email profile",
-        redirect_uri=REDIRECT_URI,
-        state=state_from_url
-    )
-
     try:
-        st.write("🔍 Fetching token from Google...")
+        oauth = OAuth2Session(
+            CLIENT_ID,
+            scope="openid email profile",
+            redirect_uri=REDIRECT_URI
+        )
+
+        st.write("🔍 Fetching token...")
+
+        # ⚠️ IMPORTANT : passer l'URL complète
+        full_url = f"{REDIRECT_URI}?code={params.get('code')}&state={params.get('state')}"
 
         token = oauth.fetch_token(
             TOKEN_URL,
-            authorization_response=st.experimental_get_query_params(), 
+            authorization_response=full_url,
             client_secret=CLIENT_SECRET
         )
 
         st.session_state.token_exchanged = True
         st.query_params.clear()
-
-        st.write("✅ Token received")
 
         # Get user info
         resp = oauth.get(USERINFO_URL)
@@ -154,12 +147,12 @@ def fetch_token():
         controller = CookieController()
         controller.set("username", user_info)
 
-        time.sleep(0.2)
         st.rerun()
 
     except Exception as e:
         st.query_params.clear()
         st.error(f"OAuth error: {str(e)}")
+
 
 
 if "code" in st.query_params:
