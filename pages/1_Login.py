@@ -451,49 +451,68 @@ if st.query_params.get("google_login") == "1":
                 unsafe_allow_html=True
             )
 def handle_supabase_oauth():
-    """Handle Supabase OAuth callback"""
-    # Supabase adds auth tokens to URL fragments
-    # We need to check for access_token or error
+    """Handle Supabase OAuth callback by extracting tokens from URL hash"""
     
-    # Check if there's an error in query params
-    if "error" in st.query_params:
-        st.error(f"Erreur d'authentification: {st.query_params.get('error_description', 'Erreur inconnue')}")
-        st.query_params.clear()
-        return False
-    
-    # Supabase puts tokens in URL hash, we need to extract them via JavaScript
-    # For now, let's use a simpler approach with session detection
-    
-    try:
-        # Get current session from Supabase
-        session = supabase.auth.get_session()
+    # JavaScript to extract tokens from URL hash and convert to query params
+    auth_component = st.markdown("""
+    <script>
+        const hash = window.location.hash.substring(1);
+        const params = new URLSearchParams(hash);
+        const accessToken = params.get('access_token');
+        const refreshToken = params.get('refresh_token');
         
-        if session and session.user:
-            user_data = session.user.user_metadata or {}
-            user_info = {
-                "id": session.user.id,
-                "email": session.user.email,
-                "name": user_data.get("full_name") or user_data.get("name") or session.user.email.split("@")[0],
-                "picture": user_data.get("avatar_url") or user_data.get("picture") or f"https://ui-avatars.com/api/?name={session.user.email.split('@')[0]}&background=603CC9&color=fff"
-            }
+        if (accessToken && refreshToken) {
+            // Redirect to same page with tokens in query params
+            const url = new URL(window.location.href);
+            url.hash = '';  // Clear hash
+            url.searchParams.set('access_token', accessToken);
+            url.searchParams.set('refresh_token', refreshToken);
+            window.location.href = url.toString();
+        }
+    </script>
+    """, unsafe_allow_html=True)
+    
+    # Now check if we have tokens in query params (after JavaScript redirect)
+    access_token = st.query_params.get("access_token")
+    refresh_token = st.query_params.get("refresh_token")
+    
+    if access_token and refresh_token:
+        try:
+            # Set the session using the tokens
+            response = supabase.auth.set_session(access_token, refresh_token)
             
-            # Create/update profile
-            create_or_update_profile(
-                user_info["id"],
-                user_info["email"],
-                user_info["name"],
-                user_info["picture"]
-            )
-            
-            # Store in session and cookie
-            st.session_state.user = user_info
-            st.session_state.token = session.access_token
-            
-            controller.set('username', user_info)
-            
-            return True
-    except:
-        pass
+            if response and response.user:
+                user_data = response.user.user_metadata or {}
+                user_info = {
+                    "id": response.user.id,
+                    "email": response.user.email,
+                    "name": user_data.get("full_name") or user_data.get("name") or response.user.email.split("@")[0],
+                    "picture": user_data.get("avatar_url") or user_data.get("picture") or f"https://ui-avatars.com/api/?name={response.user.email.split('@')[0]}&background=603CC9&color=fff"
+                }
+                
+                # Create/update profile
+                create_or_update_profile(
+                    user_info["id"],
+                    user_info["email"],
+                    user_info["name"],
+                    user_info["picture"]
+                )
+                
+                # Store in session and cookie
+                st.session_state.user = user_info
+                st.session_state.token = access_token
+                
+                controller.set('username', user_info)
+                
+                # Clear tokens from URL for security
+                st.query_params.clear()
+                
+                return True
+                
+        except Exception as e:
+            st.error(f"Erreur lors de la connexion OAuth: {str(e)}")
+            st.write("Debug - Error details:", str(e))
+            st.query_params.clear()
     
     return False
 
