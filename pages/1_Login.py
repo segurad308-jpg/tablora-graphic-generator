@@ -93,7 +93,7 @@ st.markdown(f"""
         alt="Tablora Logo" />
 </a>
 
-<a class="active" href="/Offre" target="_self" >Offre</a>
+<a href="/Offre" target="_self" >Offre</a>
 <a href="/Creer" target="_self">Créer</a>
 <div class="nav-right">
     <a class="active" href="/Login" target="_self">{login_status}</a>
