@@ -65,7 +65,7 @@ REDIRECT_URI = os.getenv("REDIRECT_URI", "https://tablora.ch/Login")
 AUTH_URL = "https://accounts.google.com/o/oauth2/auth"
 TOKEN_URL = "https://oauth2.googleapis.com/token"
 USERINFO_URL = "https://openidconnect.googleapis.com/v1/userinfo"
-SUPABASE_URL = "https://vpxutvtbzjetsjwmsjoa.supabase.co/auth/v1/callback"
+SUPABASE_URL = "https://vpxutvtbzjetsjwmsjoa.supabase.co"
 
 user_is_premium = False
 trial_used = False
