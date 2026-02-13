@@ -66,34 +66,26 @@ AUTH_URL = "https://accounts.google.com/o/oauth2/auth"
 TOKEN_URL = "https://oauth2.googleapis.com/token"
 USERINFO_URL = "https://www.googleapis.com/oauth2/v2/userinfo"
 
-if "token_exchanged" not in st.session_state:
-    st.session_state.token_exchanged = False
+if "oauth_done" not in st.session_state:
+    st.session_state.oauth_done = False
 
 def fetch_token():
-    """Exchange Google OAuth code for token and create Supabase Auth user + profile"""
-
     from authlib.integrations.requests_client import OAuth2Session
 
-    params = dict(st.query_params)
-
-    if "code" not in params:
+    if "code" not in st.query_params:
         return
 
-    # ⚠️ empêcher double exécution
-    if st.session_state.get("token_exchanged"):
+    if st.session_state.get("oauth_done"):
         return
 
     try:
+        # Rebuild full URL EXACTLY as Google returned it
+        full_url = st.request.url
+
         oauth = OAuth2Session(
             CLIENT_ID,
-            scope="openid email profile",
             redirect_uri=REDIRECT_URI
         )
-
-        st.write("🔍 Fetching token...")
-
-        # ⚠️ IMPORTANT : passer l'URL complète
-        full_url = f"{REDIRECT_URI}?code={params.get('code')}&state={params.get('state')}"
 
         token = oauth.fetch_token(
             TOKEN_URL,
@@ -101,10 +93,9 @@ def fetch_token():
             client_secret=CLIENT_SECRET
         )
 
-        st.session_state.token_exchanged = True
+        st.session_state.oauth_done = True
         st.query_params.clear()
 
-        # Get user info
         resp = oauth.get(USERINFO_URL)
         resp.raise_for_status()
         google_user = resp.json()
@@ -136,23 +127,21 @@ def fetch_token():
 
         create_or_update_profile(user_id, email, name, picture)
 
-        user_info = {
+        st.session_state.user = {
             "id": user_id,
             "email": email,
             "name": name,
             "picture": picture,
         }
 
-        st.session_state.user = user_info
         controller = CookieController()
-        controller.set("username", user_info)
+        controller.set("username", st.session_state.user)
 
         st.rerun()
 
     except Exception as e:
         st.query_params.clear()
         st.error(f"OAuth error: {str(e)}")
-
 
 
 if "code" in st.query_params:
