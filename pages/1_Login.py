@@ -20,7 +20,8 @@ st.set_page_config(
     initial_sidebar_state="collapsed", 
     page_icon="https://github.com/segurad308-jpg/images-tablora/blob/main/logo.webp?raw=true"
 )
-
+st.write("Query params:", dict(st.query_params))
+st.write("Session state keys:", list(st.session_state.keys()))
 # Cookie controller
 controller = CookieController()
 if "cookies_loaded" not in st.session_state:
@@ -35,7 +36,7 @@ except:
     pass
 user = raw if raw else None
 if not st.session_state.cookies_loaded:
-    st.stop()
+    time.sleep(0.5)
 
 
 load_css("styles/style.css")
@@ -434,7 +435,6 @@ def create_google_button():
     """, unsafe_allow_html=True)
 
 if st.query_params.get("google_login") == "1":
-    st.query_params.clear()
 
     if not st.session_state.get("cgu_accepted", False):
         st.session_state.pending_action = "google"
@@ -549,15 +549,15 @@ def logout():
     time.sleep(0.2)
     st.rerun()
 
-# Show logout success message
-if st.session_state.get("logged_out_success"):
-    st.success("Vous avez été déconnecté avec succès.")
-    del st.session_state.logged_out_success
-
 # Check OAuth callback
 if "code" in st.query_params:
     with st.spinner("Connexion en cours..."):
         fetch_token()
+
+# Show logout success message
+if st.session_state.get("logged_out_success"):
+    st.success("Vous avez été déconnecté avec succès.")
+    del st.session_state.logged_out_success
 
 # Get current user
 user_session = st.session_state.get("user", None)
