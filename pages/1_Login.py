@@ -438,7 +438,7 @@ def create_google_button():
 
 if st.query_params.get("google_login") == "1":
     st.query_params.clear()
-
+    st.session_state.last_processed_code = None
     if not st.session_state.get("cgu_accepted", False):
         st.session_state.pending_action = "google"
         st.rerun()
@@ -470,6 +470,12 @@ def fetch_token():
     code = params["code"]
     state_from_url = params.get("state")
 
+    if st.session_state.get("last_processed_code") == code:
+        st.write("⚠️ Code already processed, skipping")
+        st.query_params.clear()
+        return
+    st.session_state.last_processed_code = code
+    
     auth_response = f"{REDIRECT_URI}?{urlencode(params)}"
     oauth = OAuth2Session(CLIENT_ID, scope="openid email profile", redirect_uri=REDIRECT_URI,
                           state=st.session_state.get("oauth_state"))
