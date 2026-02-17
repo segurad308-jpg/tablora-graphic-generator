@@ -1283,28 +1283,8 @@ div.stButton > button[kind="primary"]:hover {
         flex-direction: column;
         gap: 25px;
     }
-    
-    .pricing-card-inline,
-    .pricing-card-premium-inline {
-        width: 100%;
-        max-width: 400px;
-        transform: scale(1);
-    }
-    
-    .pricing-card-premium-inline:hover {
-        transform: scale(1.02) translateY(-2px);
-    }
 }
 
-@media (min-width: 901px) and (max-width: 1100px) {
-    .pricing-card-inline {
-        width: 260px;
-    }
-    
-    .pricing-card-premium-inline {
-        width: 300px;
-    }
-}
 .pricing-cards-container-inline {
     display: flex;
     justify-content: center;
@@ -1322,18 +1302,31 @@ div.stButton > button[kind="primary"]:hover {
     padding: 30px 28px;
     position: relative;
     width: 280px;
-    transition: 
-        transform 0.25s ease,
-        border-color 0.25s ease,
-        box-shadow 0.25s ease;
+    transition: all 0.25s ease;
+        
+}
+.pricing-card-inline:hover {
+    transform: translateY(-1px);
+    border: 2px solid #603CC9;
+    box-shadow:
+        0 0 20px rgba(147, 59, 255, 0.825),
+        0 0 10px rgba(96, 60, 201, 0.2);
 }
 .pricing-card-premium-inline {
     background: linear-gradient(135deg, #603CC9 0%, #8A63DF 100%);
     box-shadow: 12px 12px 25px rgba(96, 60, 201, 0.3), -12px -12px 25px rgba(255, 255, 255, 0.5);
     border: 2px solid transparent;
     width: 320px;
-    transform: scale(1.08);
+    transform: all 0.25s ease;
     z-index: 10;
+}
+.pricing-card-premium-inline:hover {
+    transform: translateY(-1px);
+    border: 2px solid #ffffff;
+    width: 320px !important;
+    box-shadow:
+        0 0 25px rgba(212, 0, 255, 0.781),
+        0 0 15px rgb(166, 14, 255);
 }
 .logo-image-graph {
     display: block;
