@@ -334,6 +334,17 @@ st.markdown("""
     justify-content: space-around;
     box-sizing: border-box;
 } 
+.nav-right {
+    margin-left: auto;
+    margin-right: 6px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transform: translateY(-8px);
+}
+.nav-right a {
+    transform: translateY(8px);
+}
 </style>
 """, unsafe_allow_html=True)
 st.markdown("""
