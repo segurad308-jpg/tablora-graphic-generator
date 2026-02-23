@@ -227,7 +227,7 @@ def create_or_update_profile(user_id, email, name, picture):
             "subscription_end": (dt.datetime.utcnow() + dt.timedelta(days=14)).isoformat(),
         })
     
-    if profile is None:
+    if profile is not None:
         if profile.get("subscription_end") == None or profile.get("subscription_start") == None:
             data_payload.update({
                 "is_premium": False,
