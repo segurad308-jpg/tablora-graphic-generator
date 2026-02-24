@@ -1030,6 +1030,7 @@ div.stButton > button[kind="primary"]:hover {
     grid-template-columns: repeat(2, 1fr);
     gap: 30px;
     margin-bottom: 50px;
+    max-width: 900px;
 }
 
 /* Individual Pricing Card */
