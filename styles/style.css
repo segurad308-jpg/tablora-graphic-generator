@@ -1029,7 +1029,7 @@ div.stButton > button[kind="primary"]:hover {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 30px;
-    margin-bottom: 50px;
+    margin: 0 auto 50px auto;
     max-width: 900px;
 }
 
