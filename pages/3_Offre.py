@@ -305,6 +305,15 @@ if not user_is_premium:
 
     </div>
     </div>
+    <div class="pricing-card-member">
+        <p class="pricing-card-description-member">
+            Devenez <strong>membre</strong> de Tablora dès aujourd'hui 
+        </p>
+        <a href="mailto:info@tablora.ch" target="_self" class="neumo-btn1" 
+                style="display: inline-block; margin: 0 10px 0 auto; box-shadow: box-shadow: 3px 3px 7px #D1D9E6, -3px -3px 7px #FFFFFF;">
+            Nous contacter
+        </a>
+    </div>
     </div>
     """, unsafe_allow_html=True)
 

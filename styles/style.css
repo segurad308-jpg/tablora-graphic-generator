@@ -1059,6 +1059,7 @@ div.stButton > button[kind="primary"]:hover {
         box-shadow 0.25s ease;
 }
 /* Hover: bordure violette + ombre violette */
+.pricing-card-member:hover,
 .pricing-card:hover {
     transform: translateY(-2px);
     border: 2px solid #603CC9;
@@ -1067,7 +1068,28 @@ div.stButton > button[kind="primary"]:hover {
         0 0 10px rgba(96, 60, 201, 0.2);
 }
 
-
+.pricing-card-member {
+    width: 70%;
+    margin: 0 auto !important;
+    background: #ECF0F3;
+    display: flex;
+    text-align: left;
+    border-radius: 20px;
+    border: 2px solid transparent;
+    box-shadow: 12px 12px 25px #D1D9E6, -12px -12px 25px #FFFFFF;
+    padding: 10px 15px;
+    position: relative;
+    transition: 
+        transform 0.25s ease,
+        border-color 0.25s ease,
+        box-shadow 0.25s ease;
+}
+.pricing-card-description-member {
+    font-size: 25px;
+    font-weight: 450;
+    color: #595959;
+    transform: translateY(11px);
+}
 /* Premium Card Special Styling */
 .pricing-card-premium {
     background: linear-gradient(135deg, #603CC9 0%, #8A63DF 100%);
@@ -1147,7 +1169,6 @@ div.stButton > button[kind="primary"]:hover {
     margin-bottom: 20px;
     min-height: 42px;
 }
-
 .pricing-card-premium .pricing-card-description {
     color: rgba(255, 255, 255, 0.9) !important;
 }
