@@ -161,7 +161,7 @@ def render_static_home():
     </div>
 
     <div class="feature-card">
-        <img src="https://github.com/segurad308-jpg/images-tablora/blob/main/Design%20sans%20titre%20(2).webp?raw=true" class="feature-image" />
+        <img src="https://raw.githubusercontent.com/segurad308-jpg/images-tablora/refs/heads/main/Design%20sans%20titre%20(2).webp" class="feature-image" />
         <div class="feature-title">Données sécurisées</div>
         <div class="feature-desc">Vos fichiers ne quittent jamais votre ordinateur et ne sont pas stockés.</div>
     </div>
