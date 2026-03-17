@@ -98,7 +98,7 @@ def render_static_home():
         <h3>Vous devez créer un graphique</h3>
         <p>Créer un graphique à partir de zéro prend du temps et est souvent fastidieux.</p>
         <div class="img-placeholder">
-        <img src="https://github.com/segurad308-jpg/images-tablora/blob/main/time3.webp?raw=true" alt="Problem 1" style="width:100%;height:100%;object-fit:cover;border-radius:14px;" />
+        <img src="https://raw.githubusercontent.com/segurad308-jpg/images-tablora/refs/heads/main/time3.webp" alt="Problem 1" style="width:100%;height:100%;object-fit:cover;border-radius:14px;" />
         </div>
     </div>
     </div>
@@ -110,7 +110,7 @@ def render_static_home():
         <h3>Aucun logiciel adapté</h3>
         <p>Vous cherchez alors un logiciel pratique et facile d'utilisation mais rien de semble adapté à vos besoins.</p>
         <div class="img-placeholder">
-        <img src="https://github.com/segurad308-jpg/images-tablora/blob/main/complex.webp?raw=true" alt="Problem 2" style="width:100%;height:100%;object-fit:cover;border-radius:14px;" />
+        <img src="https://raw.githubusercontent.com/segurad308-jpg/images-tablora/refs/heads/main/complex.webp" alt="Problem 2" style="width:100%;height:100%;object-fit:cover;border-radius:14px;" />
         </div>
     </div>
     </div>
@@ -122,7 +122,7 @@ def render_static_home():
         <h3>Vous perdez du temps</h3>
         <p>Rien ne vous convient et vous finissez par vous contenter du moins pire mais vous n'êtes en aucun cas satisfait de votre travail.</p>
         <div class="img-placeholder">
-        <img src="https://github.com/segurad308-jpg/images-tablora/blob/main/sad.webp?raw=true" alt="Problem 3" style="width:100%;height:100%;object-fit:cover;border-radius:14px;" />
+        <img src="https://raw.githubusercontent.com/segurad308-jpg/images-tablora/refs/heads/main/sad.webp" alt="Problem 3" style="width:100%;height:100%;object-fit:cover;border-radius:14px;" />
         </div>
     </div>
     </div>
@@ -143,19 +143,19 @@ def render_static_home():
     <section class="benefits-section">
     <div class="benefits-left neumo-row">
     <div class="feature-card">
-        <img src="https://github.com/segurad308-jpg/images-tablora/blob/main/Design%20sans%20titre.webp?raw=true" class="feature-image" />
+        <img src="https://raw.githubusercontent.com/segurad308-jpg/images-tablora/refs/heads/main/Design%20sans%20titre.webp" class="feature-image" />
         <div class="feature-title">Importez vos données CSV et Excel</div>
         <div class="feature-desc">En un clic, importez vos données et commencez à créer vos graphiques.</div>
     </div>
 
     <div class="feature-card">
-        <img src="https://github.com/segurad308-jpg/images-tablora/blob/main/his.webp?raw=true" class="feature-image" />
+        <img src="https://raw.githubusercontent.com/segurad308-jpg/images-tablora/refs/heads/main/his.webp" class="feature-image" />
         <div class="feature-title">Créez des graphes personnalisables et rapides</div>
         <div class="feature-desc">Choisissez le graphe qui vous correspond le mieux grâce à nos nombreuses possibilités de personnalisation.</div>
     </div>
 
     <div class="feature-card">
-        <img src="https://github.com/segurad308-jpg/images-tablora/blob/main/Design%20sans%20titre%20(1).webp?raw=true" class="feature-image" />
+        <img src="https://raw.githubusercontent.com/segurad308-jpg/images-tablora/refs/heads/main/Design%20sans%20titre%20(1).webp" class="feature-image" />
         <div class="feature-title">Téléchargement pro</div>
         <div class="feature-desc">Exportez directement et facilement vos graphiques en PNG, PDF, SVG et partagez vos créations partout.</div>
     </div>
@@ -278,7 +278,7 @@ def render_static_home():
     </div>
 
     <div class="neumo-card">
-        <img src="https://github.com/segurad308-jpg/images-tablora/blob/main/design.webp?raw=true" class="neumo-img" alt="Feature">
+        <img src="https://raw.githubusercontent.com/segurad308-jpg/images-tablora/refs/heads/main/design.webp" class="neumo-img" alt="Feature">
         <div style="display: flex; flex-direction: column; width: 50%;">
             <div class="st1">
                 Visualisez plus vite et mieux<br> 

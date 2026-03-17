@@ -11,7 +11,7 @@ from utils.cache_function import get_cached_profile, has_access_cached
 from utils.subscription import get_profile, has_access
 from utils.cache_function import load_css
 
-st.set_page_config(page_title="Tablora - Offres", layout="wide", initial_sidebar_state="collapsed", page_icon="https://github.com/segurad308-jpg/images-tablora/blob/main/logo.webp?raw=true")
+st.set_page_config(page_title="Tablora - Offres", layout="wide", initial_sidebar_state="collapsed", page_icon="https://raw.githubusercontent.com/segurad308-jpg/images-tablora/refs/heads/main/logo.webp")
 
 controller = CookieController()
 if "cookies_ready" not in st.session_state:
@@ -149,7 +149,7 @@ login_status = "Profil" if user else "Login"
 st.markdown(f"""  
 <div class="topnav">
 <a href="/" target="_self" class="logo-image-graph logo-link">
-    <img src="https://github.com/segurad308-jpg/images-tablora/blob/main/Tablora.webp?raw=true"
+    <img src="https://raw.githubusercontent.com/segurad308-jpg/images-tablora/refs/heads/main/Tablora.webp"
         class="logo-image-img"
         alt="Tablora Logo" />
 </a>

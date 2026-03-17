@@ -9,7 +9,7 @@ from utils.cache_footer import cache_footer
 from utils.html_home import render_static_home, render_static_home2
 
 # THIS MUST BE THE ABSOLUTE FIRST STREAMLIT COMMAND
-st.set_page_config(page_title="Tablora - Accueil", layout="wide", initial_sidebar_state="collapsed", page_icon="https://github.com/segurad308-jpg/images-tablora/blob/main/logo.webp?raw=true")
+st.set_page_config(page_title="Tablora - Accueil", layout="wide", initial_sidebar_state="collapsed", page_icon="https://raw.githubusercontent.com/segurad308-jpg/images-tablora/refs/heads/main/logo.webp")
  
 controller = CookieController()
 if "cookies_ready" not in st.session_state:
@@ -30,7 +30,7 @@ login_status = "Profil" if user else "Login"
 st.markdown(f"""  
 <div class="topnav">
 <a href="/" target="_self" class="logo-image-graph logo-link">
-    <img src="https://github.com/segurad308-jpg/images-tablora/blob/main/Tablora.webp?raw=true"
+    <img src="https://raw.githubusercontent.com/segurad308-jpg/images-tablora/refs/heads/main/Tablora.webp"
         class="logo-image-img"
         alt="Tablora Logo" />
 </a>
@@ -68,17 +68,17 @@ with col_right:
             """
             <p>
                 1. Importez votre fichier de données (CSV ou Excel).<br><br>
-                <img src="https://github.com/segurad308-jpg/images-tablora/blob/main/faq.webp?raw=true" class="faq-image">
+                <img src="https://raw.githubusercontent.com/segurad308-jpg/images-tablora/refs/heads/main/faq.webp" class="faq-image">
             </p>
 
             <p>
                 2. Sélectionnez vos préférences.<br><br>
-                <img src="https://github.com/segurad308-jpg/images-tablora/blob/main/faq%202.webp?raw=true" class="faq-image">
+                <img src="https://raw.githubusercontent.com/segurad308-jpg/images-tablora/refs/heads/main/faq%202.webp" class="faq-image">
             </p>
 
             <p>
                 3. Générez et téléchargez votre graphique.<br><br>
-                <img src="https://github.com/segurad308-jpg/images-tablora/blob/main/faq%203.webp?raw=true" class="faq-image">
+                <img src="https://raw.githubusercontent.com/segurad308-jpg/images-tablora/refs/heads/main/faq%203.webp" class="faq-image">
             </p>
             """,
             unsafe_allow_html=True) 
