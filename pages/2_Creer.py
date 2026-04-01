@@ -5,27 +5,34 @@ from utils.subscription import get_profile, has_access, is_free_expired
 from supabase import create_client, Client
 import os
 from dotenv import load_dotenv
+from utils.cache_function import get_cached_profile, get_supabase, has_access_cached
 import json
 import time
+import io
+import base64
 
 st.set_page_config(page_title="Tablora - Créer un graphique", layout="centered", page_icon="https://raw.githubusercontent.com/segurad308-jpg/images-tablora/refs/heads/main/logo.webp")
 
+# ─────────────────────────────────────────────
+# AUTH & PROFILE  (runs once, cached in session)
+# ─────────────────────────────────────────────
 controller = CookieController()
 if "cookies_ready" not in st.session_state:
     time.sleep(0.2)
     st.session_state.cookies_ready = True
+
 raw = controller.get('username')
 user = raw if raw else None
 if raw:
-    controller.set('username', raw) 
+    controller.set('username', raw)
 
 load_dotenv()
-SUPABASE_URL = os.getenv("SUPABASE_URL")
-SUPABASE_KEY = os.getenv("SUPABASE_SERVICE_KEY")
-supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 
-time.sleep(0.1)
-try:  
+# Cache the Supabase client so it isn't re-created on every rerun
+
+supabase = get_supabase()
+
+try:
     user_id = user.get("id")
     if not user_id:
         st.error("Erreur: Impossible de récupérer votre identifiant.")
@@ -33,11 +40,11 @@ try:
 except AttributeError:
     st.switch_page("pages/1_Login.py")
 
-profile = get_profile(user_id)
+profile = get_cached_profile(user_id)
 if not profile or not profile.get("plan"):
     st.switch_page("pages/3_Offre.py")
 
-user_is_premium = has_access(profile)
+user_is_premium = has_access_cached(profile)
 trial_expired = is_free_expired(profile)
 
 if "_upgrade" in st.query_params:
@@ -48,7 +55,10 @@ if profile.get("plan") == "free" and trial_expired:
 
 if user_is_premium == False and trial_expired:
     st.switch_page("pages/3_Offre.py")
-    
+
+# ─────────────────────────────────────────────
+# CSS / STYLES
+# ─────────────────────────────────────────────
 st.markdown("""
 <style>
 header {visibility: hidden;}
@@ -433,162 +443,250 @@ if not user_is_premium:
 
 st.title("Créer un graphique")
 
+# ─────────────────────────────────────────────
+# DATA LOADING — cached so the file isn't re-parsed on every widget interaction
+# ─────────────────────────────────────────────
+@st.cache_data(show_spinner=False)
+def cached_load_data(file_bytes, file_name):
+    """Wrap load_data so the result is memoised by file content.
+    Attaches .name to the BytesIO so load_data can detect the file type."""
+    import io
+    buf = io.BytesIO(file_bytes)
+    buf.name = file_name  # load_data uses .name to detect csv vs xlsx
+    return load_data(buf)
+
+
+# ─────────────────────────────────────────────
+# FILE UPLOAD
+# ─────────────────────────────────────────────
 file_path = st.file_uploader("Importer un fichier CSV ou Excel", type=["csv", "xlsx"])
 
 if file_path is not None:
     try:
-        df = load_data(file_path)
+        # Read file bytes once; cache key is the bytes + filename
+        file_bytes = file_path.read()
+        df = cached_load_data(file_bytes, file_path.name)
+
         st.write("Données chargées avec succès !")
         st.dataframe(df.head())
 
-        if user_is_premium:
-            plot_type = st.selectbox("Type de graphique", ["ligne", "barre", "nuage de points", "circulaire"])
-        else:
-            plot_type = st.selectbox("Type de graphique (Fonctionnalité Premium ♛)", ["ligne", "barre"])
+        # ─────────────────────────────────────────────
+        # GRAPH CONTROLS — wrapped in a fragment so widget
+        # interactions only rerun this section, not the whole page
+        # ─────────────────────────────────────────────
+        @st.fragment
+        def graph_controls_and_output(df, user_is_premium):
+            if user_is_premium:
+                plot_type_label = st.selectbox(
+                    "Type de graphique",
+                    ["ligne", "barre", "nuage de points", "circulaire"],
+                    key="plot_type_select"
+                )
+            else:
+                plot_type_label = st.selectbox(
+                    "Type de graphique (Fonctionnalité Premium ♛)",
+                    ["ligne", "barre"],
+                    key="plot_type_select"
+                )
 
-        if plot_type == "ligne":
-            plot_type = "line"
-        elif plot_type == "barre":
-            plot_type = "bar"
-        elif plot_type == "nuage de points":
-            plot_type = "scatter"
-        elif plot_type == "circulaire":
-            plot_type = "pie"
+            label_to_type = {
+                "ligne": "line",
+                "barre": "bar",
+                "nuage de points": "scatter",
+                "circulaire": "pie",
+            }
+            plot_type = label_to_type.get(plot_type_label, "line")
 
-         # Column selection
-        x_column = st.selectbox("Colonne pour l'axe X", options=df.columns.tolist(), index=0)
-        available_y_columns = [col for col in df.columns if col != x_column]
+            # Column selection
+            x_column = st.selectbox(
+                "Colonne pour l'axe X",
+                options=df.columns.tolist(),
+                index=0,
+                key="x_column_select"
+            )
+            available_y_columns = [col for col in df.columns if col != x_column]
 
-        
+            if plot_type == "pie":
+                y_columns = [st.selectbox(
+                    "Colonne de valeurs",
+                    options=available_y_columns,
+                    key="y_pie_select"
+                )]
+            else:
+                y_columns = st.multiselect(
+                    "Colonnes de valeurs",
+                    options=available_y_columns,
+                    default=available_y_columns,
+                    key="y_columns_multiselect"
+                )
 
-        if plot_type == "pie":
-            y_columns = [st.selectbox("Colonne de valeurs", options=available_y_columns)]
-        else:
-            y_columns = st.multiselect("Colonnes de valeurs", options=available_y_columns, default=available_y_columns)
+            # Linear regression option for scatter plots
+            show_regression = False
+            if plot_type == "scatter":
+                show_regression = st.checkbox(
+                    "Afficher la régression linéaire",
+                    key="show_regression_cb"
+                )
 
-        # Linear regression option for scatter plots
-        show_regression = False
-        if plot_type == "scatter":
-            show_regression = st.checkbox("Afficher la régression linéaire")
+            if user_is_premium:
+                fond_choice = st.selectbox(
+                    "Thème",
+                    ["Blanc pur", "Clair doux", "Sombre"],
+                    key="fond_select"
+                )
+            else:
+                fond_choice = st.selectbox(
+                    "Thème (Fonctionnalité Premium ♛)",
+                    ["Blanc pur"],
+                    key="fond_select"
+                )
 
-        if user_is_premium:
-            fond_choice = st.selectbox("Thème", ["Blanc pur", "Clair doux", "Sombre"])
-        else:
-            fond_choice = st.selectbox("Thème (Fonctionnalité Premium ♛)", ["Blanc pur"])
+            title_choice = st.text_input("Titre du graphique", key="title_input")
+            if plot_type != "pie":
+                x_label = st.text_input("Nom de l'axe X", key="x_label_input")
+                y_label = st.text_input("Nom de l'axe Y", key="y_label_input")
+            else:
+                x_label = ""
+                y_label = ""
 
-        title_choice = st.text_input("Titre du graphique")
-        if plot_type != "pie":
-            x_label = st.text_input("Nom de l’axe X")
-            y_label = st.text_input("Nom de l’axe Y")
-        else:
-            x_label = ""
-            y_label = ""
+            if st.button("Générer le graphique", key="generate_btn"):
+                if y_columns:
+                    with st.spinner("Génération du graphique..."):
+                        selected_cols = [x_column] + y_columns
+                        df_filtered = df[selected_cols].copy()
+                        fig = generate_graph(
+                            df_filtered, plot_type, fond_choice,
+                            title_choice, x_label, y_label, show_regression
+                        )
+                        # Serialise to bytes immediately so matplotlib fig
+                        # doesn't stay in memory; store only bytes in state
+                        buf = io.BytesIO()
+                        buf_pdf = io.BytesIO()
+                        buf_svg = io.BytesIO()
+                        fig.savefig(buf, format="png", bbox_inches='tight', dpi=300)
+                        try:
+                            fig.savefig(buf_pdf, format="pdf", bbox_inches='tight', dpi=300)
+                        except Exception:
+                            buf_pdf = None
+                        try:
+                            fig.savefig(buf_svg, format="svg", bbox_inches='tight')
+                        except Exception:
+                            buf_svg = None
 
+                        import matplotlib.pyplot as plt
+                        plt.close(fig)  # Free matplotlib memory immediately
 
-        if st.button("Générer le graphique"):
-            if y_columns:
-                # Create filtered dataframe with selected columns
-                with st.spinner("Génération du graphique..."):
-                    selected_cols = [x_column] + y_columns
-                    df_filtered = df[selected_cols].copy()
-                    
-                    fig = generate_graph(df_filtered, plot_type, fond_choice, title_choice, x_label, y_label, show_regression)
-                    st.session_state['last_fig'] = fig
-                    st.session_state['last_title'] = title_choice
+                        st.session_state['last_fig_png'] = buf.getvalue()
+                        st.session_state['last_fig_pdf'] = buf_pdf.getvalue() if buf_pdf else None
+                        st.session_state['last_fig_svg'] = buf_svg.getvalue() if buf_svg else None
+                        st.session_state['last_title'] = title_choice
 
-        if 'last_fig' in st.session_state:
-            fig = st.session_state['last_fig']
-            st.pyplot(fig)
-            
-            st.markdown("""
+            # ── Display stored graph ──
+            if 'last_fig_png' in st.session_state:
+                st.image(st.session_state['last_fig_png'], use_container_width=True)
+
+                st.markdown("""
+                    <style>
+                    /* Réduit uniquement la selectbox de la classe .small-select */
+                    .small-select [data-baseweb="select"] {
+                        width: 130px !important;
+                        min-width: 130px !important;
+                        max-width: 130px !important;
+                    }
+                    .small-select [data-testid="stSelectboxLabel"] p {
+                        font-size: 14px !important;
+                    }
+                    div[data-testid="stDownloadButton"] button {
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        gap: 6px;
+                        font-size: 16px;
+                    }
+                    div[data-testid="stDownloadButton"] svg {
+                        margin-bottom: -2px;
+                    }
+                    </style>
+                """, unsafe_allow_html=True)
+
+                st.markdown('<div class="small-select">', unsafe_allow_html=True)
+                if user_is_premium:
+                    file_ext = st.selectbox(
+                        "Format",
+                        ["png", "pdf", "svg"],
+                        index=0,
+                        key="format_select"
+                    )
+                else:
+                    file_ext = st.selectbox(
+                        "Format (Fonctionnalité Premium ♛)",
+                        ["png"],
+                        index=0,
+                        key="format_select"
+                    )
+                st.markdown('</div>', unsafe_allow_html=True)
+
+                # Pick the pre-rendered bytes for the chosen format
+                format_map = {
+                    "png": st.session_state.get('last_fig_png'),
+                    "pdf": st.session_state.get('last_fig_pdf'),
+                    "svg": st.session_state.get('last_fig_svg'),
+                }
+                raw_bytes = format_map.get(file_ext)
+
+                # Fall back to PNG if the chosen format isn't available
+                if raw_bytes is None:
+                    raw_bytes = st.session_state['last_fig_png']
+                    file_ext = "png"
+
+                data_b64 = base64.b64encode(raw_bytes).decode('utf-8')
+                fname = f"graphe.{file_ext}"
+                mime_map = {'png': 'image/png', 'svg': 'image/svg+xml', 'pdf': 'application/pdf'}
+                mime = mime_map.get(file_ext, 'application/octet-stream')
+
+                svg_icon = """
+                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="#666"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block; margin:auto;">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="7 10 12 15 17 10"/>
+                <line x1="12" y1="15" x2="12" y2="3"/>
+                </svg>
+                """
+
+                st.markdown(f"""
                 <style>
-                /* Réduit uniquement la selectbox de la classe .small-select */
-                .small-select [data-baseweb="select"] {
-                    width: 130px !important;  /* largeur réduite */
-                    min-width: 130px !important;
-                    max-width: 130px !important;
-                }
-                .small-select [data-testid="stSelectboxLabel"] p {
-                    font-size: 14px !important; /* texte légèrement plus petit */
-                }
-                div[data-testid="stDownloadButton"] button {
-                    display: flex;
+                .download-btn {{
+                    display: inline-flex;
                     align-items: center;
                     justify-content: center;
-                    gap: 6px;
-                    font-size: 16px;
-                }
-                div[data-testid="stDownloadButton"] svg {
-                    margin-bottom: -2px;
-                }
+                    background: #ECF0F3;
+                    color: #666;
+                    border: none;
+                    border-radius: 15px;
+                    padding: 5px 11px;
+                    box-shadow: 18px 18px 30px #D1D9E6, -18px -18px 30px #FFFFFF;
+                    transition: all 0.25s ease-in-out;
+                    text-decoration: none;
+                }}
+                .download-btn:hover {{
+                    box-shadow: inset 18px 18px 30px #D1D9E6, inset -18px -18px 30px #FFFFFF;
+                }}
+                .download-btn svg {{
+                    width: 25px;
+                    height: 25px;
+                    display: block;
+                    margin: auto;
+                    transform: translateY(5px);
+                }}
                 </style>
-            """, unsafe_allow_html=True)
 
-            st.markdown('<div class="small-select">', unsafe_allow_html=True)
-            if user_is_premium:
-                file_ext = st.selectbox("Format", ["png", "pdf", "svg"], index=0)
-            else:
-                file_ext = st.selectbox("Format (Fonctionnalité Premium ♛)", ["png"], index=0)
+                <a href="data:{mime};base64,{data_b64}" download="{fname}" class="download-btn">
+                {svg_icon}
+                </a>
+                """, unsafe_allow_html=True)
 
-            import io, base64
-            buf = io.BytesIO()
-            try:
-                fig.savefig(buf, format=file_ext, bbox_inches='tight', dpi=300)
-            except Exception:
-                buf = io.BytesIO()
-                fig.savefig(buf, format='png', bbox_inches='tight', dpi=300)
-                file_ext = 'png'
-
-            buf.seek(0)
-            data_b64 = base64.b64encode(buf.getvalue()).decode('utf-8')
-            fname = f"graphe.{file_ext}"
-
-
-            mime_map = {'png': 'image/png', 'svg': 'image/svg+xml', 'pdf': 'application/pdf'}
-            mime = mime_map.get(file_ext, 'application/octet-stream')
-
-            svg_icon = """
-            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="#666"
-            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block; margin:auto;">
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-            <polyline points="7 10 12 15 17 10"/>
-            <line x1="12" y1="15" x2="12" y2="3"/>
-            </svg>
-            """
-            
-            st.markdown(f"""
-            <style>
-            .download-btn {{
-                display: inline-flex;
-                align-items: center;
-                justify-content: center;
-                background: #ECF0F3;
-                color: #666;
-                border: none;
-                border-radius: 15px;
-                padding: 5px 11px;
-                box-shadow: 18px 18px 30px #D1D9E6, -18px -18px 30px #FFFFFF;
-                transition: all 0.25s ease-in-out;
-                text-decoration: none;
-            }}
-            .download-btn:hover {{
-                box-shadow: inset 18px 18px 30px #D1D9E6, inset -18px -18px 30px #FFFFFF;
-            }}
-            .download-btn svg {{
-                width: 25px;
-                height: 25px;
-                display: block;
-                margin: auto;
-                transform: translateY(5px);
-            }}
-            </style>
-
-            <a href="data:file/octet-stream;base64,{data_b64}" download="{fname}" class="download-btn">
-            {svg_icon}
-            </a>
-            """, unsafe_allow_html=True)
-
-
+        # Call the fragment
+        graph_controls_and_output(df, user_is_premium)
 
     except Exception as e:
         st.error(f"Erreur : {e}")
@@ -648,7 +746,7 @@ st.markdown("""
 <div class="footer-block">
     <div class="footer-title">Légal</div>
     <div><a href="/mentions_legales" target="_blank">Mentions légales</a></div>
-    <div><a href="/CGU" target="_blank">Conditions générales d’utilisation</a></div>
+    <div><a href="/CGU" target="_blank">Conditions générales d'utilisation</a></div>
     <div><a href="/CGV" target="_blank">Conditions générales de vente</a></div>
     <div><a href="/LPD" target="_blank">Politique de confidentialité</a></div>
 </div>

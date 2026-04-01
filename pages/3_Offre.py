@@ -8,7 +8,6 @@ import os
 import time
 import stripe
 from utils.cache_function import get_cached_profile, has_access_cached
-from utils.subscription import get_profile, has_access
 from utils.cache_function import load_css
 
 st.set_page_config(page_title="Tablora - Offres", layout="wide", initial_sidebar_state="collapsed", page_icon="https://raw.githubusercontent.com/segurad308-jpg/images-tablora/refs/heads/main/logo.webp")
@@ -51,8 +50,8 @@ if user:
             st.error(f"Erreur lors de la récupération du profil: {str(e)}")
 
 if user_id:
-    profile = get_profile(user_id)
-    user_is_premium = has_access(profile)
+    profile = get_cached_profile(user_id)
+    user_is_premium = has_access_cached(profile)
 
 if "_stripe_return" in st.query_params:
     get_cached_profile.clear()
