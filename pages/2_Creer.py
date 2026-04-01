@@ -10,6 +10,7 @@ import json
 import time
 import io
 import base64
+from datetime import datetime, timedelta
 
 st.set_page_config(page_title="Tablora - Créer un graphique", layout="centered", page_icon="https://raw.githubusercontent.com/segurad308-jpg/images-tablora/refs/heads/main/logo.webp")
 
@@ -24,7 +25,7 @@ if "cookies_ready" not in st.session_state:
 raw = controller.get('username')
 user = raw if raw else None
 if raw:
-    controller.set('username', raw)
+    controller.set('username', raw, expires=datetime.now() + timedelta(days=30))
 
 load_dotenv()
 

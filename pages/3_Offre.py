@@ -9,6 +9,7 @@ import time
 import stripe
 from utils.cache_function import get_cached_profile, has_access_cached
 from utils.cache_function import load_css
+from datetime import datetime, timedelta
 
 st.set_page_config(page_title="Tablora - Offres", layout="wide", initial_sidebar_state="collapsed", page_icon="https://raw.githubusercontent.com/segurad308-jpg/images-tablora/refs/heads/main/logo.webp")
 
@@ -19,7 +20,7 @@ if "cookies_ready" not in st.session_state:
 raw = controller.get('username')
 user = raw if raw else None
 if raw:
-    controller.set('username', raw) 
+    controller.set('username', raw, expires=datetime.now() + timedelta(days=30)) 
 from utils.load_css import load_css  
 load_css("styles/style.css")
 

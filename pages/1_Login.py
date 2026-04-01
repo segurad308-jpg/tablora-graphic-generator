@@ -29,7 +29,7 @@ if "cookies_ready" not in st.session_state:
 raw = controller.get('username')
 user = raw if raw else None
 if raw:
-    controller.set('username', raw)
+    controller.set('username', raw, expires=datetime.now() + timedelta(days=30))
 
 load_css("styles/style.css")
 # Load .env
@@ -322,7 +322,7 @@ def login_user(email, password):
             st.session_state.token = response.session.access_token
             
             # Store in cookie
-            controller.set('username', st.session_state.user)
+            controller.set('username', st.session_state.user, expires=datetime.now() + timedelta(days=30))
             
             return True, "Connexion réussie!"
         return False, "Email ou mot de passe incorrect"
@@ -510,7 +510,7 @@ def fetch_token():
         }
         st.session_state.user = user_info
 
-        controller.set("username", st.session_state.user)
+        controller.set("username", st.session_state.user, expires=datetime.now() + timedelta(days=30))
 
         st.query_params.clear()
         st.session_state.token_exchanged = False

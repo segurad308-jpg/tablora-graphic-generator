@@ -4,6 +4,7 @@ import streamlit.components.v1 as components
 import extra_streamlit_components as stx
 from streamlit_cookies_controller import CookieController
 import time
+from datetime import datetime, timedelta
 from utils.cache_footer import cache_footer
 #from utils.cache_function import load_css
 from utils.html_home import render_static_home, render_static_home2
@@ -18,7 +19,7 @@ if "cookies_ready" not in st.session_state:
 raw = controller.get('username')
 user = raw if raw else None
 if raw:
-    controller.set('username', raw) 
+    controller.set('username', raw, expires=datetime.now() + timedelta(days=30)) 
 
 import sys, os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
