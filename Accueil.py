@@ -1,7 +1,4 @@
 import streamlit as st
-from streamlit_extras.switch_page_button import switch_page
-import streamlit.components.v1 as components
-import extra_streamlit_components as stx
 from streamlit_cookies_controller import CookieController
 import time
 from datetime import datetime, timedelta
@@ -12,6 +9,7 @@ from utils.html_home import render_static_home, render_static_home2
 # THIS MUST BE THE ABSOLUTE FIRST STREAMLIT COMMAND
 st.set_page_config(page_title="Tablora - Accueil", layout="wide", initial_sidebar_state="collapsed", page_icon="https://raw.githubusercontent.com/segurad308-jpg/images-tablora/refs/heads/main/logo.webp")
  
+
 controller = CookieController()
 if "cookies_ready" not in st.session_state:
     time.sleep(0.2)
@@ -21,8 +19,6 @@ user = raw if raw else None
 if raw:
     controller.set('username', raw, expires=datetime.now() + timedelta(days=30)) 
 
-import sys, os
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from utils.load_css import load_css
 load_css("styles/style.css")
