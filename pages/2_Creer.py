@@ -4,7 +4,7 @@ from streamlit_cookies_controller import CookieController
 from supabase import create_client, Client
 import os
 from dotenv import load_dotenv
-from utils.cache_function import get_cached_profile, get_supabase, has_access_cached
+from utils.cache_function import get_cached_profile, get_supabase
 import json
 import time
 import io
@@ -13,8 +13,6 @@ from datetime import datetime, timedelta
 
 st.set_page_config(page_title="Tablora - Créer un graphique", layout="centered", page_icon="https://raw.githubusercontent.com/segurad308-jpg/images-tablora/refs/heads/main/logo.webp")
 
-# AUTH & PROFILE 
-# ─────────────────────────────────────────────
 controller = CookieController()
 if "cookies_ready" not in st.session_state:
     time.sleep(0.2)
@@ -27,8 +25,6 @@ if raw:
 
 load_dotenv()
 
-# Cache the Supabase client so it isn't re-created on every rerun
-
 supabase = get_supabase()
 
 try:
@@ -40,24 +36,7 @@ except AttributeError:
     st.switch_page("pages/1_Login.py")
 
 profile = get_cached_profile(user_id)
-if not profile or not profile.get("plan"):
-    st.switch_page("pages/3_Offre.py")
 
-user_is_premium = has_access_cached(profile)
-trial_expired = is_free_expired(profile)
-
-if "_upgrade" in st.query_params:
-    st.switch_page("pages/3_Offre.py")
-
-if profile.get("plan") == "free" and trial_expired:
-    st.switch_page("pages/3_Offre.py")
-
-if user_is_premium == False and trial_expired:
-    st.switch_page("pages/3_Offre.py")
-
-# ─────────────────────────────────────────────
-# CSS / STYLES
-# ─────────────────────────────────────────────
 st.markdown("""
 <style>
 header {visibility: hidden;}
@@ -66,12 +45,9 @@ header {visibility: hidden;}
     position: relative;
     z-index: 1;
     background-color: transparent !important;
-    
-    /* === AJOUT CLÉ === */
     padding-top: 0 !important;
-    /* ================= */
 }
-/* === FORMES GÉOMÉTRIQUES DÉCORATIVES (NEUMORPHISM) === */
+
 #neumo-bg {
     position: fixed;
     inset: 0;
@@ -99,25 +75,21 @@ header {visibility: hidden;}
     50% { transform: translateY(-25px) scale(1.05); opacity: 1; }
 }
 
-/* === BACKGROUND GLOBAL === */
 body, section.main, [data-testid="stAppViewContainer"] {
     background-color: #ECF0F3 !important;
 }
 
-/* === GLOBAL TEXT === */
 html, body, [class*="css"] {
     color: #7B4EBF !important;
     font-family: 'Segoe UI', sans-serif !important;
 }
 
-/* === TITRES === */
 h1, h2, h3 {
     color: #373736 !important;
     text-align: center;
     text-shadow: 1px 1px 2px #FFF;
 }
 
-/* === FILE UPLOADER === */
 div[data-testid="stFileUploader"] {
     background: #ECF0F3 !important;
     border-radius: 15px;
@@ -127,13 +99,9 @@ div[data-testid="stFileUploader"] {
 }
 div[data-testid="stFileUploader"] label { color: #666 !important; }
 
-/* === BOUTONS === */
 div.stButton > button {
-    /* Neumorphism gradient */
     background: linear-gradient(135deg, #b26bff, #db66ff) !important;
-    /* Force white text */
     color: #fff !important;
-    /* Style */
     font-weight: 500 !important;
     border: none !important;
     border-radius: 12px !important;
@@ -151,7 +119,6 @@ div.stButton > button:active {
 }
 
 
-/* === INPUTS / TEXTBOX / SELECTBOX === */
 div[data-baseweb="select"], input[type="text"], textarea {
     background: #ECF0F3 !important;
     color: #555 !important;
@@ -165,10 +132,8 @@ div[data-baseweb="select"]:hover, input[type="text"]:hover, textarea:hover {
     box-shadow: inset 15px 15px 25px #D1D9E6, inset -15px -15px 25px #FFFFFF !important;
 }
 
-/* === Labels === */
 label, p { color: #373736 !important; font-weight: 500 !important; }
 
-/* === TABLE === */
 [data-testid="stDataFrame"] {
     background: #ECF0F3 !important;
     border-radius: 15px;
@@ -176,14 +141,12 @@ label, p { color: #373736 !important; font-weight: 500 !important; }
     padding: 15px;
 }
 
-/* === SIDEBAR === */
 section[data-testid="stSidebar"] {
     background-color: #ECF0F3 !important;
     box-shadow: 18px 0px 30px #D1D9E6;
 }
 section[data-testid="stSidebar"] * { color: #555 !important; }
 
-/* === SUPPRIMER LES DÉCORS PAR DÉFAUT === */
 [data-testid="stDecoration"] { display: none; }
 
 .logo-image {
@@ -203,18 +166,16 @@ section[data-testid="stSidebar"] * { color: #555 !important; }
     transition: all 0.3s ease;
 }
 
-/* Navigation Bar */
 .topnav {
     display: flex;
     align-items: center;
     position: relative;
     z-index: 10;
     overflow: hidden;
-    background: #f0f0f0;   /* léger gris clair */
+    background: #f0f0f0;
     padding: 8px 0;
     border-radius: 10px;
     height: 60px;
-    /* léger relief */
     box-shadow:
         3px 3px 6px #c8c8c8,
         -3px -3px 6px #ffffff;
@@ -229,7 +190,6 @@ section[data-testid="stSidebar"] * { color: #555 !important; }
     font-weight: 450;
     border-radius: 25px;
 
-    /* très léger effet bouton en relief */
     height: 40px;
     background: #f0f0f0;
     display: inline-flex;
@@ -251,15 +211,13 @@ section[data-testid="stSidebar"] * { color: #555 !important; }
     box-shadow: none;
 }
 
-/* Hover (légèrement creusé) */
 .topnav a:hover:not(.CTA-nav-btn):not(.logo-image-graph) {
     background-color: #e7e7e7;
     color: #222;
 }
 
-/* Page active → violet + creusé */
 .topnav a.active {
-    background: #a47cff !important; /* violet doux */
+    background: #a47cff !important;
     color: white !important;
     box-shadow:
         inset 2px 2px 4px #8c6de0,
@@ -289,59 +247,43 @@ st.markdown("""
     box-shadow: 4px 4px 14px #c4becf, -2px -2px 8px #c4becf !important;
 }
 
-/* Tag text softer and clean */
 [data-baseweb="tag"] span {
     color: #7B4EBF !important;
     font-weight: 500 !important;
     letter-spacing: 0.01em !important;
 }
 
-/* Tag close icon with mild color */
 [data-baseweb="tag"] svg {
     color: #b8b3d1 !important;
 }
 
-/* Remove focus border */
 [data-baseweb="tag"]:focus {
     outline: none !important;
     border: none !important;
 }
-            
+
 .neumo-btn2 {
     display: flex;
     background: #603CC9;
     color: #fff;
     font-family: 'Segoe UI', sans-serif !important;
     font-weight: 600;
-    font-size: 16px;          /* 🔹 encore plus petit */
-    padding: 10px 14px;        /* 🔹 bouton beaucoup moins large */
+    font-size: 16px;
+    padding: 10px 14px;
     border-radius: 10px;
     text-decoration: none;
     margin: 0px auto 0px auto;
     box-shadow: 6px 6px 14px #D1D9E6, -6px -6px 14px #FFFFFF;
     transition: all 0.25s ease-in-out;
-    width: fit-content;       
-    white-space: nowrap;   
-    border: 2px solid #603CC9;   
+    width: fit-content;
+    white-space: nowrap;
+    border: 2px solid #603CC9;
 }
 .neumo-btn2:hover {
     box-shadow: inset 6px 6px 14px #3d277c, inset -6px -6px 14px #3d277c;
     color: #f1e8ff;
     border-color: #3d277c;
     transform: translateY(-1px);
-} 
-.upgrade-section {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    padding: 25px;
-    border-radius: 20px;
-    background: #ECF0F3;
-    box-shadow: 18px 18px 30px #D1D9E6, -18px -18px 30px #FFFFFF;
-    margin: 30px 0;
-    width: 100%;
-    justify-content: space-around;
-    box-sizing: border-box;
 } 
 .nav-right {
     margin-left: auto;
@@ -358,26 +300,20 @@ st.markdown("""
 """, unsafe_allow_html=True)
 st.markdown("""
 <style>
-
-/* Cible directe : nom du fichier */
 .stFileUploaderFileName {
     color: #555 !important;
 }
 
-/* Cible les classes Emotion générées dynamiquement */
 .st-emotion-cache-1fi65ho {
     color: #555 !important;
 }
 
-/* Taille du fichier (en dessous) */
 .st-emotion-cache-c8ta4l {
     color: #777 !important;
 }
-
 </style>
 """, unsafe_allow_html=True)
 
-# ===== NAVIGATION BAR =====
 login_status = "Profil" if user else "Login"
 st.markdown(f"""  
 <div class="topnav">
@@ -387,7 +323,6 @@ st.markdown(f"""
         alt="Tablora Logo" />
 </a>
             
-<a href="/Offre" target="_self">Offre</a>
 <a class="active" href="/Creer" target="_self" >Créer</a>
 <div class="nav-right">
     <a href="/Login" target="_self">{login_status}</a>
@@ -403,90 +338,37 @@ st.markdown("""
     <div class="shape"></div>
 </div>
 """, unsafe_allow_html=True)
-if not user_is_premium:
-    st.markdown("""
-    <div class="upgrade-section" style="margin-top:40px;">
-    <div style="
-        max-width: 720px;
-        margin: 0 auto;
-        padding: 30px;
-        text-align: center;
-    ">
-    <div style="
-        font-size: 26px;
-        font-weight: 700;
-        color: #311566;
-        margin-bottom: 10px;
-    ">
-        Débloquez tout le potentiel de <span style="color:#603CC9;">Tablora</span>
-    </div>
-
-    <div style="
-        font-size: 17px;
-        color: #555;
-        line-height: 1.6;
-        margin-bottom: 20px;
-    ">
-        Accédez à toutes les fonctionnalités avancées :<br>
-        graphiques illimités, export haute qualité, thèmes premium<br>
-        et une expérience sans restriction.
-    </div>
-    <form action="" method="get">
-        <button class="neumo-btn2" name="_upgrade" value="1" type="submit">
-            Passer à Premium
-        </button>
-    </form>
-    </div>
-    </div>
-    """, unsafe_allow_html=True)
 
 st.title("Créer un graphique")
 
-# ─────────────────────────────────────────────
-# DATA LOADING — cached so the file isn't re-parsed on every widget interaction
-# ─────────────────────────────────────────────
+
 @st.cache_data(show_spinner=False)
 def cached_load_data(file_bytes, file_name):
-    """Wrap load_data so the result is memoised by file content.
-    Attaches .name to the BytesIO so load_data can detect the file type."""
+    """Memoize file parsing by content: load_data relies on ``buf.name`` to detect csv vs xlsx."""
     import io
     buf = io.BytesIO(file_bytes)
-    buf.name = file_name  # load_data uses .name to detect csv vs xlsx
+    buf.name = file_name
     return load_data(buf)
 
 
-# ─────────────────────────────────────────────
-# FILE UPLOAD
-# ─────────────────────────────────────────────
 file_path = st.file_uploader("Importer un fichier CSV ou Excel", type=["csv", "xlsx"])
 
 if file_path is not None:
     try:
-        # Read file bytes once; cache key is the bytes + filename
         file_bytes = file_path.read()
         df = cached_load_data(file_bytes, file_path.name)
 
         st.write("Données chargées avec succès !")
         st.dataframe(df.head())
 
-        # ─────────────────────────────────────────────
-        # GRAPH CONTROLS — wrapped in a fragment so widget
-        # interactions only rerun this section, not the whole page
-        # ─────────────────────────────────────────────
+        # Streamlit fragment: interactions only re-run this block, not the whole page.
         @st.fragment
-        def graph_controls_and_output(df, user_is_premium):
-            if user_is_premium:
-                plot_type_label = st.selectbox(
-                    "Type de graphique",
-                    ["ligne", "barre", "nuage de points", "circulaire"],
-                    key="plot_type_select"
-                )
-            else:
-                plot_type_label = st.selectbox(
-                    "Type de graphique (Fonctionnalité Premium ♛)",
-                    ["ligne", "barre"],
-                    key="plot_type_select"
-                )
+        def graph_controls_and_output(df):
+            plot_type_label = st.selectbox(
+                "Type de graphique",
+                ["ligne", "barre", "nuage de points", "circulaire"],
+                key="plot_type_select"
+            )
 
             label_to_type = {
                 "ligne": "line",
@@ -496,7 +378,6 @@ if file_path is not None:
             }
             plot_type = label_to_type.get(plot_type_label, "line")
 
-            # Column selection
             x_column = st.selectbox(
                 "Colonne pour l'axe X",
                 options=df.columns.tolist(),
@@ -519,7 +400,6 @@ if file_path is not None:
                     key="y_columns_multiselect"
                 )
 
-            # Linear regression option for scatter plots
             show_regression = False
             if plot_type == "scatter":
                 show_regression = st.checkbox(
@@ -527,18 +407,11 @@ if file_path is not None:
                     key="show_regression_cb"
                 )
 
-            if user_is_premium:
-                fond_choice = st.selectbox(
-                    "Thème",
-                    ["Blanc pur", "Clair doux", "Sombre"],
-                    key="fond_select"
-                )
-            else:
-                fond_choice = st.selectbox(
-                    "Thème (Fonctionnalité Premium ♛)",
-                    ["Blanc pur"],
-                    key="fond_select"
-                )
+            fond_choice = st.selectbox(
+                "Thème",
+                ["Blanc pur", "Clair doux", "Sombre"],
+                key="fond_select"
+            )
 
             title_choice = st.text_input("Titre du graphique", key="title_input")
             if plot_type != "pie":
@@ -557,8 +430,8 @@ if file_path is not None:
                             df_filtered, plot_type, fond_choice,
                             title_choice, x_label, y_label, show_regression
                         )
-                        # Serialise to bytes immediately so matplotlib fig
-                        # doesn't stay in memory; store only bytes in state
+                        # Serialize to bytes immediately so we only keep bytes in session state
+                        # (otherwise matplotlib holds the figure in memory).
                         buf = io.BytesIO()
                         buf_pdf = io.BytesIO()
                         buf_svg = io.BytesIO()
@@ -573,20 +446,18 @@ if file_path is not None:
                             buf_svg = None
 
                         import matplotlib.pyplot as plt
-                        plt.close(fig)  # Free matplotlib memory immediately
+                        plt.close(fig)
 
                         st.session_state['last_fig_png'] = buf.getvalue()
                         st.session_state['last_fig_pdf'] = buf_pdf.getvalue() if buf_pdf else None
                         st.session_state['last_fig_svg'] = buf_svg.getvalue() if buf_svg else None
                         st.session_state['last_title'] = title_choice
 
-            # ── Display stored graph ──
             if 'last_fig_png' in st.session_state:
                 st.image(st.session_state['last_fig_png'], use_container_width=True)
 
                 st.markdown("""
                     <style>
-                    /* Réduit uniquement la selectbox de la classe .small-select */
                     .small-select [data-baseweb="select"] {
                         width: 130px !important;
                         min-width: 130px !important;
@@ -609,23 +480,14 @@ if file_path is not None:
                 """, unsafe_allow_html=True)
 
                 st.markdown('<div class="small-select">', unsafe_allow_html=True)
-                if user_is_premium:
-                    file_ext = st.selectbox(
-                        "Format",
-                        ["png", "pdf", "svg"],
-                        index=0,
-                        key="format_select"
-                    )
-                else:
-                    file_ext = st.selectbox(
-                        "Format (Fonctionnalité Premium ♛)",
-                        ["png"],
-                        index=0,
-                        key="format_select"
-                    )
+                file_ext = st.selectbox(
+                    "Format",
+                    ["png", "pdf", "svg"],
+                    index=0,
+                    key="format_select"
+                )
                 st.markdown('</div>', unsafe_allow_html=True)
 
-                # Pick the pre-rendered bytes for the chosen format
                 format_map = {
                     "png": st.session_state.get('last_fig_png'),
                     "pdf": st.session_state.get('last_fig_pdf'),
@@ -633,7 +495,7 @@ if file_path is not None:
                 }
                 raw_bytes = format_map.get(file_ext)
 
-                # Fall back to PNG if the chosen format isn't available
+                # PNG is always available: fall back to it if the PDF/SVG export failed.
                 if raw_bytes is None:
                     raw_bytes = st.session_state['last_fig_png']
                     file_ext = "png"
@@ -684,13 +546,11 @@ if file_path is not None:
                 </a>
                 """, unsafe_allow_html=True)
 
-        # Call the fragment
-        graph_controls_and_output(df, user_is_premium)
+        graph_controls_and_output(df)
 
     except Exception as e:
         st.error(f"Erreur : {e}")
 
-# ===== FOOTER =====
 st.markdown("""
 <style>
 .footer {
@@ -746,7 +606,6 @@ st.markdown("""
     <div class="footer-title">Légal</div>
     <div><a href="/mentions_legales" target="_blank">Mentions légales</a></div>
     <div><a href="/CGU" target="_blank">Conditions générales d'utilisation</a></div>
-    <div><a href="/CGV" target="_blank">Conditions générales de vente</a></div>
     <div><a href="/LPD" target="_blank">Politique de confidentialité</a></div>
 </div>
 

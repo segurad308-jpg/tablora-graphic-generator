@@ -50,7 +50,6 @@ st.markdown("""
     <ul>
         <li>Adresse email</li>
         <li>Informations liées au compte utilisateur</li>
-        <li>Informations de facturation et de paiement</li>
     </ul>
 
     <p>
@@ -76,7 +75,6 @@ st.markdown("""
 
     <ul>
         <li>La création et la gestion des comptes utilisateurs</li>
-        <li>La gestion des abonnements et de la facturation</li>
         <li>La fourniture et l’amélioration du Service</li>
         <li>La communication avec les utilisateurs (support, informations importantes)</li>
     </ul>
@@ -98,18 +96,13 @@ st.markdown("""
     aux finalités pour lesquelles elles ont été collectées.
     </p>
 
-    <p>
-    Les données liées à la facturation peuvent être conservées conformément aux obligations
-    légales suisses en matière comptable.
-    </p>
-
     <h2>8. Partage des données</h2>
     <p>
     Les données personnelles ne sont ni vendues, ni louées, ni échangées.
     </p>
 
     <p>
-    Elles peuvent être transmises uniquement à des prestataires techniques ou de paiement,
+    Elles peuvent être transmises uniquement à des prestataires techniques,
     dans la mesure strictement nécessaire à la fourniture du Service.
     </p>
 

@@ -2,11 +2,9 @@ import os
 import pandas as pd 
 def load_data(file) -> pd.DataFrame:
     def detect_decimal(file, sample_size=5000):
-        """
-        Detects whether a CSV uses ',' or '.' as decimal separator.
-        """
+        """Guess whether the CSV uses ',' or '.' as the decimal separator by inspecting a sample."""
         sample = file.read(sample_size).decode("utf-8", errors="ignore")
-        file.seek(0)  # IMPORTANT: reset pointer
+        file.seek(0)  # We consumed the file while reading: reset the cursor to the start before pandas re-reads it.
 
         comma_decimal = sample.count(",") and any(
             c.isdigit() and n == "," and p.isdigit()
@@ -58,11 +56,11 @@ def generate_graph(df, plot_type=None, fond_choice=None, title_choice=None, x_la
     import numpy as np
     from matplotlib.ticker import ScalarFormatter
     def clean_to_float(val):
-        """Convertit proprement une valeur en float, même si elle contient espaces/virgules."""
+        """Convert a value to float, tolerating whitespace (including non-breaking) and the comma decimal."""
         if pd.isna(val):
             return np.nan
-        val = str(val).replace(" ", "").replace("\xa0", "")  # supprime espaces et insécables
-        val = val.replace(",", ".")  # remplace les virgules par des points
+        val = str(val).replace(" ", "").replace("\xa0", "")
+        val = val.replace(",", ".")
         try:
             return float(val)
         except ValueError:
@@ -78,18 +76,15 @@ def generate_graph(df, plot_type=None, fond_choice=None, title_choice=None, x_la
         )
         return df_agg
 
-    # === OPTIMIZATION FOR LARGE DATASETS ===
+    # Above ~1000 points, downsample to target ~600 points: rendering stays readable and fast.
     original_len = len(df)
-
     if original_len > 1000 and plot_type in ["line", "bar", "scatter"]:
-        # Calculate downsample factor to get around 500-800 points
         downsample_factor = max(2, original_len // 600)
         df = df.iloc[::downsample_factor].reset_index(drop=True)
 
-    # graphe
-    x_col = df.columns[0]  # première colonne pour l'axe X
-    y_cols = df.columns[1:]  # toutes les autres colonnes pour l'axe Y
-    
+    x_col = df.columns[0]
+    y_cols = df.columns[1:]
+
     df[y_cols] = df[y_cols].applymap(clean_to_float)
 
     if df[x_col].duplicated().any():
@@ -102,8 +97,6 @@ def generate_graph(df, plot_type=None, fond_choice=None, title_choice=None, x_la
     if pd.isna(max_y) or max_y == 0:
         max_y = 1
 
-
-    # Définition des couleurs selon le choix
     if fond_choice == "Blanc pur":
         figure_facecolor = '#ffffff'
         axes_facecolor = '#ffffff'
@@ -122,7 +115,7 @@ def generate_graph(df, plot_type=None, fond_choice=None, title_choice=None, x_la
         grid_color = '#555555'
         text_facecolor = "#FFFFFF"
         axes_labelcolor = "#FFFFFF"
-    else:  # fallback
+    else:
         figure_facecolor = '#f5f5f5'
         axes_facecolor = '#f5f5f5'
         grid_color = '#dddddd'
@@ -130,36 +123,34 @@ def generate_graph(df, plot_type=None, fond_choice=None, title_choice=None, x_la
         axes_labelcolor = '#222222'
 
 
-    # === Style global moderne ===
     plt.rcParams.update({
         'figure.facecolor': figure_facecolor,
         'axes.facecolor': axes_facecolor,
-        'axes.edgecolor': axes_labelcolor,      # axes eux-mêmes
-        'axes.labelcolor': axes_labelcolor, 
-        'grid.color': grid_color,
-        'font.family': 'DejaVu Sans',      # Police moderne, claire et bien proportionnée
-        'font.size': 11,                   # Taille lisible
-        'axes.titlesize': 14,              # Taille du titre du graphe
-        'axes.labelsize': 12,              # Taille des labels des axes
-        'legend.fontsize': 10,             # Taille de la légende
-        'xtick.labelsize': 10,             # Taille des ticks en X
-        'ytick.labelsize': 10, 
-        'xtick.color': text_facecolor,           # ticks X
-        'ytick.color': text_facecolor,            # Taille des ticks en Y
-        'axes.linewidth': 0.8,             
-        'text.color': text_facecolor,           # Texte légèrement assombri
+        'axes.edgecolor': axes_labelcolor,
         'axes.labelcolor': axes_labelcolor,
-        'legend.facecolor': axes_facecolor,      # fond légende
+        'grid.color': grid_color,
+        'font.family': 'DejaVu Sans',
+        'font.size': 11,
+        'axes.titlesize': 14,
+        'axes.labelsize': 12,
+        'legend.fontsize': 10,
+        'xtick.labelsize': 10,
+        'ytick.labelsize': 10,
+        'xtick.color': text_facecolor,
+        'ytick.color': text_facecolor,
+        'axes.linewidth': 0.8,
+        'text.color': text_facecolor,
+        'axes.labelcolor': axes_labelcolor,
+        'legend.facecolor': axes_facecolor,
         'legend.edgecolor': axes_labelcolor
     })
 
-    # === Création du graphique ===
     fig, ax = plt.subplots(figsize=(10,6))
 
-    # GRAPHIQUE EN COURBE
     if plot_type == "line":
         ax.set_axisbelow(True)
-        colors = plt.cm.tab10.colors  # 10 couleurs distinctes
+        colors = plt.cm.tab10.colors
+        # Above 200 points the markers become unreadable, so we hide them.
         marker_style = 'o' if len(x) < 200 else None
         markersize = 6 if len(x) < 200 else 0
 
@@ -176,7 +167,7 @@ def generate_graph(df, plot_type=None, fond_choice=None, title_choice=None, x_la
                 alpha=0.9
             )
 
-        # Appliquer ScalarFormatter uniquement si l'axe est numérique
+        # ticklabel_format fails silently on non-numeric axes: we let it pass.
         try:
             ax.ticklabel_format(style='plain', axis='y', useOffset=False)
         except:
@@ -196,7 +187,6 @@ def generate_graph(df, plot_type=None, fond_choice=None, title_choice=None, x_la
             for tick in ax.get_xticklabels():
                 tick.set_rotation(45)
                 tick.set_ha('right')
-            # Reduce number of x-ticks for very large datasets
             if len(x) > 100:
                 ax.locator_params(axis='x', nbins=min(20, len(x)//10))
         else:
@@ -206,10 +196,9 @@ def generate_graph(df, plot_type=None, fond_choice=None, title_choice=None, x_la
 
         fig.tight_layout()
 
-    # GRAPHIQUE EN BARRE
     elif plot_type == "bar":
         ax.set_axisbelow(True)
-        colors = plt.cm.Paired.colors  
+        colors = plt.cm.Paired.colors
         if len(y_cols) == 0:
             raise ValueError("Aucune colonne Y détectée pour le graphique")
         width = 0.8 / len(y_cols)
@@ -220,7 +209,7 @@ def generate_graph(df, plot_type=None, fond_choice=None, title_choice=None, x_la
                 x_positions + i * width,
                 y_data[col],
                 width=width,
-                color=colors[i % len(colors)],  
+                color=colors[i % len(colors)],
                 edgecolor='white',
                 linewidth=1,
                 label=col,
@@ -238,7 +227,7 @@ def generate_graph(df, plot_type=None, fond_choice=None, title_choice=None, x_la
         
         group_centers = x_positions + width * (len(y_cols) - 1) / 2
 
-        # --- LOGIQUE ADAPTATIVE DES TICKS ---
+        # Progressively space out the ticks to avoid label overlap.
         if len(x) > 100:
             step = max(1, len(x) // 20)
             xticks = group_centers[::step]
@@ -259,16 +248,12 @@ def generate_graph(df, plot_type=None, fond_choice=None, title_choice=None, x_la
         ax.set_xticks(xticks)
         ax.set_xticklabels(xlabels, rotation=rotation, ha='right')
 
-        # Marges et style du graphe
         ax.set_ylim(0, max_y * 1.2)
         ax.grid(True, axis='y', linestyle='--', alpha=0.3)
-        
 
-        # Retirer les bordures pour un rendu “flat”
         for spine in ax.spines.values():
             spine.set_visible(False)
 
-        # Légende propre et déportée
         ax.legend(
             frameon=False,
             loc='upper left',
@@ -278,11 +263,11 @@ def generate_graph(df, plot_type=None, fond_choice=None, title_choice=None, x_la
 
         fig.tight_layout()
 
-    # GRAPHIQUE EN NUAGE DE POINTS
     elif plot_type == "scatter":
         ax.set_axisbelow(True)
-        colors = plt.cm.tab10.colors  # palette vive et cohérente
+        colors = plt.cm.tab10.colors
         markers = ['o', 's', 'D', '^', 'v', 'P', 'X', '*']
+        # Above 500 points, shrink the markers so they don't hide each other.
         point_size = 80 if len(x) < 500 else max(20, 80 - (len(x) // 20))
 
         for i, col in enumerate(y_cols):
@@ -291,31 +276,26 @@ def generate_graph(df, plot_type=None, fond_choice=None, title_choice=None, x_la
                 y_data[col],
                 label=col,
                 color=colors[i % len(colors)],
-                s=point_size,  # taille des points
-                alpha=0.85,  # légère transparence
-                edgecolor='white',  # contour blanc net
+                s=point_size,
+                alpha=0.85,
+                edgecolor='white',
                 linewidth=0.8,
                 marker=markers[i % len(markers)]
             )
 
-            # Add linear regression line if requested
             if show_regression:
                 try:
-                    # Try to convert x to numeric
                     x_numeric = pd.to_numeric(x, errors='coerce')
                     y_numeric = y_data[col]
-                    
-                    # Remove NaN values
+
                     mask = ~(x_numeric.isna() | y_numeric.isna())
                     x_clean = x_numeric[mask]
                     y_clean = y_numeric[mask]
-                    
+
                     if len(x_clean) > 1:
-                        # Calculate linear regression
                         z = np.polyfit(x_clean, y_clean, 1)
                         p = np.poly1d(z)
-                        
-                        # Plot regression line
+
                         x_line = np.linspace(x_clean.min(), x_clean.max(), 100)
                         ax.plot(
                             x_line,
@@ -327,7 +307,7 @@ def generate_graph(df, plot_type=None, fond_choice=None, title_choice=None, x_la
                             label=f'Régression {col}'
                         )
                     elif len(y_numeric.dropna()) > 0:
-                        # If x is not numeric but we have y values, show mean line
+                        # Non-numeric X: regression isn't possible, so we display the mean of Y instead.
                         y_mean = y_numeric.mean()
                         ax.axhline(
                             y=y_mean,
@@ -338,7 +318,6 @@ def generate_graph(df, plot_type=None, fond_choice=None, title_choice=None, x_la
                             label=f'Moyenne {col}'
                         )
                 except Exception as e:
-                    # Fallback: try to show mean line if possible
                     try:
                         y_numeric = y_data[col]
                         if len(y_numeric.dropna()) > 0:
@@ -363,15 +342,12 @@ def generate_graph(df, plot_type=None, fond_choice=None, title_choice=None, x_la
         except:
             pass
 
-        # Marges et limites
         ax.set_ylim(0, max_y * 1.2)
         ax.grid(True, linestyle='--', alpha=0.5)
 
-        # Retirer les bordures
         for spine in ax.spines.values():
             spine.set_visible(False)
 
-        # Légende fluide et externe
         ax.legend(
             frameon=False,
             loc='upper left',
@@ -381,16 +357,13 @@ def generate_graph(df, plot_type=None, fond_choice=None, title_choice=None, x_la
 
         fig.tight_layout()
 
-    # GRAPHIQUE EN CAMAMBERT
     elif plot_type == "pie":
-        colors = plt.cm.Paired.colors  # palette douce et contrastée
+        colors = plt.cm.Paired.colors
 
         for i, col in enumerate(y_cols):
-            # Nettoyage et conversion
             serie = df[col].astype(str).str.replace(" ", "", regex=False)
             serie = pd.to_numeric(serie, errors="coerce")
 
-            # Retirer les NaN (valeurs non numériques)
             valid = ~serie.isna()
             values = serie[valid]
             labels = x[valid]
@@ -398,7 +371,6 @@ def generate_graph(df, plot_type=None, fond_choice=None, title_choice=None, x_la
             if values.empty:
                 print(f"⚠️ Impossible de tracer {col} (aucune valeur numérique)")
 
-            # === Création du pie chart ===
             else:
                 wedges, texts, autotexts = ax.pie(
                     values,
@@ -406,17 +378,16 @@ def generate_graph(df, plot_type=None, fond_choice=None, title_choice=None, x_la
                     autopct='%1.1f%%',
                     startangle=90,
                     colors=colors,
-                    pctdistance=0.8,       # pour cent un peu plus proches du bord
-                    labeldistance=1.05,    # labels un peu espacés
-                    wedgeprops={'edgecolor': axes_facecolor, 'linewidth': 1.5},  # bordures nettes
+                    pctdistance=0.8,
+                    labeldistance=1.05,
+                    wedgeprops={'edgecolor': axes_facecolor, 'linewidth': 1.5},
                     textprops={'color': text_facecolor, 'fontsize': 10}
                 )
 
-                # Cercle central pour effet “donut”
+                # Central circle that turns the pie chart into a "donut".
                 centre_circle = plt.Circle((0, 0), 0.55, fc=axes_facecolor, alpha=1)
                 ax.add_artist(centre_circle)
 
-                # Aspect circulaire parfait
                 ax.set_aspect('equal')
 
                 titre_final = title_choice if 'title_choice' in locals() and title_choice else f"Répartition de {col}"
@@ -427,7 +398,6 @@ def generate_graph(df, plot_type=None, fond_choice=None, title_choice=None, x_la
                     fontweight='semibold',
                     color=text_facecolor
                 )
-                # Légende externe, propre
                 ax.legend(
                     wedges,
                     labels,
@@ -440,7 +410,6 @@ def generate_graph(df, plot_type=None, fond_choice=None, title_choice=None, x_la
         fig.tight_layout()
         return fig
 
-    # === Mise en forme ===
     if plot_type != "pie":
         ax.set_title(title_choice, pad=15)
         ax.set_xlabel(x_label)

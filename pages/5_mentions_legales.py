@@ -53,12 +53,8 @@ st.markdown("""
 
     <h2>Accès au service</h2>
     <p>
-        Le service est accessible :
+        Le service est accessible gratuitement à tous les utilisateurs.
     </p>
-    <ul>
-        <li>soit gratuitement avec des fonctionnalités limitées,</li>
-        <li>soit via une offre payante donnant accès à des fonctionnalités supplémentaires.</li>
-    </ul>
     <p>
         L’éditeur se réserve le droit de modifier, suspendre ou interrompre tout ou partie du service à tout moment, notamment pour des raisons de maintenance ou d’amélioration.
     </p>
@@ -80,7 +76,6 @@ st.markdown("""
     </p>
     <ul>
         <li>l’authentification,</li>
-        <li>la gestion des abonnements,</li>
         <li>le bon fonctionnement du service.</li>
     </ul>
     <p>

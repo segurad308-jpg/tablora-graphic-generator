@@ -3,10 +3,9 @@ from streamlit_cookies_controller import CookieController
 import time
 from datetime import datetime, timedelta
 from utils.cache_footer import cache_footer
-#from utils.cache_function import load_css
 from utils.html_home import render_static_home, render_static_home2
 
-# THIS MUST BE THE ABSOLUTE FIRST STREAMLIT COMMAND
+# set_page_config must be the first Streamlit call on the page.
 st.set_page_config(page_title="Tablora - Accueil", layout="wide", initial_sidebar_state="collapsed", page_icon="https://raw.githubusercontent.com/segurad308-jpg/images-tablora/refs/heads/main/logo.webp")
  
 
@@ -32,21 +31,18 @@ st.markdown(f"""
         alt="Tablora Logo" />
 </a>
             
-<a href="/Offre" target="_self">Offre</a>
 <a href="/Creer" target="_self">Créer</a>
 <div class="nav-right">
     <a href="/Login" target="_self">{login_status}</a>
-    <a href="/Offre" target="_self" class="CTA-nav-btn">
+    <a href="/Creer" target="_self" class="CTA-nav-btn">
         Créer maintenant  🡪
     </a>
 </div>
 </div>
 """, unsafe_allow_html=True)
 
-# ===== HERO SECTION =====
 st.markdown(render_static_home(), unsafe_allow_html=True)
 
-# ===== FAQ SECTION =====
 col_left, col_right = st.columns([1, 1.7])
 
 with col_left:
@@ -54,7 +50,7 @@ with col_left:
     <div class="st2">
         Frequently Asked ‎<span style="color:#a47cff;"><i>Questions</i></span>
     </div>
-    <a href="/Offre" target="_self" class="neumo-btn1" style="margin-top: 0;">
+    <a href="/Creer" target="_self" class="neumo-btn1" style="margin-top: 0;">
                 Essayer gratuitement
     </a>
     """, unsafe_allow_html=True)
@@ -110,5 +106,4 @@ with col_right:
 
 st.markdown(render_static_home2(), unsafe_allow_html=True)
 
-# ===== FOOTER =====
 st.markdown(cache_footer(), unsafe_allow_html=True)

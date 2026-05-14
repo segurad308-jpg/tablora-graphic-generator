@@ -4,7 +4,7 @@ import streamlit as st
 def render_static_home():
     return """
     <div class="hero-section">
-        <a class="hero-catch" href="/Offre" target="_self">
+        <a class="hero-catch" href="/Creer" target="_self">
             <div class="hero-catch-left">ㅤN°1ㅤ</div>
             <div class="hero-catch-mid">ㅤTablora pour Créer et Personnaliser Vos Graphiques  ㅤ</div>
             <div class="hero-catch-right">‎ ‎  🡪 ‎ ‎ </div>
@@ -17,7 +17,7 @@ def render_static_home():
                 Grâce à Tablora, élaborez vos graphiques en seulement quelques clics
         </h2>
         <div style="display: flex; gap: 20px; margin-top: 30px; margin-bottom: 20px;">
-            <a href="/Offre" target="_self" class="neumo-btn1">
+            <a href="/Creer" target="_self" class="neumo-btn1">
                 Essayer gratuitement
             </a>
         </div>
@@ -125,7 +125,7 @@ def render_static_home():
     </div>
     </div>
     <div style="display:flex; justify-content:center; margin-top:20px;">
-        <a href="/Offre" target="_self" class="neumo-btn2">
+        <a href="/Creer" target="_self" class="neumo-btn2">
             Essayer gratuitement
         </a>
     </div>
@@ -181,7 +181,7 @@ def render_static_home():
         <li>Support client</li>
     </ul>
     <div style="display:flex; margin-top:40px;">
-        <a href="/Offre" target="_self" class="neumo-btn2">
+        <a href="/Creer" target="_self" class="neumo-btn2">
             Essayer gratuitement
         </a>
     </div>
@@ -199,7 +199,7 @@ def render_static_home():
             <div class="neumo-text">
                 Générez des graphiques époustouflants en seulement quelques secondes grâce à notre interface intuitive.
             </div>
-            <a href="/Offre" target="_self" class="neumo-btn1">
+            <a href="/Creer" target="_self" class="neumo-btn1">
                 Essayer gratuitement
             </a>
         </div>
@@ -249,10 +249,10 @@ def render_static_home():
     </tr>
 
     <tr>
-        <td>Abordable et accessible</td>
+        <td>Gratuit et open source</td>
         <td class="tablora-cell"><span class="neumo-check">✔</span></td>
         <td class="neumo-check">-</td>
-        <td class="neumo-check">✔</td>
+        <td class="neumo-check">-</td>
     </tr>
     </table>
     </div>
@@ -305,7 +305,7 @@ def render_static_home2():
     </div>
 
     <div style="display: flex; justify-content: center; gap: 20px; margin-top: 0; text-align: center;">
-        <a href="/Offre" target="_self" class="neumo-btn2">
+        <a href="/Creer" target="_self" class="neumo-btn2">
             Essayer gratuitement
         </a>
     </div>

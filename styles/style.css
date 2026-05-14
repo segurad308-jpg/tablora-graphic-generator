@@ -1,4 +1,3 @@
-/* ACCUEIL */
 header {visibility: hidden;}
 
 .main > div {
@@ -63,7 +62,7 @@ h2 {
     gap: 24px;
 }
 .feature-card {
-    background: #ecf0f3; /* fond foncé */
+    background: #ecf0f3;
     border-radius: 20px;
     padding: 28px;
 
@@ -79,11 +78,11 @@ h2 {
 }
             
 .feature-image {
-    width: 50%;           /* ajustable */
+    width: 50%;
     height: auto;
     border-radius: 15px;
     display: block;
-    margin: 0 auto 15px auto;   /* centre */
+    margin: 0 auto 15px auto;
 }
 
 .feature-title {
@@ -222,14 +221,14 @@ h2 {
     color: #603CC9 !important;
     font-family: 'Segoe UI', sans-serif !important;
     font-weight: 600;
-    font-size: 16px;          /* 🔹 encore plus petit */
-    padding: 10px 14px;        /* 🔹 bouton beaucoup moins large */
+    font-size: 16px;
+    padding: 10px 14px;
     border-radius: 10px;
     text-decoration: none;
     margin-top: 20px;
     box-shadow: 6px 6px 14px #D1D9E6, -6px -6px 14px #FFFFFF;
     transition: all 0.25s ease-in-out;
-    width: fit-content;       
+    width: fit-content;
     white-space: nowrap;
     border: 2px solid #603CC9;
 }
@@ -241,8 +240,8 @@ h2 {
     color: #fff !important;
     font-family: 'Segoe UI', sans-serif !important;
     font-weight: 600;
-    font-size: 16px;          /* 🔹 encore plus petit */
-    padding: 10px 14px;        /* 🔹 bouton beaucoup moins large */
+    font-size: 16px;
+    padding: 10px 14px;
     border-radius: 10px;
     margin-top: 20px;
     box-shadow: 6px 6px 14px #D1D9E6, -6px -6px 14px #FFFFFF;
@@ -270,16 +269,16 @@ h2 {
     color: #fff !important;
     font-family: 'Segoe UI', sans-serif !important;
     font-weight: 600;
-    font-size: 16px;          
-    padding: 10px 14px;        
+    font-size: 16px;
+    padding: 10px 14px;
     border-radius: 10px;
     text-decoration: none;
     margin: 0;
     box-shadow: 6px 6px 14px #D1D9E6, -6px -6px 14px #FFFFFF;
     transition: all 0.25s ease-in-out;
-    width: fit-content;       
-    white-space: nowrap;   
-    border: 2px solid #603CC9;   
+    width: fit-content;
+    white-space: nowrap;
+    border: 2px solid #603CC9;
 }
 .neumo-btn2:hover {
     box-shadow: inset 6px 6px 14px #3d277c, inset -6px -6px 14px #3d277c;
@@ -294,16 +293,16 @@ h2 {
     color: #603CC9 !important;
     font-family: 'Segoe UI', sans-serif !important;
     font-weight: 600;
-    font-size: 16px;          /* 🔹 encore plus petit */
-    padding: 10px 14px;        /* 🔹 bouton beaucoup moins large */
+    font-size: 16px;
+    padding: 10px 14px;
     border-radius: 10px;
     text-decoration: none;
     margin: 0;
     box-shadow: 6px 6px 14px #D1D9E6, -6px -6px 14px #FFFFFF;
     transition: all 0.25s ease-in-out;
-    width: fit-content;       
-    white-space: nowrap;    
-    border: 2px solid #603CC9;  
+    width: fit-content;
+    white-space: nowrap;
+    border: 2px solid #603CC9;
 }
 .neumo-btn3:hover {
     box-shadow: inset 6px 6px 14px #D1D9E6, inset -6px -6px 14px #D1D9E6;
@@ -346,20 +345,17 @@ html, body {
     line-height: 1.45 !important;
     text-align: center !important;
 }
-/* Grille en arrière-plan uniquement */
 .hero-section::before {
     content: "";
     position: absolute;
     inset: 0;
     z-index: 0;
 
-    /* Grille */
     background-image:
         linear-gradient(to right, rgba(0, 0, 0, 0.06) 1px, transparent 1px),
         linear-gradient(to bottom, rgba(0, 0, 0, 0.06) 1px, transparent 1px);
     background-size: 60px 60px;
 
-    /* Fondu vers les bords */
     -webkit-mask-image: radial-gradient(
         circle at center,
         rgba(0, 0, 0, 1) 40%,
@@ -380,8 +376,8 @@ html, body {
     display: inline-block;
     background: #ffffff;
     color: #444 !important;
-    font-family: 'Segoe UI', sans-serif !important;          /* 🔹 encore plus petit */
-    padding: 6px 12px;        /* 🔹 bouton beaucoup moins large */
+    font-family: 'Segoe UI', sans-serif !important;
+    padding: 6px 12px;
     border-radius: 20px;
     margin-top: 20px;
     animation: shadow-pulse 4s ease-in-out infinite;
@@ -399,13 +395,13 @@ html, body {
             -6px -6px 14px #FFFFFF;
     }
     25% {
-        box-shadow: 
-            6px 6px 14px rgba(191, 168, 255, 0.4),  /* Purple tint */
+        box-shadow:
+            6px 6px 14px rgba(191, 168, 255, 0.4),
             -6px -6px 14px #FFFFFF;
     }
     50% {
-        box-shadow: 
-            6px 6px 14px rgba(96, 60, 201, 0.5),  /* Deeper purple */
+        box-shadow:
+            6px 6px 14px rgba(96, 60, 201, 0.5),
             -6px -6px 14px rgba(160, 124, 255, 0.2);
     }
     75% {
@@ -477,13 +473,12 @@ html, body {
 }
             
 .faq-image {
-    width: 30%;           /* ajustable */
+    width: 30%;
     height: auto;
     border-radius: 15px;
     justify-content: flex-start;
-    margin: 0 auto 15px auto;   /* centre */
-}   
-/* Expander closed state */
+    margin: 0 auto 15px auto;
+}
 details {
     margin-left: auto !important;
     width: 80% !important;
@@ -497,7 +492,6 @@ details {
         -6px -6px 12px #ffffff !important;
 }
 
-/* Expander open state */
 details[open] {
     margin-left: auto !important;
     width: 80% !important;
@@ -508,7 +502,6 @@ details[open] {
     border: none !important;
 }
 
-/* Summary (question) styling - closed */
 details > summary {
     font-size: 18px !important;
     font-weight: 500 !important;
@@ -521,7 +514,6 @@ details > summary {
     border-radius: 12px !important;
 }
 
-/* Summary (question) when open - slightly darker */
 details[open] > summary {
     color: #444 !important;
     background: #E5E9ED !important;
@@ -534,7 +526,6 @@ details[open] > summary * {
     color: #444 !important;
 }
 
-/* Content area (the answer) - stays light */
 details > div {
     padding: 10px 4px !important;
     font-size: 16px !important;
@@ -542,17 +533,14 @@ details > div {
     background: #ECF0F3 !important;
 }
 
-/* Streamlit expander content wrapper */
 details[open] > div[data-testid="stExpanderDetails"] {
     background: #ECF0F3 !important;
 }
 
-/* Background */
 .stApp {
     background-color: #ECF0F3;
 }
 
-/* Remove any default Streamlit expander backgrounds */
 div[data-testid="stExpander"] {
     background: transparent !important;
 }
@@ -588,7 +576,6 @@ div[data-testid="stExpanderDetails"] {
     border-bottom: 2px solid #d9dfe6;
 }
 
-/* 🔹 Tablora column header - purple */
 .neumo-table th.tablora-header {
     background: #a47cff;
     color: white !important;
@@ -608,17 +595,15 @@ div[data-testid="stExpanderDetails"] {
     background: #ECF0F3;
 }
 
-/* 🔹 Tablora column cells - purple */
 .neumo-table td.tablora-cell {
     background: #a47cff;
     color: white;
     font-weight: 600;
     position: relative;
     z-index: 1;
-    text-align: center;  /* 🔹 Center the checkmarks */
+    text-align: center;
 }
 
-/* 🔹 Last row in Tablora column gets rounded bottom */
 .neumo-table tr:last-child td.tablora-cell {
     border-radius: 0 0 20px 20px;
 }
@@ -630,13 +615,11 @@ div[data-testid="stExpanderDetails"] {
     text-align: center;
 }
 
-/* 🔹 Checkmarks in Tablora column */
 .tablora-cell .neumo-check {
     color: white;
     font-size: 22px;
 }
 
-/* 🔹 Add elevation to Tablora column */
 .neumo-table th.tablora-header,
 .neumo-table td.tablora-cell {
     box-shadow: 0 4px 15px rgba(96, 60, 201, 0.3);
@@ -678,12 +661,10 @@ div[data-testid="stExpanderDetails"] {
     color: white;
 }
 
-/* LOGIN PAGE */
 @keyframes fadeIn {
     to { opacity: 1; }
 }
 
-/* FORM TITLES */
 .login-box-title {
     font-size: 26px;
     font-weight: 800;
@@ -697,7 +678,6 @@ div[data-testid="stExpanderDetails"] {
     margin-bottom: 25px;
 }
 
-/* GOOGLE BUTTON */
 .login-google-btn {
     display: block;
     width: 100%;
@@ -728,7 +708,6 @@ div[data-testid="stExpanderDetails"] {
         width: 18px;
         height: 18px;
 }
-/* USER CARD (when logged in) */
 .login-user-card {
     background: #ECF0F3;
     border-radius: 22px;
@@ -767,13 +746,10 @@ div[data-testid="stExpanderDetails"] {
     color: #666;
 }
 
-/* REMOVE default Streamlit grey block padding */
 .block-container {
     padding-top: 0 !important;
 }
 
-
-/* OVERRIDE STREAMLIT BUTTONS */
 div.stButton > button {
     background: #ECF0F3 !important;
     border: none !important;
@@ -799,356 +775,6 @@ div.stButton > button[kind="primary"]:hover {
     box-shadow: 4px 4px 8px rgba(178, 107, 255, 0.4), -4px -4px 8px rgba(255, 255, 255, 0.6) !important;
 }
 
-/* PRICING PAGE */
-/* Pricing Container */
-.pricing-wrapper {
-    /*max-width: 1000px;*/
-    margin: 10px auto 60px auto;
-    padding: 0 40px;
-}
-
-/* Pricing Header */
-.pricing-header {
-    text-align: center;
-    margin: 50px 20px;
-}
-
-.pricing-main-title {
-    font-size: 42px;
-    font-weight: 800;
-    color: #603CC9;
-    text-shadow: 1px 1px 2px #EEE;
-    margin-bottom: 12px;
-}
-
-.pricing-subtitle {
-    font-size: 18px;
-    color: #595959;
-    font-weight: 500;
-    line-height: 1.6;
-}
-
-/* Pricing Cards Container */
-.pricing-cards-container {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 30px;
-    margin: 0 auto 50px auto;
-    max-width: 900px;
-}
-
-/* Individual Pricing Card */
-.pricing-card {
-    background: #ECF0F3;
-    border-radius: 20px;
-    border: 2px solid transparent;
-    box-shadow: 12px 12px 25px #D1D9E6, -12px -12px 25px #FFFFFF;
-    padding: 30px 28px;
-    position: relative;
-    transition: 
-        transform 0.25s ease,
-        border-color 0.25s ease,
-        box-shadow 0.25s ease;
-}
-.pricing-card-free {
-    background: #ECF0F3;
-    border-radius: 20px;
-    border: 2px solid transparent;
-    box-shadow: 12px 12px 25px #D1D9E6, -12px -12px 25px #FFFFFF;
-    padding: 30px 28px;
-    position: relative;
-    transition: 
-        transform 0.25s ease,
-        border-color 0.25s ease,
-        box-shadow 0.25s ease;
-}
-/* Hover: bordure violette + ombre violette */
-.pricing-card-member:hover,
-.pricing-card:hover {
-    transform: translateY(-2px);
-    border: 2px solid #603CC9;
-    box-shadow:
-        0 0 20px rgba(147, 59, 255, 0.825),
-        0 0 10px rgba(96, 60, 201, 0.2);
-}
-
-.pricing-card-member {
-    width: 70%;
-    margin: 0 auto !important;
-    background: #ECF0F3;
-    display: flex;
-    text-align: left;
-    border-radius: 20px;
-    border: 2px solid transparent;
-    box-shadow: 12px 12px 25px #D1D9E6, -12px -12px 25px #FFFFFF;
-    padding: 10px 15px;
-    position: relative;
-    transition: 
-        transform 0.25s ease,
-        border-color 0.25s ease,
-        box-shadow 0.25s ease;
-}
-.pricing-card-description-member {
-    font-size: 25px;
-    font-weight: 450;
-    color: #595959;
-    transform: translateY(11px);
-}
-/* Premium Card Special Styling */
-.pricing-card-premium {
-    background: linear-gradient(135deg, #603CC9 0%, #8A63DF 100%);
-    box-shadow: 12px 12px 25px rgba(96, 60, 201, 0.3), -12px -12px 25px rgba(255, 255, 255, 0.5);
-    border: 2px solid transparent;
-}
-
-.pricing-card-premium .pricing-card-badge,
-.pricing-card-premium .pricing-card-plan-name,
-.pricing-card-premium .pricing-card-description,
-.pricing-card-premium .pricing-card-price,
-.pricing-card-premium .pricing-card-period,
-.pricing-card-premium .pricing-feature-item {
-    color: white !important;
-}
-
-.pricing-card-premium .pricing-feature-icon {
-    color: rgba(255, 255, 255, 0.9) !important;
-}
-.pricing-card-premium-inline .pricing-card-badge,
-.pricing-card-premium-inline .pricing-card-plan-name,
-.pricing-card-premium-inline .pricing-card-description,
-.pricing-card-premium-inline .pricing-card-price,
-.pricing-card-premium-inline .pricing-card-period,
-.pricing-card-premium-inline .pricing-feature-item {
-    color: white !important;
-}
-
-.pricing-card-premium-inline .pricing-feature-icon {
-    color: rgba(255, 255, 255, 0.9) !important;
-}
-/* Badge */
-.pricing-card-badge {
-    display: inline-block;
-    padding: 4px 12px;
-    background: rgba(96, 60, 201, 0.1);
-    border-radius: 16px;
-    font-size: 12px;
-    font-weight: 600;
-    color: #603CC9;
-    margin-bottom: 12px;
-}
-.pricing-card-badge-premium {
-    display: inline-block;
-    padding: 4px 12px;
-    background: rgba(255, 255, 255, 0.2) !important;
-    border-radius: 16px;
-    font-size: 12px;
-    font-weight: 600;
-    color: white !important;
-    margin-bottom: 12px;
-    z-index: 12;
-}
-.pricing-card-premium .pricing-card-badge {
-    background: rgba(255, 255, 255, 0.2);
-    color: white;
-}
-
-/* Plan Name */
-.pricing-card-plan-name {
-    font-size: 24px !important;
-    font-weight: 700 !important;
-    color: #373736 !important;
-    margin-bottom: 8px !important;
-}
-
-.pricing-card-premium .pricing-card-plan-name {
-    color: white !important;
-    text-shadow: none !important;
-}
-
-/* Description */
-.pricing-card-description {
-    font-size: 14px;
-    color: #595959;
-    line-height: 1.5;
-    margin-bottom: 20px;
-    min-height: 42px;
-}
-.pricing-card-premium .pricing-card-description {
-    color: rgba(255, 255, 255, 0.9) !important;
-}
-
-/* Price Section */
-.pricing-card-price-section {
-    margin-bottom: 20px;
-    padding-bottom: 20px;
-    border-bottom: 1px solid rgba(96, 60, 201, 0.1);
-}
-
-.pricing-card-premium .pricing-card-price-section {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.pricing-card-price {
-    font-size: 42px;
-    font-weight: 800;
-    color: #603CC9;
-    line-height: 1;
-}
-
-.pricing-card-premium .pricing-card-price {
-    color: white !important;
-}
-
-.pricing-card-period {
-    font-size: 16px;
-    color: #666;
-    font-weight: 500;
-    margin-left: 6px;
-}
-
-.pricing-card-premium .pricing-card-period {
-    color: rgba(255, 255, 255, 0.8) !important;
-}
-
-/* Features List */
-.pricing-features-list {
-    margin-bottom: 25px;
-}
-
-.pricing-feature-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    margin-bottom: 10px;
-    font-size: 14px;
-    color: #555;
-    line-height: 1.4;
-}
-
-.pricing-feature-icon {
-    color: #603CC9;
-    font-size: 16px;
-    margin-top: 2px;
-    flex-shrink: 0;
-}
-
-/* CTA Button */
-.pricing-cta-button {
-    display: block;
-    text-decoration: none !important;
-    width: 100%;
-    padding: 12px 24px;
-    background: #ECF0F3;
-    color: #603CC9 !important;
-    font-weight: 700;
-    font-size: 16px;
-    border: 2px solid #603CC9;
-    border-radius: 12px;
-    text-align: center;
-    text-decoration: none;
-    box-shadow: 6px 6px 12px #D1D9E6, -6px -6px 12px #FFFFFF;
-    transition: all 0.3s ease;
-    cursor: pointer;
-    font-family: 'Segoe UI', sans-serif;
-    margin-top: 30px;
-}
-
-.pricing-cta-button:hover {
-    box-shadow: inset 4px 4px 10px #D1D9E6, inset -4px -4px 10px #FFFFFF;
-    color: #4b2fa0;
-    border-color: #4b2fa0;
-    transform: translateY(-1px);
-}
-
-.pricing-card-premium .pricing-cta-button {
-    background: white;
-    color: #603CC9;
-    border: 2px solid #ffffff;
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
-}
-.pricing-card-premium-inline .pricing-cta-button {
-    background: white;
-    color: #603CC9;
-    border: 2px solid #ffffff;
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
-}
-.pricing-cta-button:hover {
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
-    background: rgba(255, 255, 255, 0.95);
-}
-.pricing-card-premium:hover {
-    transform: translateY(-2px);
-    border: 2px solid #ffffff;
-    box-shadow:
-        0 0 25px rgba(212, 0, 255, 0.781),
-        0 0 15px rgb(166, 14, 255);
-}
-/* Responsive */
-@media (max-width: 900px) {
-    .pricing-cards-container {
-        grid-template-columns: 1fr;
-        gap: 25px;
-    }
-    
-    .pricing-table-row {
-        grid-template-columns: 1fr;
-        text-align: left;
-    }
-    
-    .pricing-table-cell {
-        text-align: left;
-    }
-}
-@media (max-width: 900px) {
-    .pricing-cards-container-inline {
-        flex-direction: column;
-        gap: 25px;
-    }
-}
-
-.pricing-cards-container-inline {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 30px;
-    margin-bottom: 50px;
-    flex-wrap: wrap;
-}
-.pricing-card-inline {
-    background: #ECF0F3;
-    color: white !important;
-    border-radius: 20px;
-    border: 2px solid transparent;
-    box-shadow: 12px 12px 25px #D1D9E6, -12px -12px 25px #FFFFFF;
-    padding: 30px 28px;
-    position: relative;
-    width: 280px;
-    transition: all 0.25s ease;
-        
-}
-.pricing-card-inline:hover {
-    transform: translateY(-1px);
-    border: 2px solid #603CC9;
-    box-shadow:
-        0 0 20px rgba(147, 59, 255, 0.825),
-        0 0 10px rgba(96, 60, 201, 0.2);
-}
-.pricing-card-premium-inline {
-    background: linear-gradient(135deg, #603CC9 0%, #8A63DF 100%);
-    box-shadow: 12px 12px 25px rgba(96, 60, 201, 0.3), -12px -12px 25px rgba(255, 255, 255, 0.5);
-    border: 2px solid transparent;
-    width: 320px;
-    transform: all 0.25s ease;
-    z-index: 10;
-}
-.pricing-card-premium-inline:hover {
-    transform: translateY(-1px);
-    border: 2px solid #ffffff;
-    width: 320px !important;
-    box-shadow:
-        0 0 25px rgba(212, 0, 255, 0.781),
-        0 0 15px rgb(166, 14, 255);
-}
 .logo-image-graph {
     display: block;
 }
@@ -1161,16 +787,14 @@ div.stButton > button[kind="primary"]:hover {
     transition: all 0.3s ease;
 }
 
-/* Navigation Bar */
 .topnav {
     display: flex;
     align-items: center;
     overflow: hidden;
-    background: #f0f0f0;   /* léger gris clair */
+    background: #f0f0f0;
     padding: 8px 0;
     border-radius: 10px;
     height: 60px;
-    /* léger relief */
     box-shadow:
         3px 3px 6px #c8c8c8,
         -3px -3px 6px #ffffff;
@@ -1185,7 +809,6 @@ div.stButton > button[kind="primary"]:hover {
     font-weight: 450;
     border-radius: 25px;
 
-    /* très léger effet bouton en relief */
     height: 40px;
     background: #f0f0f0;
     display: inline-flex;
@@ -1207,7 +830,6 @@ div.stButton > button[kind="primary"]:hover {
     box-shadow: none;
 }
 
-/* Hover (légèrement creusé) */
 .topnav a:hover:not(.CTA-nav-btn):not(.logo-image-graph) {
     background-color: #e7e7e7;
     color: #222;
@@ -1223,9 +845,8 @@ div.stButton > button[kind="primary"]:hover {
 .nav-right a {
     transform: translateY(8px);
 }
-/* Page active → violet + creusé */
 .topnav a.active {
-    background: #a47cff !important; /* violet doux */
+    background: #a47cff !important;
     color: white !important;
     box-shadow:
         inset 2px 2px 4px #8c6de0,
@@ -1243,13 +864,13 @@ div.stButton > button[kind="primary"]:hover {
     border-radius: 10px;
     text-decoration: none;
     transition: all 0.25s ease-in-out;
-    width: fit-content; 
-    white-space: nowrap; 
+    width: fit-content;
+    white-space: nowrap;
     border: 2px solid #603CC9;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    margin: 0 !important;  /* 🔹 Reset margin */
+    margin: 0 !important;
 }
 
 .CTA-nav-btn:hover {
@@ -1465,9 +1086,8 @@ div.stButton > button[kind="primary"]:hover {
     max-width: 1060px;
     margin: 0 auto;
     padding: 80px 24px 100px;
-  }
+}
 
-  /* ─── TIMELINE WRAPPER ─── */
 .timeline {
     position: relative;
     display: grid;
@@ -1475,7 +1095,6 @@ div.stButton > button[kind="primary"]:hover {
     column-gap: 52px;
 }
 
-  /* ─── CONTINUOUS LINE ─── */
 .timeline::before {
     content: '';
     position: absolute;
@@ -1489,12 +1108,10 @@ div.stButton > button[kind="primary"]:hover {
     z-index: 0;
 }
 
-  /* ─── ITEM ─── */
 .timeline-item {
     display: contents;
 }
 
-  /* ─── DOT ─── */
 .timeline-item .dot {
     grid-column: 2;
     align-self: start;
@@ -1510,7 +1127,6 @@ div.stButton > button[kind="primary"]:hover {
     margin-top: 30px;
 }
 
-  /* ─── CARD ─── */
 .timeline-item .card {
     background: #f0ecf7;
     border-radius: 22px;
@@ -1531,7 +1147,6 @@ div.stButton > button[kind="primary"]:hover {
        0   0   16px  rgba(124, 58, 237, 0.15);
 }
 
-  /* ─── GRID PLACEMENT ─── */
 .timeline-item:nth-child(odd)  .card { grid-column: 1; }
 .timeline-item:nth-child(odd)  .dot  { grid-column: 2; }
 .timeline-item:nth-child(even) .card { grid-column: 3; }
@@ -1544,7 +1159,6 @@ div.stButton > button[kind="primary"]:hover {
 .timeline-item:nth-child(3) .card,
 .timeline-item:nth-child(3) .dot  { grid-row: 3; }
 
-  /* ─── CARD INTERNALS ─── */
 .card .step-label {
     display: inline-block;
     font-size: 11px;
@@ -1577,7 +1191,6 @@ div.stButton > button[kind="primary"]:hover {
     margin-bottom: 22px;
 }
 
-  /* ─── IMAGE PLACEHOLDER ─── */
 .img-placeholder {
     width: 100%;
     aspect-ratio: 16 / 9;
@@ -1611,7 +1224,6 @@ div.stButton > button[kind="primary"]:hover {
     opacity: 0.7;
 }
 
-  /* ─── RESPONSIVE ─── */
 @media (max-width: 680px) {
     .timeline {
       grid-template-columns: 20px 1fr;

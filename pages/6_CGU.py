@@ -43,8 +43,7 @@ st.markdown("""
 
     <h2>3. Accès au service</h2>
     <p>
-    Le Service est accessible en ligne via un navigateur web compatible. Certaines fonctionnalités
-    sont réservées aux utilisateurs disposant d’un abonnement payant (« version Premium »).
+    Le Service est accessible gratuitement en ligne via un navigateur web compatible.
     </p>
 
     <p>
@@ -78,35 +77,7 @@ st.markdown("""
     Toute utilisation du Service effectuée via le compte de l’utilisateur est réputée effectuée par ce dernier.
     </p>
 
-    <h2>6. Abonnement et facturation</h2>
-    <p>
-    L’accès à la version Premium du Service est proposé sous forme d’abonnement mensuel.
-    </p>
-
-    <p>
-    L’abonnement est facturé automatiquement chaque mois, sauf résiliation par l’utilisateur
-    avant la date de renouvellement.
-    </p>
-
-    <p>
-    Les tarifs en vigueur sont ceux affichés sur le site au moment de la souscription.
-    </p>
-
-    <h2>7. Résiliation</h2>
-    <p>
-    L’utilisateur peut résilier son abonnement à tout moment depuis son espace personnel.
-    </p>
-
-    <p>
-    La résiliation prend effet à la fin de la période d’abonnement en cours.
-    </p>
-
-    <p>
-    L’utilisateur conserve l’accès à la version Premium jusqu’à l’expiration de la période déjà payée.
-    Aucun remboursement partiel n’est effectué pour une période entamée.
-    </p>
-
-    <h2>8. Propriété intellectuelle</h2>
+    <h2>6. Propriété intellectuelle</h2>
     <p>
     Le Service, son interface, son code, ses fonctionnalités et tous les éléments qui le composent
     sont protégés par le droit de la propriété intellectuelle.
@@ -116,7 +87,7 @@ st.markdown("""
     Toute reproduction, modification, distribution ou exploitation non autorisée du Service est interdite.
     </p>
 
-    <h2>9. Responsabilité</h2>
+    <h2>7. Responsabilité</h2>
     <p>
     Le Service est fourni « tel quel ». L’éditeur ne garantit pas l’absence d’erreurs, d’interruptions
     ou de dysfonctionnements.
@@ -127,13 +98,13 @@ st.markdown("""
     de l’utilisation ou de l’impossibilité d’utiliser le Service.
     </p>
 
-    <h2>10. Modification des CGU</h2>
+    <h2>8. Modification des CGU</h2>
     <p>
     L’éditeur se réserve le droit de modifier les présentes CGU à tout moment.
     Les CGU applicables sont celles en vigueur à la date d’utilisation du Service.
     </p>
 
-    <h2>11. Droit applicable et for juridique</h2>
+    <h2>9. Droit applicable et for juridique</h2>
     <p>
     Les présentes CGU sont soumises au droit suisse.
     </p>
@@ -143,7 +114,7 @@ st.markdown("""
     des dispositions légales impératives.
     </p>
 
-    <h2>12. Contact</h2>
+    <h2>10. Contact</h2>
     <p>
     Pour toute question relative au Service ou aux présentes CGU, l’utilisateur peut contacter
     l’éditeur à l’adresse suivante :

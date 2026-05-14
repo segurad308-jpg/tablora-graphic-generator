@@ -14,7 +14,6 @@ def cache_footer():
         <div class="footer-title">Légal</div>
         <div><a href="/mentions_legales" target="_blank">Mentions légales</a></div>
         <div><a href="/CGU" target="_blank">Conditions générales d’utilisation</a></div>
-        <div><a href="/CGV" target="_blank">Conditions générales de vente</a></div>
         <div><a href="/LPD" target="_blank">Politique de confidentialité</a></div>
     </div>
 
