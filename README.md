@@ -4,6 +4,8 @@ Tablora is a lightweight web app for turning spreadsheets into clean, exportable
 
 Upload a `.csv` or `.xlsx` file, pick your variables and chart type, and download the result as PNG, PDF, or SVG.
 
+**Live app:** [Tablora](https://tablora.ch/)
+
 ## Features
 
 - Import CSV or Excel files (auto-detects decimal separator)
