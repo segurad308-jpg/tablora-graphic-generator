@@ -20,9 +20,6 @@ def render_static_home():
             <a href="/Offre" target="_self" class="neumo-btn1">
                 Essayer gratuitement
             </a>
-            <a href="/Offre" target="_self" class="neumo-btn">
-                Voir l'offre
-            </a> 
         </div>
         <a href="#reviews-section" class="hero-sub" style="text-decoration: none;">
             ★ ‎ ★ ‎ ★ ‎ ★ ‎ ★ㅤ<u>De nombreux utilisateurs satisfaits</u>
@@ -191,92 +188,6 @@ def render_static_home():
     </div>
     </section>
 
-    <div class="pricing-wrapper">
-    <div class="pricing-header">
-        <h1 class="pricing-main-title">Nos offres</h1>
-        <p class="pricing-subtitle">Choisissez ce qui vous correspond le mieux</p>
-    </div>
-
-    <div class="pricing-cards-container-inline">
-        
-    <!-- Starter Plan -->
-    <div class="pricing-card-inline">
-    <div class="pricing-card-price-section">
-        <span class="pricing-card-price">0 CHF</span>
-    </div>
-    
-    <h3 class="pricing-card-plan-name">Essai gratuit</h3>
-    <p class="pricing-card-description">Découvrez Tablora et créez vos premiers graphiques</p>
-    
-    <ul class="pricing-features-list">
-        <div class="pricing-feature-item">
-            <span class="pricing-feature-icon">✓</span>
-            <span>Types et thèmes limités</span>
-        </div>
-        <div class="pricing-feature-item">
-            <span class="pricing-feature-icon">✓</span>
-            <span>Exportation limitée</span>
-        </div>
-    </ul>
-    
-    <a href="/Offre" target="_self" class="pricing-cta-button">Essayer gratuitement</a>
-    </div>
-
-    <!-- Professional Plan (Premium) - LARGER -->
-    <div class="pricing-card-inline pricing-card-premium-inline">
-        <div class="pricing-card-badge-premium">Le plus populaire</div>
-    
-    <div class="pricing-card-price-section">
-        <span class="pricing-card-price">7 CHF</span>
-        <span class="pricing-card-period">/ mois</span>
-    </div>
-    
-    <h3 class="pricing-card-plan-name">Premium</h3>
-    <p class="pricing-card-description">Visualisez, créez et analysez au meilleur niveau</p>
-    
-    <div class="pricing-features-list">
-        <div class="pricing-feature-item">
-            <span class="pricing-feature-icon">✓</span>
-            <span>Création illimitée</span>
-        </div>
-        <div class="pricing-feature-item">
-            <span class="pricing-feature-icon">✓</span>
-            <span>Personnalisation avancée</span>
-        </div>
-        <div class="pricing-feature-item">
-            <span class="pricing-feature-icon">✓</span>
-            <span>Exportation avancée</span>
-        </div>
-    </div>
-    
-    <a href="/Offre" target="_self" class="pricing-cta-button">Voir l'offre Premium</a>
-    </div>
-
-    <!-- Company Plan -->
-    <div class="pricing-card-inline">
-    <div class="pricing-card-price-section">
-        <span class="pricing-card-price" style="font-size: 23px; font-weight: 700;">Nous contacter</span>
-    </div>
-    
-    <h3 class="pricing-card-plan-name">Devenir membre</h3>
-    <p class="pricing-card-description">Bénéficiez de tous les avantages premium et contribuez directement au développement de Tablora</p>
-    
-    <div class="pricing-features-list">
-        <div class="pricing-feature-item">
-            <span class="pricing-feature-icon">✓</span>
-            <span>Tous les avantages Premium</span>
-        </div>
-        <div class="pricing-feature-item">
-            <span class="pricing-feature-icon">✓</span>
-            <span>Contribution au développement</span>
-        </div>
-    </div>
-    
-    <a href="mailto:info.tablora@gmail.com" class="pricing-cta-button">Nous contacter</a>
-    </div>
-    </div>
-    </div>
-
     <div class="neumo-card">
         <img src="https://raw.githubusercontent.com/segurad308-jpg/images-tablora/refs/heads/main/design.webp" class="neumo-img" alt="Feature">
         <div style="display: flex; flex-direction: column; width: 50%;">
@@ -396,9 +307,6 @@ def render_static_home2():
     <div style="display: flex; justify-content: center; gap: 20px; margin-top: 0; text-align: center;">
         <a href="/Offre" target="_self" class="neumo-btn2">
             Essayer gratuitement
-        </a>
-        <a href="/Offre" target="_self" class="neumo-btn3">
-            Acheter l'offre maintenant
         </a>
     </div>
     """

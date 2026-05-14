@@ -1,7 +1,6 @@
 from graph_generator import generate_graph, load_data
 import streamlit as st
 from streamlit_cookies_controller import CookieController
-from utils.subscription import get_profile, has_access, is_free_expired
 from supabase import create_client, Client
 import os
 from dotenv import load_dotenv
@@ -14,8 +13,7 @@ from datetime import datetime, timedelta
 
 st.set_page_config(page_title="Tablora - Créer un graphique", layout="centered", page_icon="https://raw.githubusercontent.com/segurad308-jpg/images-tablora/refs/heads/main/logo.webp")
 
-# ─────────────────────────────────────────────
-# AUTH & PROFILE  (runs once, cached in session)
+# AUTH & PROFILE 
 # ─────────────────────────────────────────────
 controller = CookieController()
 if "cookies_ready" not in st.session_state:
