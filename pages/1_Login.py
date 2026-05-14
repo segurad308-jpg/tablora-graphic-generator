@@ -78,8 +78,8 @@ st.markdown(f"""
         alt="Tablora Logo" />
 </a>
 
-<a href="/Creer" target="_self">Créer</a>
 <div class="nav-right">
+    <a href="/Creer" target="_self">Créer</a>
     <a class="active" href="/Login" target="_self">{login_status}</a>
 </div>
 </div>
